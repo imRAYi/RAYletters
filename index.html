@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حروف مع ريان</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+
+<link rel="icon" type="image/png" href="favicon.png">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
+<style>
+/* ════════════════════════════════════════
+   CSS VARIABLES — LIGHT / DARK MODE
+════════════════════════════════════════ */
+:root {
+  --bg-overlay:       rgba(12, 2, 35, 0.76);
+  --header-bg:        rgba(20, 5, 50, 0.96);
+  --sidebar-from:     #160330;
+  --sidebar-to:       #2a0858;
+  --modal-from:       #1a0438;
+  --modal-to:         #2b0858;
+  --hex-border:       #7b2fbf;
+  --hex-cell-bg:      #ffffff;
+  --hex-cell-color:   #5a1a8a;
+  --hex-hover:        #f0e0ff;
+  --card-bg:          rgba(255,255,255,0.055);
+  --card-border:      rgba(255,255,255,0.13);
+  --answer-bg:        #ffffff;
+  --answer-color:     #1a0438;
+  --page-overlay:     rgba(8,0,25,0.9);
+}
+body.dark-mode {
+  --bg-overlay:       rgba(4, 0, 14, 0.88);
+  --header-bg:        rgba(8, 2, 22, 0.98);
+  --sidebar-from:     #08011a;
+  --sidebar-to:       #120430;
+  --modal-from:       #0d0220;
+  --modal-to:         #160438;
+  --hex-border:       #4a1a78;
+  --hex-cell-bg:      #e8d8ff;
+  --hex-cell-color:   #3a0a68;
+  --hex-hover:        #d4b8f8;
+  --card-bg:          rgba(255,255,255,0.03);
+  --card-border:      rgba(255,255,255,0.08);
+  --answer-bg:        #f0e0ff;
+  --answer-color:     #1a0438;
+  --page-overlay:     rgba(4,0,14,0.95);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background-image: url(BackGround.jpeg);
+  background-size: cover; background-position: center;
+  background-repeat: no-repeat; background-attachment: fixed;
+  min-height: 100vh; font-family: 'Tajawal', sans-serif;
+  transition: filter 0.4s;
+}
+body.dark-mode { filter: brightness(0.82) saturate(0.85); }
+
+/* ─── HAMBURGER ─── */
+.hamburger-btn {
+  position: fixed; top: 22px; right: 22px; z-index: 1001;
+  background: rgba(25,8,55,0.92); border: 2px solid rgba(255,215,0,0.45);
+  border-radius: 12px; width: 48px; height: 48px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 5px; cursor: pointer; transition: all 0.25s;
+}
+.hamburger-btn:hover { background: rgba(90,26,138,0.95); border-color: #ffd700; transform: scale(1.05); }
+.hamburger-btn span { display: block; width: 22px; height: 2.5px; background: #ffd700; border-radius: 3px; }
+
+/* ─── SIDEBAR ─── */
+.sidebar-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  z-index: 1002; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.sidebar-overlay.active { opacity: 1; pointer-events: all; }
+
+.sidebar {
+  position: fixed; top: 0; right: -310px; width: 290px; height: 100%;
+  background: linear-gradient(180deg, var(--sidebar-from) 0%, var(--sidebar-to) 60%, var(--sidebar-from) 100%);
+  z-index: 1003; transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+  border-left: 2px solid rgba(255,215,0,0.2);
+  box-shadow: -10px 0 50px rgba(0,0,0,0.7);
+}
+.sidebar.open { right: 0; }
+
+.sidebar-header {
+  padding: 28px 22px 18px; border-bottom: 1px solid rgba(255,215,0,0.18);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sidebar-logo { height: 48px; filter: drop-shadow(0 2px 8px rgba(255,215,0,0.4)); }
+.sidebar-close {
+  background: rgba(255,255,255,0.07); border: none; color: rgba(255,255,255,0.7);
+  font-size: 1.4rem; cursor: pointer; width: 34px; height: 34px;
+  border-radius: 8px; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.sidebar-close:hover { background: rgba(255,215,0,0.15); color: #ffd700; }
+
+.sidebar-nav { flex: 1; padding: 18px 14px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+.sidebar-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 16px; border-radius: 13px; cursor: pointer;
+  transition: all 0.2s; color: rgba(255,255,255,0.8);
+  font-size: 1.02rem; font-weight: 700; border: 1.5px solid transparent;
+}
+.sidebar-item:hover {
+  background: rgba(255,215,0,0.1); border-color: rgba(255,215,0,0.25);
+  color: #ffd700; transform: translateX(-4px);
+}
+.sidebar-item .item-icon { width: 28px; height: 28px; flex-shrink: 0; object-fit: contain; }
+
+/* زر تسجيل الدخول في السايدبار */
+.sidebar-login-btn {
+  margin: 8px 14px 0;
+  background: linear-gradient(135deg, #ff8c00, #ffd700);
+  color: #1a1a2e; border: none; border-radius: 13px;
+  padding: 13px 16px; cursor: pointer; font-size: 1.02rem; font-weight: 900;
+  font-family: 'Tajawal', sans-serif; display: flex; align-items: center; gap: 14px;
+  transition: all 0.2s; width: calc(100% - 28px);
+}
+.sidebar-login-btn:hover { transform: translateX(-4px); box-shadow: 0 4px 16px rgba(255,140,0,0.5); }
+.sidebar-login-btn .item-icon { width: 28px; height: 28px; object-fit: contain; }
+
+/* عرض اسم المستخدم بعد تسجيل الدخول */
+.sidebar-user-info {
+  margin: 8px 14px 0;
+  background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,215,0,0.3);
+  border-radius: 13px; padding: 11px 16px;
+  display: none; align-items: center; gap: 12px;
+}
+.sidebar-user-info.visible { display: flex; }
+.sidebar-user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid rgba(255,215,0,0.5); object-fit: cover;
+  background: rgba(255,215,0,0.2);
+}
+.sidebar-user-name { color: rgba(255,255,255,0.9); font-size: 0.9rem; font-weight: 700; flex: 1; }
+.sidebar-logout {
+  background: none; border: none; color: rgba(255,255,255,0.4);
+  font-size: 0.75rem; cursor: pointer; font-family: 'Tajawal', sans-serif;
+  transition: color 0.2s; padding: 2px 6px;
+}
+.sidebar-logout:hover { color: #ff6b6b; }
+
+/* Social icons */
+.sidebar-social {
+  display: flex; gap: 12px; justify-content: center;
+  padding: 14px 22px 10px; border-top: 1px solid rgba(255,215,0,0.18);
+}
+.social-link {
+  display: flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 12px;
+  background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.12);
+  transition: all 0.2s; cursor: pointer; text-decoration: none;
+}
+.social-link:hover { background: rgba(255,215,0,0.12); border-color: rgba(255,215,0,0.35); transform: translateY(-2px); }
+.social-link img { width: 22px; height: 22px; object-fit: contain; }
+
+.sidebar-footer {
+  padding: 10px 22px 18px; text-align: center;
+  color: rgba(255,255,255,0.4); font-size: 0.8rem; line-height: 1.7;
+}
+
+/* ─── HEADER ─── */
+header {
+  width: 100%; background: var(--header-bg); backdrop-filter: blur(14px);
+  padding: 14px 90px 14px 30px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.6);
+  border-bottom: 2px solid rgba(255,215,0,0.25);
+  position: relative; min-height: 95px; transition: background 0.4s;
+}
+.Logo {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  height: 85px; width: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
+}
+.scores { display: flex; gap: 14px; }
+.team-score {
+  display: flex; flex-direction: column; align-items: center;
+  background: rgba(255,255,255,0.06); border-radius: 14px;
+  padding: 10px 18px; min-width: 100px;
+  border: 2px solid transparent; position: relative; overflow: hidden;
+}
+.team-score::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
+.team-score.orange { border-color: rgba(255,140,0,0.55); }
+.team-score.orange::after { background: linear-gradient(90deg, #ff8c00, #ffd700); }
+.team-score.green  { border-color: rgba(46,204,64,0.55); }
+.team-score.green::after  { background: linear-gradient(90deg, #2ecc40, #00ff88); }
+.team-score .team-name { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.3px; }
+.team-score.orange .team-name { color: #ffb347; }
+.team-score.green  .team-name { color: #5dff70; }
+.team-score .score-num {
+  font-size: 2.4rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  line-height: 1.1; letter-spacing: -1px;
+}
+.team-score.orange .score-num { color: #ffd700; text-shadow: 0 0 18px rgba(255,215,0,0.8); }
+.team-score.green  .score-num { color: #5dff70; text-shadow: 0 0 18px rgba(93,255,112,0.8); }
+
+.btn-round-winner {
+  background: linear-gradient(135deg, #ff8c00, #ffd700);
+  color: #1a1a2e; font-size: 0.95rem; padding: 12px 22px;
+  border-radius: 12px; border: none; font-weight: 900; cursor: pointer;
+  transition: all 0.2s; font-family: 'Tajawal', sans-serif; white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(255,140,0,0.55);
+}
+.btn-round-winner:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,140,0,0.7); }
+
+/* ─── HEX GRID ─── */
+:root {
+  --hex-outer-w: 210px; --hex-outer-h: 226px;
+  --hex-inner-w: 196px; --hex-inner-h: 211px;
+  --hex-font: 2.6rem; --hex-gap: 5px;
+  --hex-overlap: -53px; --hex-offset: -200px;
+}
+
+.board-wrapper {
+  display: flex; align-items: center; justify-content: center;
+  min-height: calc(100vh - 97px); padding: 20px;
+}
+.hex-grid { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.hex-row { display: flex; gap: var(--hex-gap); margin-bottom: var(--hex-overlap); }
+.hex-row:last-child { margin-bottom: 0; }
+.hex-row.offset { margin-right: var(--hex-offset); }
+
+.hex-outer {
+  width: var(--hex-outer-w); height: var(--hex-outer-h);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: var(--hex-border);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s; flex-shrink: 0;
+}
+.hex-cell {
+  width: var(--hex-inner-w); height: var(--hex-inner-h);
+  cursor: pointer;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: var(--hex-cell-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--hex-font); font-weight: 900; color: var(--hex-cell-color);
+  transition: all 0.25s ease; user-select: none;
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+}
+.hex-cell:hover:not(.claimed) { background: var(--hex-hover); transform: scale(1.05); }
+.hex-outer.claimed-orange { background: #b85e00; }
+.hex-outer.claimed-green  { background: #1a7a28; }
+.hex-cell.claimed-orange  { background: #ff8c00; color: white; cursor: default; }
+.hex-cell.claimed-green   { background: #2ecc40; color: white; cursor: default; }
+.hex-cell.claimed { cursor: default; }
+.hex-cell.pulse { animation: pulse 0.5s ease; }
+@keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.15)} 100%{transform:scale(1)} }
+.gold-cell {
+  background: linear-gradient(135deg, #ffd700, #ff8c00, #ffd700);
+  background-size: 200% 200%; color: #1a1a2e;
+  animation: goldShimmer 3s infinite linear;
+}
+.hex-outer.gold-outer { background: #b8860b; animation: goldOuterAnim 3s infinite linear; }
+@keyframes goldShimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes goldOuterAnim { 0%,100%{background:#b8860b} 50%{background:#e0a010} }
+
+/* ─── MODAL BASE ─── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,0,25,0.85); backdrop-filter: blur(8px);
+  z-index: 100; align-items: center; justify-content: center; padding: 16px;
+}
+.modal-overlay.active { display: flex; }
+@keyframes slideIn {
+  from { transform: translateY(-40px) scale(0.9); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ─── QUESTION MODAL ─── */
+.modal {
+  background: linear-gradient(155deg, var(--modal-from) 0%, var(--modal-to) 100%);
+  border-radius: 26px; padding: 0; max-width: 540px; width: 100%;
+  text-align: center; animation: slideIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  overflow: hidden; border: 1.5px solid rgba(255,255,255,0.1);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.8);
+}
+.modal-top-bar { height: 5px; width: 100%; }
+.orange-modal .modal-top-bar { background: linear-gradient(90deg,#ff8c00,#ffd700,#ff8c00); }
+.green-modal  .modal-top-bar { background: linear-gradient(90deg,#2ecc40,#00ff66,#2ecc40); }
+.modal-body { padding: 26px 34px 30px; }
+.modal h2 { font-size: 0.85rem; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 1px; margin-bottom: 2px; }
+.modal .letter-display {
+  font-size: 5.5rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  line-height: 1; margin: 4px 0 14px;
+}
+.orange-modal .letter-display { color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.55); }
+.green-modal  .letter-display { color: #5dff70; text-shadow: 0 0 30px rgba(93,255,112,0.55); }
+
+.modal .question {
+  font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.07); padding: 17px 20px;
+  border-radius: 14px; margin: 0 0 16px; line-height: 1.75;
+  border: 1px solid rgba(255,255,255,0.09);
+}
+
+/* ── زر اظهار / اخفاء الاجابة ── */
+.btn-reveal {
+  background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.88);
+  border: 1.5px solid rgba(255,255,255,0.22);
+  font-size: 0.97rem; padding: 10px 28px; border-radius: 11px;
+  font-weight: 700; cursor: pointer; transition: all 0.2s;
+  font-family: 'Tajawal', sans-serif; margin: 2px 0 10px;
+}
+.btn-reveal:hover { background: rgba(255,255,255,0.16); transform: translateY(-2px); }
+
+/* ── الاجابة — لون محايد مختلف عن الفرق ── */
+.modal .answer {
+  font-size: 1.55rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  color: #1a0438; padding: 13px 26px; border-radius: 13px;
+  margin: 0 0 12px; display: none;
+  background: linear-gradient(135deg, #f0e0ff, #e2c8ff);
+  box-shadow: 0 4px 20px rgba(150,80,255,0.35);
+  animation: fadeUp 0.3s ease;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+.action-buttons { display: none; margin-top: 8px; }
+.action-buttons.visible { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+
+.btn {
+  display: inline-block; padding: 11px 24px; border-radius: 12px;
+  font-size: 0.97rem; font-weight: 700; font-family: 'Tajawal', sans-serif;
+  border: none; cursor: pointer; transition: all 0.2s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.btn:active { transform: translateY(0); }
+.btn-orange-win { background: linear-gradient(135deg,#ff8c00,#e07000); color: white; }
+.btn-green-win  { background: linear-gradient(135deg,#2ecc40,#1a9e30); color: white; }
+.btn-skip { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.18); }
+.btn-skip:hover { background: rgba(255,255,255,0.18); }
+
+/* ─── ROUND WINNER MODAL ─── */
+.round-modal {
+  background: linear-gradient(155deg, var(--modal-from) 0%, var(--modal-to) 100%);
+  border-radius: 26px; max-width: 460px; width: 100%; overflow: hidden;
+  border: 1.5px solid rgba(255,215,0,0.28);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.8);
+  animation: slideIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.round-modal-header {
+  background: rgba(255,215,0,0.08); padding: 28px 30px 22px;
+  border-bottom: 1px solid rgba(255,215,0,0.18); text-align: center;
+}
+.round-modal-header h2 { font-size: 1.5rem; font-weight: 900; color: #ffd700; font-family: 'Cairo', sans-serif; }
+.round-modal-body { padding: 26px 28px 30px; text-align: center; }
+.round-modal-body p { color: rgba(255,255,255,0.65); font-size: 1rem; margin-bottom: 22px; }
+.round-team-btns { display: flex; gap: 14px; justify-content: center; margin-bottom: 16px; }
+.round-team-btn {
+  flex: 1; padding: 18px 12px; border-radius: 16px;
+  font-size: 1rem; font-weight: 900; font-family: 'Tajawal', sans-serif;
+  border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.round-team-btn.orange-btn { background: rgba(255,140,0,0.12); border-color: rgba(255,140,0,0.6); color: #ffb347; }
+.round-team-btn.orange-btn:hover { background: #ff8c00; color: white; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,140,0,0.5); }
+.round-team-btn.green-btn  { background: rgba(46,204,64,0.12); border-color: rgba(46,204,64,0.6); color: #5dff70; }
+.round-team-btn.green-btn:hover  { background: #2ecc40; color: white; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(46,204,64,0.5); }
+.btn-cancel-round {
+  background: none; border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.45); padding: 9px 26px; border-radius: 10px;
+  cursor: pointer; font-family: 'Tajawal', sans-serif; font-size: 0.92rem; transition: all 0.2s;
+}
+.btn-cancel-round:hover { border-color: rgba(255,255,255,0.35); color: rgba(255,255,255,0.75); }
+
+/* ─── WIN SCREEN ─── */
+.win-screen {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  align-items: center; justify-content: center; flex-direction: column;
+  background: rgba(8,0,25,0.92); backdrop-filter: blur(10px); padding: 20px;
+}
+.win-screen.active { display: flex; }
+.win-content { text-align: center; color: white; animation: zoomIn 0.5s ease; }
+@keyframes zoomIn { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+.win-content h1 { font-size: 3.2rem; font-weight: 900; margin-bottom: 12px; font-family: 'Cairo', sans-serif; color: #ffd700; text-shadow: 0 0 35px rgba(255,215,0,0.55); }
+.win-content p  { font-size: 1.35rem; margin-bottom: 30px; color: rgba(255,255,255,0.65); }
+.btn-restart { background: linear-gradient(135deg,#ff8c00,#ffd700); color: #1a1a2e; font-size: 1.2rem; padding: 14px 40px; border-radius: 14px; font-weight: 900; box-shadow: 0 5px 20px rgba(255,140,0,0.55); }
+
+/* ─── SETUP SCREEN ─── */
+.setup-screen {
+  display: flex; position: fixed; inset: 0;
+  background-image: url(BackGround.jpeg); background-size: cover; background-position: center;
+  z-index: 300; align-items: center; justify-content: center; flex-direction: column; padding: 20px;
+}
+.setup-screen::before { content: ''; position: absolute; inset: 0; background: var(--bg-overlay); z-index: 0; }
+.setup-screen > * { position: relative; z-index: 1; }
+.setup-card {
+  background: var(--card-bg); backdrop-filter: blur(20px);
+  border: 1.5px solid var(--card-border); border-radius: 28px;
+  padding: 42px 50px; display: flex; flex-direction: column;
+  align-items: center; gap: 26px; box-shadow: 0 25px 70px rgba(0,0,0,0.6);
+  width: 100%; max-width: 560px;
+}
+.setup-logo { width: 160px; filter: drop-shadow(0 8px 22px rgba(255,215,0,0.5)); }
+.setup-title { font-size: 1.45rem; font-weight: 900; color: #ffd700; text-shadow: 0 2px 12px rgba(255,215,0,0.4); text-align: center; }
+.team-setup { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; width: 100%; }
+.team-box {
+  background: rgba(255,255,255,0.055); border-radius: 16px; padding: 20px 22px;
+  border: 2px solid; text-align: center; flex: 1; min-width: 140px; transition: transform 0.2s;
+}
+.team-box:hover { transform: translateY(-3px); }
+.team-box.orange { border-color: #ff8c00; box-shadow: 0 4px 20px rgba(255,140,0,0.2); }
+.team-box.green  { border-color: #2ecc40; box-shadow: 0 4px 20px rgba(46,204,64,0.2); }
+.team-box label { display: block; font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+.team-box.orange label { color: #ffb347; }
+.team-box.green  label { color: #5dff70; }
+.team-box input {
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  border: 2px solid rgba(255,255,255,0.18); font-size: 1rem;
+  font-family: 'Tajawal', sans-serif; text-align: center;
+  background: rgba(255,255,255,0.1); color: #fff; outline: none; transition: border-color 0.2s;
+}
+.team-box.orange input:focus { border-color: #ff8c00; }
+.team-box.green  input:focus { border-color: #2ecc40; }
+.btn-start {
+  background: linear-gradient(135deg,#ff8c00,#ffd700); color: #1a1a2e;
+  font-size: 1.28rem; padding: 14px 55px; border-radius: 14px; font-weight: 900;
+  border: none; cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 5px 20px rgba(255,140,0,0.5); font-family: 'Tajawal', sans-serif;
+}
+.btn-start:hover { transform: translateY(-3px); box-shadow: 0 9px 30px rgba(255,140,0,0.7); }
+
+/* ─── NOTICE TOAST ─── */
+.custom-notice {
+  position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg,#ff8c00,#ffd700); color: #1a1a2e;
+  padding: 13px 26px; border-radius: 50px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 9999;
+  transition: all 0.5s cubic-bezier(0.68,-0.55,0.265,1.55);
+  font-weight: 900; pointer-events: none; white-space: nowrap;
+}
+.custom-notice.show { top: 25px; }
+.notice-content { display: flex; align-items: center; gap: 11px; }
+
+/* ─── SIDEBAR PAGES ─── */
+.page-overlay {
+  display: none; position: fixed; inset: 0;
+  background: var(--page-overlay); backdrop-filter: blur(8px);
+  z-index: 1010; align-items: center; justify-content: center; padding: 16px;
+}
+.page-overlay.active { display: flex; }
+
+.page-card {
+  background: linear-gradient(155deg, var(--modal-from), var(--modal-to));
+  border-radius: 24px; padding: 38px 40px; max-width: 560px; width: 100%;
+  border: 1.5px solid rgba(255,215,0,0.22);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.75);
+  animation: slideIn 0.3s ease; position: relative;
+  max-height: 90vh; overflow-y: auto;
+}
+.page-card h2 {
+  font-size: 1.65rem; font-weight: 900; color: #ffd700;
+  font-family: 'Cairo', sans-serif; margin-bottom: 22px; text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.page-card h2 .title-img { height: 38px; width: auto; object-fit: contain; }
+
+/* ── شرح اللعبة - أيقونات متساوية الحجم ── */
+.rule-item {
+  display: flex; gap: 14px; align-items: center;
+  background: rgba(255,255,255,0.055); border-radius: 13px;
+  padding: 14px 16px; margin-bottom: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.rule-img {
+  width: 40px; height: 40px; /* حجم ثابت لكل الأيقونات */
+  object-fit: contain; flex-shrink: 0;
+}
+.rule-item p { color: rgba(255,255,255,0.83); font-size: 1.02rem; line-height: 1.75; }
+
+.page-close {
+  position: absolute; top: 16px; left: 16px;
+  background: rgba(255,255,255,0.07); border: none; color: rgba(255,255,255,0.55);
+  font-size: 1.2rem; width: 34px; height: 34px; border-radius: 9px;
+  cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.page-close:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.updates-empty {
+  background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.22);
+  border-radius: 14px; padding: 22px 20px;
+  color: rgba(255,255,255,0.5); font-style: italic; text-align: center;
+  margin-top: 8px; font-size: 1rem;
+}
+
+/* ─── UPDATES LIST (من Firestore) ─── */
+.update-card {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.15);
+  border-radius: 16px; overflow: hidden; margin-bottom: 14px;
+}
+.update-card img { width: 100%; max-height: 200px; object-fit: cover; display: block; }
+.update-card-text { padding: 14px 16px; color: rgba(255,255,255,0.85); font-size: 0.97rem; line-height: 1.65; }
+.update-card-date { font-size: 0.78rem; color: rgba(255,215,0,0.5); margin-top: 6px; }
+
+/* ─── ADMIN ADD UPDATE BUTTON (مخفي افتراضياً) ─── */
+.admin-add-btn {
+  display: none; /* يظهر فقط للأدمن */
+  background: linear-gradient(135deg,#ff8c00,#ffd700); color: #1a1a2e;
+  border: none; border-radius: 12px; padding: 12px 22px;
+  font-size: 1rem; font-weight: 900; cursor: pointer;
+  font-family: 'Tajawal', sans-serif; margin-bottom: 18px;
+  width: 100%; transition: all 0.2s;
+}
+.admin-add-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 16px rgba(255,140,0,0.5); }
+.admin-add-btn.visible { display: block; }
+
+/* فورم إضافة تحديث (للأدمن) */
+.admin-form {
+  display: none; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,215,0,0.25);
+  border-radius: 16px; padding: 20px; margin-bottom: 18px;
+}
+.admin-form.visible { display: block; }
+.admin-form input[type="text"],
+.admin-form textarea {
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08);
+  color: #fff; font-family: 'Tajawal', sans-serif; font-size: 0.95rem;
+  outline: none; margin-bottom: 10px; resize: vertical;
+}
+.admin-form input[type="text"]:focus,
+.admin-form textarea:focus { border-color: rgba(255,215,0,0.5); }
+.admin-form label {
+  color: rgba(255,255,255,0.7); font-size: 0.88rem; font-weight: 700;
+  display: block; margin-bottom: 6px;
+}
+.admin-form-btns { display: flex; gap: 10px; margin-top: 4px; }
+.btn-admin-save {
+  background: linear-gradient(135deg,#2ecc40,#1a9e30); color: white;
+  border: none; border-radius: 10px; padding: 10px 22px;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: 'Tajawal', sans-serif; flex: 1;
+}
+.btn-admin-cancel {
+  background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 10px 16px;
+  font-size: 0.95rem; cursor: pointer; font-family: 'Tajawal', sans-serif;
+}
+
+.update-card { position: relative; }
+
+/* ─── FULL PAGE (تحديثات / Privacy / Terms) ─── */
+.full-page {
+  display: none; position: fixed; inset: 0;
+  background-image: url(BackGround.jpeg);
+  background-size: cover; background-position: center;
+  z-index: 1010; flex-direction: column; overflow: hidden;
+}
+.full-page::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--bg-overlay); z-index: 0;
+}
+.full-page.active { display: flex; }
+.full-page > * { position: relative; z-index: 1; }
+
+.full-page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--header-bg); backdrop-filter: blur(14px);
+  border-bottom: 2px solid rgba(255,215,0,0.22);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  flex-shrink: 0;
+}
+.full-page-header h2 {
+  font-size: 1.25rem; font-weight: 900; color: #ffd700;
+  font-family: 'Cairo', sans-serif; text-align: center;
+}
+.full-page-back {
+  background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8); font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem; font-weight: 700; padding: 8px 14px;
+  border-radius: 10px; cursor: pointer; transition: all 0.2s;
+}
+.full-page-back:hover { background: rgba(255,215,0,0.12); color: #ffd700; border-color: rgba(255,215,0,0.3); }
+
+.full-page-body {
+  flex: 1; overflow-y: auto; padding: 24px 20px;
+  max-width: 700px; margin: 0 auto; width: 100%;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.full-page-body::-webkit-scrollbar { display: none; }
+
+/* ─── POLICY CONTENT ─── */
+.policy-body { padding-bottom: 40px; }
+.policy-date {
+  color: rgba(255,215,0,0.5); font-size: 0.82rem;
+  text-align: center; margin-bottom: 22px;
+}
+.policy-section {
+  background: rgba(255,255,255,0.055); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px; padding: 18px 20px; margin-bottom: 14px;
+}
+.policy-section h3 {
+  color: #ffd700; font-size: 1.05rem; font-weight: 900;
+  font-family: 'Cairo', sans-serif; margin-bottom: 10px;
+}
+.policy-section p { color: rgba(255,255,255,0.82); font-size: 0.97rem; line-height: 1.85; }
+
+/* ─── IMG UPLOAD AREA ─── */
+.img-upload-area {
+  background: rgba(255,255,255,0.06); border: 2px dashed rgba(255,215,0,0.3);
+  border-radius: 12px; padding: 18px; text-align: center;
+  cursor: pointer; transition: all 0.2s; margin-bottom: 10px;
+  color: rgba(255,255,255,0.6); font-size: 0.95rem;
+}
+.img-upload-area:hover { background: rgba(255,215,0,0.08); border-color: rgba(255,215,0,0.5); }
+
+/* ─── SIDEBAR POLICY LINKS ─── */
+.sidebar-policy-link {
+  color: rgba(255,255,255,0.45); font-size: 0.75rem;
+  cursor: pointer; transition: color 0.2s;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.sidebar-policy-link:hover { color: rgba(255,215,0,0.75); }
+
+/* ─── USER PROFILE MODAL ─── */
+.user-profile-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,0,25,0.85); backdrop-filter: blur(10px);
+  z-index: 2100; align-items: center; justify-content: center; padding: 16px;
+}
+.user-profile-overlay.active { display: flex; }
+.user-profile-card {
+  background: linear-gradient(155deg, #1a0438 0%, #2b0858 100%);
+  border-radius: 24px; padding: 44px 36px 32px; max-width: 380px; width: 100%;
+  border: 1.5px solid rgba(255,215,0,0.3);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+  animation: slideIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  text-align: center; position: relative;
+}
+.user-profile-avatar-wrap {
+  width: 80px; height: 80px; border-radius: 50%;
+  border: 3px solid rgba(255,215,0,0.5);
+  margin: 0 auto 14px; overflow: hidden;
+  background: rgba(255,215,0,0.15);
+  display: flex; align-items: center; justify-content: center;
+}
+.user-profile-avatar { width: 100%; height: 100%; object-fit: cover; }
+.user-profile-name {
+  font-size: 1.3rem; font-weight: 900; color: #ffd700;
+  font-family: 'Cairo', sans-serif; margin-bottom: 6px;
+}
+.user-profile-email { color: rgba(255,255,255,0.5); font-size: 0.88rem; margin-bottom: 26px; }
+.user-profile-actions { display: flex; flex-direction: column; gap: 10px; }
+.btn-profile-logout {
+  background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.8); font-family: 'Tajawal', sans-serif;
+  font-size: 1rem; font-weight: 700; padding: 12px; border-radius: 12px;
+  cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-profile-logout:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.btn-profile-delete {
+  background: rgba(255,60,60,0.08); border: 1.5px solid rgba(255,80,80,0.25);
+  color: rgba(255,120,120,0.85); font-family: 'Tajawal', sans-serif;
+  font-size: 1rem; font-weight: 700; padding: 12px; border-radius: 12px;
+  cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-profile-delete:hover { background: rgba(255,60,60,0.18); color: #ff7070; }
+
+/* ─── CUSTOM DIALOG ─── */
+.custom-dialog-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,0,25,0.9); backdrop-filter: blur(10px);
+  z-index: 3000; align-items: center; justify-content: center; padding: 16px;
+}
+.custom-dialog-overlay.active { display: flex; }
+.custom-dialog {
+  background: linear-gradient(155deg, #1a0438 0%, #2b0858 100%);
+  border-radius: 22px; padding: 36px 32px; max-width: 360px; width: 100%;
+  border: 1.5px solid rgba(255,215,0,0.25);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+  animation: slideIn 0.3s ease; text-align: center;
+}
+.custom-dialog-icon { font-size: 2.8rem; margin-bottom: 12px; }
+.custom-dialog-title { font-size: 1.2rem; font-weight: 900; color: #ffd700; font-family: 'Cairo', sans-serif; margin-bottom: 10px; }
+.custom-dialog-msg { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.7; margin-bottom: 24px; }
+.custom-dialog-btns { display: flex; flex-direction: column; gap: 10px; }
+.custom-dialog-confirm {
+  background: linear-gradient(135deg,#c0392b,#e74c3c); color: white;
+  border: none; border-radius: 12px; padding: 13px; font-size: 1rem;
+  font-weight: 900; cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+}
+.custom-dialog-confirm:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(231,76,60,0.5); }
+.custom-dialog-cancel {
+  background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.65); border-radius: 12px; padding: 12px; font-size: 0.97rem;
+  font-weight: 700; cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+}
+.custom-dialog-cancel:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+/* ─── ADMIN DELETE BTN (رفع مستواها) ─── */
+.admin-delete-btn {
+  background: rgba(255,60,60,0.1); border: 1px solid rgba(255,80,80,0.3); 
+  color: rgba(255,120,120,0.85); font-size: 0.82rem; cursor: pointer; 
+  position: absolute; top: 10px; left: 10px; border-radius: 8px; padding: 5px 10px;
+  font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+}
+.admin-delete-btn:hover { background: rgba(255,60,60,0.22); color: #ff7070; }
+.question-loading {
+  font-size: 1rem; color: rgba(255,255,255,0.5);
+  text-align: center; padding: 14px 0; display: none;
+  font-style: italic;
+}
+.question-loading.visible { display: block; }
+
+/* ─── SETTINGS PAGE ─── */
+.settings-section { margin-bottom: 18px; }
+.settings-section-title {
+  font-size: 0.82rem; color: rgba(255,215,0,0.6); font-weight: 700;
+  letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase;
+}
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,0.06); border-radius: 13px;
+  padding: 14px 18px; border: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 8px;
+}
+.settings-row-label {
+  display: flex; align-items: center; gap: 12px;
+  color: rgba(255,255,255,0.85); font-size: 1rem; font-weight: 700;
+}
+.settings-row-label img { width: 26px; height: 26px; object-fit: contain; }
+
+/* Toggle Switch */
+.toggle-wrap { position: relative; display: inline-block; width: 52px; height: 28px; }
+.toggle-wrap input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background: rgba(255,255,255,0.15); border-radius: 28px;
+  transition: 0.35s; border: 1.5px solid rgba(255,255,255,0.2);
+}
+.toggle-slider::before {
+  content: ''; position: absolute; height: 20px; width: 20px;
+  left: 3px; bottom: 3px; background: rgba(255,255,255,0.6);
+  border-radius: 50%; transition: 0.35s;
+}
+input:checked + .toggle-slider { background: rgba(255,215,0,0.35); border-color: rgba(255,215,0,0.5); }
+input:checked + .toggle-slider::before { transform: translateX(24px); background: #ffd700; }
+
+/* ─── FIREBASE LOGIN MODAL ─── */
+.auth-modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,0,25,0.9); backdrop-filter: blur(10px);
+  z-index: 2000; align-items: center; justify-content: center; padding: 16px;
+}
+.auth-modal-overlay.active { display: flex; }
+.auth-modal {
+  background: linear-gradient(155deg, #1a0438 0%, #2b0858 100%);
+  border-radius: 24px; padding: 40px 38px; max-width: 420px; width: 100%;
+  border: 1.5px solid rgba(255,215,0,0.25);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+  animation: slideIn 0.35s ease; text-align: center;
+}
+.auth-modal h2 { font-size: 1.5rem; font-weight: 900; color: #ffd700; font-family: 'Cairo', sans-serif; margin-bottom: 6px; }
+.auth-modal p  { color: rgba(255,255,255,0.55); font-size: 0.9rem; margin-bottom: 28px; }
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 22px; }
+.auth-tab {
+  flex: 1; padding: 9px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.15);
+  background: none; color: rgba(255,255,255,0.5); font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+}
+.auth-tab.active { background: rgba(255,215,0,0.15); border-color: rgba(255,215,0,0.4); color: #ffd700; }
+.auth-input {
+  width: 100%; padding: 12px 16px; border-radius: 12px;
+  border: 1.5px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
+  color: #fff; font-family: 'Tajawal', sans-serif; font-size: 1rem;
+  outline: none; margin-bottom: 12px; text-align: right; transition: border-color 0.2s;
+}
+.auth-input:focus { border-color: rgba(255,215,0,0.5); }
+.btn-auth-submit {
+  width: 100%; padding: 13px; border-radius: 12px;
+  background: linear-gradient(135deg,#ff8c00,#ffd700); color: #1a1a2e;
+  font-size: 1.05rem; font-weight: 900; border: none; cursor: pointer;
+  font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(255,140,0,0.4); margin-top: 4px;
+}
+.btn-auth-submit:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(255,140,0,0.6); }
+.auth-error { color: #ff7070; font-size: 0.88rem; margin-top: 10px; min-height: 20px; }
+.auth-close {
+  position: absolute; top: 14px; left: 14px;
+  background: rgba(255,255,255,0.07); border: none; color: rgba(255,255,255,0.5);
+  width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  transition: all 0.2s;
+}
+.auth-close:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.auth-modal { position: relative; }
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════ */
+@media (max-width: 900px) {
+  :root { --hex-outer-w:150px; --hex-outer-h:162px; --hex-inner-w:140px; --hex-inner-h:151px; --hex-font:1.9rem; --hex-gap:4px; --hex-overlap:-38px; --hex-offset:-143px; }
+  header { padding: 10px 70px 10px 20px; min-height: 78px; }
+  .Logo { height: 65px; }
+  .team-score { padding: 8px 12px; min-width: 80px; }
+  .team-score .score-num { font-size: 1.9rem; }
+  .btn-round-winner { font-size: 0.85rem; padding: 10px 14px; }
+}
+@media (max-width: 600px) {
+  :root { --hex-outer-w:108px; --hex-outer-h:117px; --hex-inner-w:101px; --hex-inner-h:109px; --hex-font:1.25rem; --hex-gap:3px; --hex-overlap:-24px; --hex-offset:-92px; }
+  header { padding: 8px 58px 8px 12px; min-height: 66px; gap: 10px; }
+  .Logo { height: 52px; }
+  .team-score { padding: 6px 10px; min-width: 68px; border-radius: 10px; }
+  .team-score .team-name { font-size: 0.65rem; }
+  .team-score .score-num { font-size: 1.5rem; }
+  .btn-round-winner { font-size: 0.75rem; padding: 8px 10px; border-radius: 9px; }
+  .hamburger-btn { top: 14px; right: 14px; width: 42px; height: 42px; }
+  .sidebar { width: 82vw; right: -82vw; }
+  .board-wrapper { min-height: calc(100vh - 68px); padding: 10px 6px; }
+  .setup-card { padding: 28px 22px; gap: 20px; }
+  .setup-logo { width: 120px; }
+  .modal-body { padding: 18px 20px 22px; }
+  .modal .letter-display { font-size: 4rem; }
+  .modal .question { font-size: 1rem; padding: 13px 14px; }
+  .page-card { padding: 28px 22px; }
+  .rule-img { width: 32px; height: 32px; }
+}
+@media (max-width: 380px) {
+  :root { --hex-outer-w:90px; --hex-outer-h:97px; --hex-inner-w:84px; --hex-inner-h:91px; --hex-font:1.05rem; --hex-gap:2px; --hex-overlap:-20px; --hex-offset:-76px; }
+  .Logo { height: 46px; }
+  .team-score .score-num { font-size: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HAMBURGER -->
+<button class="hamburger-btn" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="Logo.png" class="sidebar-logo" alt="Logo">
+    <button class="sidebar-close" onclick="toggleSidebar()">&#x2715;</button>
+  </div>
+
+  <div class="sidebar-nav">
+    <!-- تسجيل الدخول -->
+    <button class="sidebar-login-btn" id="sidebarLoginBtn" onclick="openAuthModal()">
+      <img src="Login.png" class="item-icon" alt="تسجيل الدخول"
+           onerror="this.style.display='none'">
+      <span id="loginBtnText">تسجيل الدخول</span>
+    </button>
+    <!-- معلومات المستخدم بعد الدخول -->
+    <div class="sidebar-user-info" id="sidebarUserInfo" onclick="openUserProfile()" style="cursor:pointer">
+      <img src="" class="sidebar-user-avatar" id="userAvatar" alt="">
+      <span class="sidebar-user-name" id="userName">مرحباً</span>
+      <span style="color:rgba(255,215,0,0.5);font-size:0.75rem">←</span>
+    </div>
+
+    <div style="height:8px"></div>
+
+    <div class="sidebar-item" onclick="goHome()">
+      <img src="home.png" class="item-icon" alt="الرئيسية">
+      <span>الرئيسية</span>
+    </div>
+    <div class="sidebar-item" onclick="openPage('howtoplay')">
+      <img src="HowToPlay.png" class="item-icon" alt="شرح اللعبة">
+      <span>شرح اللعبة</span>
+    </div>
+    <div class="sidebar-item" onclick="openPage('updates')">
+      <img src="updates.png" class="item-icon" alt="التحديثات">
+      <span>التحديثات</span>
+    </div>
+    <div class="sidebar-item" onclick="openPage('settings')">
+      <img src="Settings.png" class="item-icon" alt="الاعدادات">
+      <span>الاعدادات</span>
+    </div>
+    <div class="sidebar-item" onclick="openContact()">
+      <img src="Contact.png" class="item-icon" alt="تواصل معنا">
+      <span>تواصل معنا</span>
+    </div>
+  </div>
+
+  <!-- Social links -->
+  <div class="sidebar-social">
+    <a class="social-link" href="https://x.com/RAYletters1" target="_blank" rel="noopener">
+      <img src="Xlogo.webp" alt="X">
+    </a>
+    <a class="social-link" href="https://www.tiktok.com/@rayletters.1?lang=en" target="_blank" rel="noopener">
+      <img src="TiktokLogo.png" alt="TikTok">
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:8px">
+      <span class="sidebar-policy-link" onclick="openPolicyPage('privacyOverlay');toggleSidebar()">سياسة الخصوصية</span>
+      <span style="color:rgba(255,255,255,0.2)">|</span>
+      <span class="sidebar-policy-link" onclick="openPolicyPage('termsOverlay');toggleSidebar()">شروط الاستخدام</span>
+    </div>
+    &#169; جميع الحقوق محفوظة لدى<br>
+    <strong style="color:rgba(255,215,0,0.75)">RAYteam</strong>
+  </div>
+</div>
+
+<!-- PAGE: شرح اللعبة -->
+<div class="page-overlay" id="howtoplayOverlay">
+  <div class="page-card">
+    <button class="page-close" onclick="closePage('howtoplayOverlay')">&#x2715;</button>
+    <h2>
+      <img src="Book.png" class="title-img" alt="">
+      شرح اللعبة
+    </h2>
+    <div class="rule-item">
+      <img src="Explain.png" class="rule-img" alt="">
+      <p>فريقين يتنافسون على سباق حروف في الخلايا</p>
+    </div>
+    <div class="rule-item">
+      <img src="GreenCell.png" class="rule-img" alt="">
+      <p>الفريق الأخضر يستطيع تجميع الحروف بشكل عامودي ولا يمكنه تجميعها بشكل أفقي</p>
+    </div>
+    <div class="rule-item">
+      <img src="OrangeCell.png" class="rule-img" alt="">
+      <p>الفريق البرتقالي يستطيع تجميع الحروف بشكل أفقي ولا يمكنه تجميعها بشكل عامودي</p>
+    </div>
+    <div class="rule-item">
+      <img src="GoldenCell.png" class="rule-img" alt="">
+      <p>البداية تكون من الخلية الذهبية التي في المنتصف</p>
+    </div>
+    <div class="rule-item">
+      <img src="wait.png" class="rule-img" alt="">
+      <p>إذا أحد الفريقين أجاب ولم تكن الإجابة صحيحة، يتوقف الفريق عن الإجابات لمدة 10 ثواني</p>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: التحديثات (صفحة كاملة) -->
+<div class="full-page" id="updatesOverlay">
+  <div class="full-page-header">
+    <button class="full-page-back" onclick="closePage('updatesOverlay')">&#x2B60; رجوع</button>
+    <h2>التحديثات</h2>
+    <div style="width:90px"></div>
+  </div>
+  <div class="full-page-body">
+
+    <!-- زر إضافة تحديث (للأدمن فقط) -->
+    <button class="admin-add-btn" id="adminAddBtn" onclick="toggleAdminForm()">
+      + إضافة تحديث جديد
+    </button>
+
+    <!-- فورم الإضافة (للأدمن) -->
+    <div class="admin-form" id="adminForm">
+      <label>صورة التحديث (اختر من جهازك أو اتركه فارغاً)</label>
+      <input type="file" id="updateImgFile" accept="image/*" style="display:none" onchange="previewImage(this)"/>
+      <div class="img-upload-area" onclick="document.getElementById('updateImgFile').click()">
+        <span id="imgUploadLabel">اضغط لاختيار صورة</span>
+        <img id="imgPreview" src="" alt="" style="display:none;max-height:120px;border-radius:10px;margin-top:8px;width:100%;object-fit:cover"/>
+      </div>
+      <label>نص التحديث</label>
+      <textarea id="updateText" rows="3" placeholder="اكتب نص التحديث هنا..."></textarea>
+      <div class="admin-form-btns">
+        <button class="btn-admin-save" onclick="saveUpdate()">حفظ التحديث</button>
+        <button class="btn-admin-cancel" onclick="toggleAdminForm()">إلغاء</button>
+      </div>
+    </div>
+
+    <!-- قائمة التحديثات من Firestore -->
+    <div id="updatesList">
+      <div class="updates-empty" id="updatesEmpty">قريباً... سيتم إضافة التحديثات هنا</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: الاعدادات -->
+<div class="page-overlay" id="settingsOverlay">
+  <div class="page-card">
+    <button class="page-close" onclick="closePage('settingsOverlay')">&#x2715;</button>
+    <h2>
+      <img src="Settings.png" class="title-img" alt="">
+      الاعدادات
+    </h2>
+    <div class="settings-section">
+      <div class="settings-section-title">المظهر</div>
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <img src="Moon.png" id="darkModeIcon" alt="الوضع الداكن">
+          <span id="darkModeLabel">الوضع الداكن</span>
+        </div>
+        <label class="toggle-wrap">
+          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: سياسة الخصوصية (صفحة كاملة) -->
+<div class="full-page" id="privacyOverlay">
+  <div class="full-page-header">
+    <button class="full-page-back" onclick="closePage('privacyOverlay')">&#x2B60; رجوع</button>
+    <h2>سياسة الخصوصية</h2>
+    <div style="width:90px"></div>
+  </div>
+  <div class="full-page-body policy-body">
+    <p class="policy-date">آخر تحديث: فبراير 2026</p>
+
+    <div class="policy-section">
+      <h3>مرحباً بكم في حروف مع ريان</h3>
+      <p>نحن في فريق RAYteam نحرص على خصوصيتكم ونلتزم بحمايتها. تشرح هذه السياسة كيفية تعاملنا مع المعلومات عند استخدامكم لموقعنا.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>المعلومات التي نجمعها</h3>
+      <p>لا نقوم بجمع أو تخزين أو بيع أي بيانات شخصية لمستخدمينا. الموقع لا يتطلب التسجيل لاستخدام المحتوى الأساسي. في حال اخترت تسجيل الدخول، نحتفظ فقط بالبيانات الضرورية مثل اسم المستخدم والبريد الإلكتروني لأغراض تشغيلية فقط.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>استخدام المعلومات</h3>
+      <p>أي بيانات يتم التعامل معها تُستخدم حصراً لتشغيل خدمات الموقع وتحسين تجربة المستخدم. نحن لا نبيع أي معلومات لطرف ثالث، ولا نشاركها مع جهات تسويقية بأي شكل من الأشكال.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>الإعلانات وGoogle AdSense</h3>
+      <p>قد يستخدم موقعنا Google AdSense لعرض إعلانات مناسبة. تستخدم Google ملفات تعريف الارتباط (Cookies) لتخصيص الإعلانات بناءً على زيارات المستخدمين السابقة. يمكنكم الاطلاع على سياسة خصوصية Google للمزيد من التفاصيل. لا نتحكم في طريقة جمع Google لهذه البيانات أو استخدامها.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>روابط الطرف الثالث</h3>
+      <p>قد يحتوي الموقع على روابط لمواقع خارجية مثل متجر اللعبة أو منصات التواصل الاجتماعي. نحن غير مسؤولين عن سياسات الخصوصية الخاصة بتلك المواقع، وننصح بمراجعة سياساتهم بشكل مستقل.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>ملفات تعريف الارتباط (Cookies)</h3>
+      <p>قد يستخدم الموقع ملفات تعريف الارتباط لحفظ تفضيلاتك مثل الوضع الداكن. هذه الملفات لا تحتوي على معلومات شخصية ولا تُشارك مع أي جهة خارجية.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>التواصل معنا</h3>
+      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b1e3f0e8c5d4d0dc83818387f1dec4c5dddededa9fd2dedc">[email&#160;protected]</a></span></p>
+    </div>
+
+    <div class="policy-section">
+      <h3>التحديثات</h3>
+      <p>قد نُحدّث هذه السياسة من وقت لآخر. سنقوم بتحديث التاريخ أعلى الصفحة عند إجراء أي تغييرات جوهرية.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: شروط الاستخدام (صفحة كاملة) -->
+<div class="full-page" id="termsOverlay">
+  <div class="full-page-header">
+    <button class="full-page-back" onclick="closePage('termsOverlay')">&#x2B60; رجوع</button>
+    <h2>شروط الاستخدام</h2>
+    <div style="width:90px"></div>
+  </div>
+  <div class="full-page-body policy-body">
+    <p class="policy-date">آخر تحديث: فبراير 2026</p>
+
+    <div class="policy-section">
+      <h3>مقدمة</h3>
+      <p>مرحباً بكم في موقع "حروف مع ريان". باستخدامكم لهذا الموقع، فإنكم توافقون على الالتزام بشروط الاستخدام الموضحة أدناه. إذا كنتم لا توافقون على هذه الشروط، يُرجى عدم استخدام الموقع.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>استخدام الموقع</h3>
+      <p>يُتيح هذا الموقع للزائرين الاستمتاع بلعبة "حروف مع ريان" والاطلاع على محتوياتها. يلتزم المستخدم باستخدام الموقع لأغراض مشروعة فقط، وعدم محاولة الإضرار بالموقع أو باقي المستخدمين بأي شكل.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>حقوق الملكية الفكرية</h3>
+      <p>جميع المحتويات الموجودة على هذا الموقع، بما تشمل الصور والرسومات والنصوص وتصميم اللعبة، هي ملك حصري لفريق RAYteam ومحمية بموجب قوانين حقوق الملكية الفكرية. لا يُسمح بنسخ أي محتوى أو إعادة نشره أو تعديله أو توزيعه بأي شكل دون الحصول على إذن كتابي مسبق من أصحاب الموقع.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>إخلاء المسؤولية</h3>
+      <p>يُقدَّم الموقع "كما هو" دون أي ضمانات صريحة أو ضمنية. لا يتحمل فريق RAYteam أي مسؤولية عن أي خسائر أو أضرار مباشرة أو غير مباشرة تنجم عن استخدام الموقع أو عدم القدرة على استخدامه، بما في ذلك المشاكل التقنية أو انقطاع الخدمة.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>الإعلانات</h3>
+      <p>قد يعرض الموقع إعلانات من Google AdSense. هذه الإعلانات خارج سيطرتنا المباشرة وخاضعة لسياسات Google. لسنا مسؤولين عن محتوى هذه الإعلانات أو دقتها.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>روابط خارجية</h3>
+      <p>قد يتضمن الموقع روابط لمواقع خارجية. هذه الروابط مُقدَّمة للراحة فقط، ولا نتحمل أي مسؤولية عن محتوى المواقع الخارجية أو سياساتها.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>تعديل الشروط</h3>
+      <p>نحتفظ بحق تعديل هذه الشروط في أي وقت. سيتم تحديث التاريخ أعلى الصفحة عند إجراء أي تغييرات. الاستمرار في استخدام الموقع بعد التحديث يعني موافقتك على الشروط الجديدة.</p>
+    </div>
+
+    <div class="policy-section">
+      <h3>التواصل معنا</h3>
+      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="de8c9f87aabbbfb3eceeece89eb1abaab2b1b1b5f0bdb1b3">[email&#160;protected]</a></span></p>
+    </div>
+  </div>
+</div>
+
+<!-- USER PROFILE MODAL -->
+<div class="user-profile-overlay" id="userProfileOverlay" onclick="closeUserProfile(event)">
+  <div class="user-profile-card" id="userProfileCard">
+    <button class="page-close" onclick="closeUserProfileDirect()" style="position:absolute;top:14px;left:14px">&#x2715;</button>
+    <div class="user-profile-avatar-wrap">
+      <img src="" id="profileAvatar" class="user-profile-avatar" alt="">
+    </div>
+    <h3 id="profileName" class="user-profile-name">-</h3>
+    <p id="profileEmail" class="user-profile-email">-</p>
+    <div class="user-profile-actions">
+      <button class="btn-profile-logout" onclick="logoutFromProfile()">
+        تسجيل الخروج
+      </button>
+      <button class="btn-profile-delete" onclick="openDeleteAccountDialog()">
+        حذف الحساب
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM DELETE ACCOUNT DIALOG -->
+<div class="custom-dialog-overlay" id="deleteAccountOverlay">
+  <div class="custom-dialog">
+    <div class="custom-dialog-icon"></div>
+    <h3 class="custom-dialog-title">حذف الحساب</h3>
+    <p class="custom-dialog-msg">هل أنت متأكد أنك تريد حذف حسابك؟<br>هذه العملية لا يمكن التراجع عنها.</p>
+    <div class="custom-dialog-btns">
+      <button class="custom-dialog-confirm" onclick="deleteUserAccount()">نعم، احذف حسابي</button>
+      <button class="custom-dialog-cancel" onclick="closeDeleteDialog()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM DELETE UPDATE DIALOG -->
+<div class="custom-dialog-overlay" id="deleteUpdateOverlay">
+  <div class="custom-dialog">
+    <div class="custom-dialog-icon"></div>
+    <h3 class="custom-dialog-title">حذف التحديث</h3>
+    <p class="custom-dialog-msg">هل تريد حذف هذا التحديث؟</p>
+    <div class="custom-dialog-btns">
+      <button class="custom-dialog-confirm" onclick="confirmDeleteUpdate()">نعم، احذف</button>
+      <button class="custom-dialog-cancel" onclick="closeDeleteUpdateDialog()">إلغاء</button>
+    </div>
+  </div>
+</div>
+<div class="auth-modal-overlay" id="authModalOverlay">
+  <div class="auth-modal">
+    <button class="auth-close" onclick="closeAuthModal()">&#x2715;</button>
+    <h2>مرحباً بك</h2>
+    <p>سجل دخولك للوصول لجميع الميزات</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">تسجيل الدخول</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">حساب جديد</button>
+    </div>
+    <div id="authLoginForm">
+      <input class="auth-input" type="email" id="loginEmail" placeholder="البريد الإلكتروني" />
+      <input class="auth-input" type="password" id="loginPassword" placeholder="كلمة المرور" />
+      <button class="btn-auth-submit" onclick="loginUser()">دخول</button>
+    </div>
+    <div id="authRegisterForm" style="display:none">
+      <input class="auth-input" type="text"  id="regName"     placeholder="الاسم" />
+      <input class="auth-input" type="email" id="regEmail"    placeholder="البريد الإلكتروني" />
+      <input class="auth-input" type="password" id="regPassword" placeholder="كلمة المرور" />
+      <button class="btn-auth-submit" onclick="registerUser()">إنشاء حساب</button>
+    </div>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<!-- SETUP SCREEN -->
+<div class="setup-screen" id="setupScreen">
+  <div class="setup-card">
+    <img src="Logo.png" class="setup-logo" alt="Logo">
+    <p class="setup-title">أدخل أسماء الفريقين للبدء</p>
+    <div class="team-setup">
+      <div class="team-box orange">
+        <label>الفريق البرتقالي</label>
+        <input type="text" id="orangeName" value="الفريق البرتقالي" />
+      </div>
+      <div class="team-box green">
+        <label>الفريق الأخضر</label>
+        <input type="text" id="greenName" value="الفريق الأخضر" />
+      </div>
+    </div>
+    <button class="btn btn-start" onclick="startGame()">ابدأ اللعبة</button>
+  </div>
+</div>
+
+<!-- NOTICE TOAST -->
+<div id="customNotice" class="custom-notice">
+  <div class="notice-content">
+    <p>يجب أن تبدأ اللعب من الخلية الذهبية في المنتصف</p>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="scores">
+    <div class="team-score orange" id="scoreOrange">
+      <span class="team-name" id="orangeLabel">برتقالي</span>
+      <span class="score-num" id="orangeScore">0</span>
+    </div>
+    <div class="team-score green" id="scoreGreen">
+      <span class="team-name" id="greenLabel">أخضر</span>
+      <span class="score-num" id="greenScore">0</span>
+    </div>
+  </div>
+  <img class="Logo" src="Logo.png" alt="حروف مع ريان">
+  <button class="btn-round-winner" onclick="openRoundModal()">فائز الجولة</button>
+</header>
+
+<!-- ROUND WINNER MODAL -->
+<div class="modal-overlay" id="roundWinnerOverlay">
+  <div class="round-modal">
+    <div class="round-modal-header">
+      <h2 id="roundModalTitle">نهاية الجولة</h2>
+    </div>
+    <div class="round-modal-body">
+      <p>اختر الفريق الفائز بهذه الجولة</p>
+      <div class="round-team-btns">
+        <button class="round-team-btn orange-btn" onclick="announceRoundWinner('orange')">
+          <span id="roundOrangeName">برتقالي</span>
+        </button>
+        <button class="round-team-btn green-btn" onclick="announceRoundWinner('green')">
+          <span id="roundGreenName">أخضر</span>
+        </button>
+      </div>
+      <button class="btn-cancel-round" onclick="closeRoundModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOARD -->
+<div class="board-wrapper">
+  <div class="hex-grid" id="hexGrid"></div>
+</div>
+
+<!-- QUESTION MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="questionModal">
+    <div class="modal-top-bar"></div>
+    <div class="modal-body">
+      <h2>السؤال عن حرف</h2>
+      <div class="letter-display" id="modalLetter">ب</div>
+      <div class="question" id="questionText">
+        <span class="question-loading visible" id="questionLoading">جاري تحميل السؤال...</span>
+        <span id="questionContent"></span>
+      </div>
+      <button class="btn-reveal" id="revealBtn" onclick="revealAnswer()">اظهر الإجابة</button>
+      <div class="answer" id="answerText"></div>
+      <div class="action-buttons" id="actionButtons">
+        <button class="btn btn-orange-win" id="btnOrangeWin" onclick="claimCell('orange')">فاز البرتقالي</button>
+        <button class="btn btn-green-win"  id="btnGreenWin"  onclick="claimCell('green')">فاز الأخضر</button>
+        <button class="btn btn-skip" onclick="skipTurn()">لا أحد</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WIN SCREEN -->
+<div class="win-screen" id="winScreen">
+  <div class="win-content">
+    <h1 id="winTitle">فاز الفريق</h1>
+    <p id="winSubtitle">النتيجة النهائية</p>
+    <button class="btn btn-restart" onclick="location.reload()">العب مرة ثانية</button>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script>
+// ════════════════════════════════════════
+const firebaseConfig = {
+  apiKey:            "AIzaSyCYtQap5fGQAc5rgMC05if2ucg5KuYCEFo",
+  authDomain:        "rayletter-c3335.firebaseapp.com",
+  projectId:         "rayletter-c3335",
+  storageBucket:     "rayletter-c3335.firebasestorage.app",
+  messagingSenderId: "1017186794699",
+  appId:             "1:1017186794699:web:29e5c2952fde71f94daf4e",
+  measurementId:     "G-HLWV64Q7W4"
+};
+firebase.initializeApp(firebaseConfig);
+const auth      = firebase.auth();
+const db        = firebase.firestore();
+const storage   = firebase.storage();
+
+// Admin UID — ضع هنا UID حسابك بعد أول تسجيل دخول
+const ADMIN_UID = "rHfHXjjz0uQ69ADsgji1CgV46aB2";
+
+// ════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════
+let currentUser = null;
+
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+  updateAuthUI(user);
+  checkAdminAccess(user);
+});
+
+function updateAuthUI(user) {
+  const loginBtn  = document.getElementById('sidebarLoginBtn');
+  const userInfo  = document.getElementById('sidebarUserInfo');
+  const userName  = document.getElementById('userName');
+  const userAvatar = document.getElementById('userAvatar');
+
+  if (user) {
+    loginBtn.style.display = 'none';
+    userInfo.classList.add('visible');
+    userName.textContent = user.displayName || user.email.split('@')[0];
+    if (user.photoURL) userAvatar.src = user.photoURL;
+    else userAvatar.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffd700"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
+  } else {
+    loginBtn.style.display = 'flex';
+    userInfo.classList.remove('visible');
+  }
+}
+
+function checkAdminAccess(user) {
+  const adminBtn = document.getElementById('adminAddBtn');
+  if (user && user.uid === ADMIN_UID) {
+    adminBtn.classList.add('visible');
+  } else {
+    adminBtn.classList.remove('visible');
+    document.getElementById('adminForm').classList.remove('visible');
+  }
+}
+
+function openAuthModal() {
+  toggleSidebar();
+  document.getElementById('authModalOverlay').classList.add('active');
+}
+function closeAuthModal() {
+  document.getElementById('authModalOverlay').classList.remove('active');
+  document.getElementById('authError').textContent = '';
+}
+function switchTab(tab) {
+  document.getElementById('authLoginForm').style.display   = tab === 'login'    ? 'block' : 'none';
+  document.getElementById('authRegisterForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tabLogin').classList.toggle('active',    tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('authError').textContent = '';
+}
+
+async function loginUser() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('authError');
+  const btn   = document.querySelector('#authLoginForm .btn-auth-submit');
+
+  if (!email) { errEl.textContent = 'أدخل البريد الإلكتروني'; return; }
+  if (!pass)  { errEl.textContent = 'أدخل كلمة المرور'; return; }
+
+  btn.textContent = 'جاري الدخول...';
+  btn.disabled = true;
+  errEl.textContent = '';
+
+  try {
+    await auth.signInWithEmailAndPassword(email, pass);
+    closeAuthModal();
+  } catch(e) {
+    errEl.textContent = translateAuthError(e.code) + (e.code ? ' [' + e.code + ']' : '');
+    console.error('Firebase Auth Error:', e.code, e.message);
+  } finally {
+    btn.textContent = 'دخول';
+    btn.disabled = false;
+  }
+}
+
+async function registerUser() {
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass  = document.getElementById('regPassword').value;
+  const errEl = document.getElementById('authError');
+  const btn   = document.querySelector('#authRegisterForm .btn-auth-submit');
+
+  if (!name)  { errEl.textContent = 'أدخل اسمك'; return; }
+  if (!email) { errEl.textContent = 'أدخل البريد الإلكتروني'; return; }
+  if (!pass)  { errEl.textContent = 'أدخل كلمة المرور'; return; }
+  if (pass.length < 6) { errEl.textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'; return; }
+
+  btn.textContent = 'جاري الإنشاء...';
+  btn.disabled = true;
+  errEl.textContent = '';
+
+  try {
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    await cred.user.updateProfile({ displayName: name });
+    closeAuthModal();
+  } catch(e) {
+    errEl.textContent = translateAuthError(e.code) + (e.code ? ' [' + e.code + ']' : '');
+    console.error('Firebase Auth Error:', e.code, e.message);
+  } finally {
+    btn.textContent = 'إنشاء حساب';
+    btn.disabled = false;
+  }
+}
+
+async function logoutUser() {
+  await auth.signOut();
+}
+
+// ════════════════════════════════════════
+// USER PROFILE
+// ════════════════════════════════════════
+function openUserProfile() {
+  const user = currentUser;
+  if (!user) return;
+  toggleSidebar();
+  document.getElementById('profileName').textContent = user.displayName || user.email.split('@')[0];
+  document.getElementById('profileEmail').textContent = user.email;
+  const avatar = document.getElementById('profileAvatar');
+  if (user.photoURL) avatar.src = user.photoURL;
+  else avatar.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffd700"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
+  document.getElementById('userProfileOverlay').classList.add('active');
+}
+function closeUserProfile(e) {
+  if (e.target === document.getElementById('userProfileOverlay')) {
+    document.getElementById('userProfileOverlay').classList.remove('active');
+  }
+}
+function closeUserProfileDirect() {
+  document.getElementById('userProfileOverlay').classList.remove('active');
+}
+async function logoutFromProfile() {
+  closeUserProfileDirect();
+  await auth.signOut();
+}
+function openDeleteAccountDialog() {
+  closeUserProfileDirect();
+  document.getElementById('deleteAccountOverlay').classList.add('active');
+}
+function closeDeleteDialog() {
+  document.getElementById('deleteAccountOverlay').classList.remove('active');
+}
+async function deleteUserAccount() {
+  try {
+    await currentUser.delete();
+    closeDeleteDialog();
+  } catch(e) {
+    closeDeleteDialog();
+    // If requires re-auth, sign out instead
+    await auth.signOut();
+  }
+}
+
+// ════════════════════════════════════════
+// IMAGE PREVIEW
+// ════════════════════════════════════════
+function previewImage(input) {
+  const preview = document.getElementById('imgPreview');
+  const label = document.getElementById('imgUploadLabel');
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      label.textContent = 'تم اختيار الصورة';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function translateAuthError(code) {
+  const map = {
+    'auth/invalid-email':           'البريد الإلكتروني غير صحيح',
+    'auth/user-not-found':          'لا يوجد حساب بهذا البريد',
+    'auth/wrong-password':          'كلمة المرور غير صحيحة',
+    'auth/invalid-credential':      'البريد أو كلمة المرور غير صحيحة',
+    'auth/email-already-in-use':    'البريد مستخدم مسبقاً',
+    'auth/weak-password':           'كلمة المرور ضعيفة (6 أحرف على الأقل)',
+    'auth/too-many-requests':       'محاولات كثيرة، حاول بعد قليل',
+    'auth/network-request-failed':  'مشكلة في الاتصال بالإنترنت',
+    'auth/operation-not-allowed':   'Email/Password غير مفعّل - فعّله من Firebase Console',
+    'auth/configuration-not-found': 'إعداد Firebase غير مكتمل',
+    'auth/user-disabled':           'هذا الحساب موقوف',
+    'auth/internal-error':          'خطأ داخلي في Firebase',
+  };
+  return map[code] || 'خطأ غير معروف';
+}
+
+// ════════════════════════════════════════
+// UPDATES (Firestore)
+// ════════════════════════════════════════
+let adminFormVisible = false;
+
+function toggleAdminForm() {
+  adminFormVisible = !adminFormVisible;
+  document.getElementById('adminForm').classList.toggle('visible', adminFormVisible);
+}
+
+async function saveUpdate() {
+  const fileInput = document.getElementById('updateImgFile');
+  const text   = document.getElementById('updateText').value.trim();
+  if (!text) { showToast('أدخل نص التحديث'); return; }
+
+  let imgUrl = '';
+  const btn = document.querySelector('.btn-admin-save');
+  btn.textContent = 'جاري الحفظ...';
+  btn.disabled = true;
+
+  try {
+    // محاولة رفع الصورة
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+      try {
+        // حاول رفع على Storage أولاً
+        const ref = storage.ref('updates/' + Date.now() + '_' + file.name);
+        await ref.put(file);
+        imgUrl = await ref.getDownloadURL();
+      } catch(storageErr) {
+        // إذا فشل Storage، احفظ كـ base64 مباشرة في Firestore
+        imgUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    await db.collection('updates').add({
+      imgUrl,
+      text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    // reset form
+    fileInput.value = '';
+    document.getElementById('imgPreview').style.display = 'none';
+    document.getElementById('imgUploadLabel').textContent = 'اضغط لاختيار صورة';
+    document.getElementById('updateText').value = '';
+    toggleAdminForm();
+    loadUpdates();
+    showToast('تم حفظ التحديث بنجاح');
+  } catch(e) {
+    showToast('حدث خطأ: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.textContent = 'حفظ التحديث';
+    btn.disabled = false;
+  }
+}
+
+let pendingDeleteId = null;
+function deleteUpdate(id) {
+  pendingDeleteId = id;
+  document.getElementById('deleteUpdateOverlay').classList.add('active');
+}
+function closeDeleteUpdateDialog() {
+  document.getElementById('deleteUpdateOverlay').classList.remove('active');
+  pendingDeleteId = null;
+}
+async function confirmDeleteUpdate() {
+  if (!pendingDeleteId) return;
+  await db.collection('updates').doc(pendingDeleteId).delete();
+  closeDeleteUpdateDialog();
+  loadUpdates();
+}
+
+async function loadUpdates() {
+  const listEl  = document.getElementById('updatesList');
+  const emptyEl = document.getElementById('updatesEmpty');
+  try {
+    const snap = await db.collection('updates').orderBy('createdAt','desc').get();
+    if (snap.empty) {
+      emptyEl.style.display = 'block';
+      listEl.innerHTML = '';
+      listEl.appendChild(emptyEl);
+      return;
+    }
+    listEl.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const card = document.createElement('div');
+      card.className = 'update-card';
+      const isAdmin = currentUser && currentUser.uid === ADMIN_UID;
+      card.innerHTML = `
+        ${isAdmin ? `<button class="admin-delete-btn" onclick="deleteUpdate('${doc.id}')">حذف</button>` : ''}
+        ${d.imgUrl ? `<img src="${d.imgUrl}" alt="تحديث" onerror="this.style.display='none'">` : ''}
+        <div class="update-card-text">
+          ${d.text}
+          <div class="update-card-date">${d.createdAt ? new Date(d.createdAt.seconds*1000).toLocaleDateString('ar-SA') : ''}</div>
+        </div>
+      `;
+      listEl.appendChild(card);
+    });
+  } catch(e) {
+    emptyEl.style.display = 'block';
+    emptyEl.textContent = 'قريباً... سيتم إضافة التحديثات هنا';
+  }
+}
+
+// ════════════════════════════════════════
+// QUESTIONS FROM FIRESTORE
+// ════════════════════════════════════════
+// هيكل Firestore:
+// Collection: "questions"
+// Document:   letter (e.g. "أ")
+// Field:      questions → array of { q: "...", a: "..." }
+// أو sub-collection: "questions/{letter}/items/{id}" → { q, a }
+
+let cachedQuestions = {}; // cache بعد أول تحميل
+
+async function fetchQuestionsForLetter(letter) {
+  if (cachedQuestions[letter]) return cachedQuestions[letter];
+  try {
+    const doc = await db.collection('questions').doc(letter).get();
+    if (doc.exists && doc.data().questions) {
+      cachedQuestions[letter] = doc.data().questions;
+      return cachedQuestions[letter];
+    }
+  } catch(e) { /* fail silently */ }
+  return null;
+}
+
+// ════════════════════════════════════════
+// DARK MODE
+// ════════════════════════════════════════
+function toggleDarkMode(enabled) {
+  document.body.classList.toggle('dark-mode', enabled);
+  localStorage.setItem('darkMode', enabled ? '1' : '0');
+  const icon  = document.getElementById('darkModeIcon');
+  const label = document.getElementById('darkModeLabel');
+  if (enabled) {
+    icon.src  = 'Moon.png';
+    label.textContent = 'الوضع الداكن';
+  } else {
+    icon.src  = 'Sun.png';
+    label.textContent = 'الوضع الطبيعي';
+  }
+}
+// تذكر الاختيار عند الفتح
+(function() {
+  const saved = localStorage.getItem('darkMode');
+  if (saved === '1') {
+    document.body.classList.add('dark-mode');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('darkModeToggle').checked = true;
+      document.getElementById('darkModeIcon').src = 'Moon.png';
+      document.getElementById('darkModeLabel').textContent = 'الوضع الداكن';
+    });
+  }
+})();
+
+// ════════════════════════════════════════
+// SIDEBAR
+// ════════════════════════════════════════
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+function goHome() {
+  toggleSidebar();
+  document.getElementById('setupScreen').style.display = 'flex';
+}
+function openPage(id) {
+  toggleSidebar();
+  if (id === 'updates') loadUpdates();
+  document.getElementById(id + 'Overlay').classList.add('active');
+}
+function openPolicyPage(id) {
+  document.getElementById(id).classList.add('active');
+}
+function closePage(id) {
+  document.getElementById(id).classList.remove('active');
+}
+function openContact() {
+  toggleSidebar();
+  window.location.href = 'mailto:RAYteam2026@outlook.com';
+}
+
+// ════════════════════════════════════════
+// GAME VARIABLES
+// ════════════════════════════════════════
+const allLetters = ['أ','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
+
+let teamNames     = { orange:'الفريق البرتقالي', green:'الفريق الأخضر' };
+let scores        = { orange:0, green:0 };
+let roundWins     = { orange:0, green:0 };
+let currentTurn   = 'orange';
+let currentRound  = 1;
+let firstMoveDone = false;
+let usedQuestions = {};
+let cells         = [];
+let currentCell   = null;
+let answerVisible = false;
+let currentQ      = null; // السؤال الحالي من Firestore
+
+// ════════════════════════════════════════
+// BUILD GRID
+// ════════════════════════════════════════
+function buildGrid() {
+  const grid = document.getElementById('hexGrid');
+  grid.innerHTML = '';
+  cells = [];
+  firstMoveDone = false;
+  answerVisible = false;
+
+  const shuffled = [...allLetters].sort(() => Math.random() - 0.5).slice(0, 25);
+  const layout = [5, 5, 5, 5, 5];
+  let idx = 0;
+
+  layout.forEach((count, rowIdx) => {
+    const row = document.createElement('div');
+    row.className = 'hex-row' + (rowIdx % 2 !== 0 ? ' offset' : '');
+
+    for (let i = 0; i < count; i++) {
+      const letter = shuffled[idx];
+      const outer  = document.createElement('div');
+      outer.className = 'hex-outer';
+      const cell = document.createElement('div');
+      cell.className = 'hex-cell';
+      cell.textContent = letter;
+      cell.dataset.letter  = letter;
+      cell.dataset.index   = idx;
+      cell.dataset.claimed = 'false';
+
+      if (idx === 12) {
+        cell.classList.add('gold-cell');
+        outer.classList.add('gold-outer');
+      }
+
+      cell.addEventListener('click', () => onCellClick(cell));
+      outer.appendChild(cell);
+      row.appendChild(outer);
+      cells.push(cell);
+      idx++;
+    }
+    grid.appendChild(row);
+  });
+}
+
+// ════════════════════════════════════════
+// GAME LOGIC
+// ════════════════════════════════════════
+function startGame() {
+  const oName = document.getElementById('orangeName').value;
+  const gName = document.getElementById('greenName').value;
+  teamNames.orange = oName || 'الفريق البرتقالي';
+  teamNames.green  = gName || 'الفريق الأخضر';
+  document.getElementById('orangeLabel').textContent  = teamNames.orange;
+  document.getElementById('greenLabel').textContent   = teamNames.green;
+  document.getElementById('btnOrangeWin').textContent = 'فاز ' + teamNames.orange;
+  document.getElementById('btnGreenWin').textContent  = 'فاز ' + teamNames.green;
+  document.getElementById('setupScreen').style.display = 'none';
+  roundWins = { orange:0, green:0 };
+  scores    = { orange:0, green:0 };
+  currentRound = 1;
+  document.getElementById('orangeScore').textContent = '0';
+  document.getElementById('greenScore').textContent  = '0';
+  usedQuestions = {};
+  buildGrid();
+}
+
+async function onCellClick(cell) {
+  if (cell.dataset.claimed === 'true') return;
+  const cellIdx = parseInt(cell.dataset.index);
+  if (!firstMoveDone && cellIdx !== 12) { showNotice(); return; }
+
+  currentCell = cell;
+  const letter = cell.dataset.letter;
+  document.getElementById('modalLetter').textContent = letter;
+
+  // إظهار المودال مباشرة مع loading
+  document.getElementById('questionContent').textContent = '';
+  document.getElementById('questionLoading').classList.add('visible');
+  document.getElementById('answerText').style.display   = 'none';
+  document.getElementById('actionButtons').className    = 'action-buttons';
+  answerVisible = false;
+  document.getElementById('revealBtn').textContent = 'اظهر الإجابة';
+  const modal = document.getElementById('questionModal');
+  modal.className = 'modal ' + (currentTurn === 'orange' ? 'orange-modal' : 'green-modal');
+  document.getElementById('modalOverlay').classList.add('active');
+
+  // جلب السؤال من Firestore
+  const qList = await fetchQuestionsForLetter(letter);
+  document.getElementById('questionLoading').classList.remove('visible');
+
+  if (qList && qList.length > 0) {
+    if (!usedQuestions[letter]) usedQuestions[letter] = [];
+    const avail = qList.map((_,i)=>i).filter(i => !usedQuestions[letter].includes(i));
+    let chosen = avail.length > 0
+      ? avail[Math.floor(Math.random() * avail.length)]
+      : Math.floor(Math.random() * qList.length);
+    if (avail.length > 0) usedQuestions[letter].push(chosen);
+    currentQ = qList[chosen];
+    document.getElementById('questionContent').textContent = currentQ.q;
+    document.getElementById('answerText').textContent      = currentQ.a;
+  } else {
+    // fallback: مؤقت حتى تضيف الأسئلة
+    currentQ = { q: `اذكر كلمة تبدأ بحرف (${letter})`, a: 'أي إجابة صحيحة' };
+    document.getElementById('questionContent').textContent = currentQ.q;
+    document.getElementById('answerText').textContent      = currentQ.a;
+  }
+}
+
+function revealAnswer() {
+  const ansEl  = document.getElementById('answerText');
+  const revBtn = document.getElementById('revealBtn');
+  if (!answerVisible) {
+    ansEl.style.display = 'block';
+    document.getElementById('actionButtons').className = 'action-buttons visible';
+    revBtn.textContent = 'أخفِ الإجابة';
+    answerVisible = true;
+  } else {
+    ansEl.style.display = 'none';
+    document.getElementById('actionButtons').className = 'action-buttons';
+    revBtn.textContent = 'اظهر الإجابة';
+    answerVisible = false;
+  }
+}
+
+function claimCell(winner) {
+  if (!currentCell) return;
+  currentCell.dataset.claimed = 'true';
+  currentCell.classList.remove('gold-cell');
+  currentCell.classList.add('claimed','claimed-'+winner,'pulse');
+  const outer = currentCell.parentElement;
+  if (outer && outer.classList.contains('hex-outer')) {
+    outer.classList.remove('gold-outer');
+    outer.classList.add('claimed-'+winner);
+  }
+  firstMoveDone = true;
+  scores[winner]++;
+  closeModal();
+  switchTurn();
+}
+
+function skipTurn()  { closeModal(); switchTurn(); }
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  currentCell = null; answerVisible = false; currentQ = null;
+}
+
+function switchTurn() {
+  currentTurn = currentTurn === 'orange' ? 'green' : 'orange';
+}
+
+function showNotice() {
+  const n = document.getElementById('customNotice');
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 3000);
+}
+
+// ════════════════════════════════════════
+// TOAST HELPER
+// ════════════════════════════════════════
+function showToast(msg) {
+  let toast = document.getElementById('appToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'appToast';
+    toast.style.cssText = `
+      position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);
+      background:linear-gradient(135deg,#1a0438,#2b0858);
+      color:#fff;padding:13px 26px;border-radius:50px;
+      border:1.5px solid rgba(255,215,0,0.35);
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);z-index:9999;
+      font-family:'Tajawal',sans-serif;font-weight:700;font-size:0.97rem;
+      transition:all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+      pointer-events:none;white-space:nowrap;
+    `;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.transform = 'translateX(-50%) translateY(0)';
+  toast.style.opacity = '1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.style.transform = 'translateX(-50%) translateY(80px)';
+    toast.style.opacity = '0';
+  }, 3000);
+}
+
+// ════════════════════════════════════════
+// WIN EFFECTS — CONFETTI
+// ════════════════════════════════════════
+let confettiInterval = null;
+
+function launchWinEffects(side) {
+  // ألوان بناءً على الفريق
+  const colors = side === 'orange'
+    ? ['#ff8c00','#ffd700','#ffb347','#fff']
+    : ['#2ecc40','#00ff88','#5dff70','#fff'];
+
+  // إطلاق confetti متعدد الموجات
+  const count = 200;
+  const defaults = { origin: { y: 0.7 } };
+
+  function fire(particleRatio, opts) {
+    confetti(Object.assign({}, defaults, opts, {
+      particleCount: Math.floor(count * particleRatio),
+      colors,
+    }));
+  }
+
+  fire(0.25, { spread: 26, startVelocity: 55 });
+  fire(0.2,  { spread: 60 });
+  fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+  fire(0.1,  { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+  fire(0.1,  { spread: 120, startVelocity: 45 });
+
+  // موجات متكررة
+  let count2 = 0;
+  confettiInterval = setInterval(() => {
+    count2++;
+    if (count2 > 5) { clearInterval(confettiInterval); return; }
+    confetti({
+      particleCount: 60,
+      spread: 70,
+      origin: { x: Math.random(), y: Math.random() * 0.5 },
+      colors,
+    });
+  }, 700);
+}
+
+function stopWinEffects() {
+  if (confettiInterval) { clearInterval(confettiInterval); confettiInterval = null; }
+  confetti.reset();
+}
+
+// ════════════════════════════════════════
+// ROUND WINNER
+// ════════════════════════════════════════
+function openRoundModal() {
+  document.getElementById('roundOrangeName').textContent = teamNames.orange;
+  document.getElementById('roundGreenName').textContent  = teamNames.green;
+  const rn = currentRound===1?'الأولى':currentRound===2?'الثانية':'الثالثة (الحاسمة)';
+  document.getElementById('roundModalTitle').textContent = 'نهاية الجولة ' + rn;
+  document.getElementById('roundWinnerOverlay').classList.add('active');
+}
+function closeRoundModal() {
+  document.getElementById('roundWinnerOverlay').classList.remove('active');
+}
+function announceRoundWinner(side) {
+  closeRoundModal();
+  roundWins[side]++;
+  document.getElementById('orangeScore').textContent = roundWins.orange;
+  document.getElementById('greenScore').textContent  = roundWins.green;
+
+  const wn   = teamNames[side];
+  const ws   = document.getElementById('winScreen');
+  const wt   = document.getElementById('winTitle');
+  const wsub = document.getElementById('winSubtitle');
+  const rb   = document.querySelector('.btn-restart');
+
+  if (roundWins[side] >= 2) {
+    wt.textContent  = wn + ' بطل اللعبة 🏆';
+    wsub.textContent = 'فاز بـ ' + roundWins[side] + ' جولات';
+    rb.textContent  = 'إعادة اللعبة كاملة';
+    rb.onclick      = () => { stopWinEffects(); location.reload(); };
+    ws.classList.add('active');
+    launchWinEffects(side);
+    return;
+  }
+  if (roundWins.orange === 1 && roundWins.green === 1) {
+    wt.textContent  = 'تعادل - الجولة الثالثة الحاسمة';
+    wsub.textContent = teamNames.orange+': '+roundWins.orange+' | '+teamNames.green+': '+roundWins.green;
+    rb.textContent  = 'ابدأ الجولة الحاسمة';
+    rb.onclick = () => { stopWinEffects(); currentRound=3; ws.classList.remove('active'); startNextRound(); };
+    ws.classList.add('active'); return;
+  }
+  const rn = currentRound===1?'الأولى':'الثانية';
+  wt.textContent  = wn + ' فاز بالجولة ' + rn + ' 🎉';
+  wsub.textContent = teamNames.orange+': '+roundWins.orange+' | '+teamNames.green+': '+roundWins.green;
+  rb.textContent  = 'ابدأ الجولة التالية';
+  rb.onclick = () => { stopWinEffects(); currentRound++; ws.classList.remove('active'); startNextRound(); };
+  ws.classList.add('active');
+  launchWinEffects(side);
+}
+
+function startNextRound() {
+  scores = { orange:0, green:0 };
+  currentTurn = 'orange';
+  cells = []; usedQuestions = {};
+  buildGrid();
+}
+</script>
+</body>
+</html>
