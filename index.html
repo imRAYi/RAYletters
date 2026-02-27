@@ -2,11 +2,15 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>حروف مع ريان</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Cairo:wght@700;900&display=swap" rel="stylesheet">
 
 <link rel="icon" type="image/png" href="favicon.png">
+
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2576310128869225"
+     crossorigin="anonymous"></script>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -172,21 +176,23 @@ body.dark-mode { filter: brightness(0.82) saturate(0.85); }
 /* ─── HEADER ─── */
 header {
   width: 100%; background: var(--header-bg); backdrop-filter: blur(14px);
-  padding: 14px 90px 14px 30px;
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 10px 70px 10px 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
   box-shadow: 0 4px 30px rgba(0,0,0,0.6);
   border-bottom: 2px solid rgba(255,215,0,0.25);
-  position: relative; min-height: 95px; transition: background 0.4s;
+  position: relative; min-height: 80px; transition: background 0.4s;
+  flex-wrap: nowrap;
 }
 .Logo {
   position: absolute; left: 50%; transform: translateX(-50%);
-  height: 85px; width: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
+  height: 70px; width: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
+  pointer-events: none;
 }
-.scores { display: flex; gap: 14px; }
+.scores { display: flex; gap: 8px; flex-shrink: 0; }
 .team-score {
   display: flex; flex-direction: column; align-items: center;
-  background: rgba(255,255,255,0.06); border-radius: 14px;
-  padding: 10px 18px; min-width: 100px;
+  background: rgba(255,255,255,0.06); border-radius: 12px;
+  padding: 7px 12px; min-width: 80px;
   border: 2px solid transparent; position: relative; overflow: hidden;
 }
 .team-score::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
@@ -194,11 +200,11 @@ header {
 .team-score.orange::after { background: linear-gradient(90deg, #ff8c00, #ffd700); }
 .team-score.green  { border-color: rgba(46,204,64,0.55); }
 .team-score.green::after  { background: linear-gradient(90deg, #2ecc40, #00ff88); }
-.team-score .team-name { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.3px; }
+.team-score .team-name { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3px; }
 .team-score.orange .team-name { color: #ffb347; }
 .team-score.green  .team-name { color: #5dff70; }
 .team-score .score-num {
-  font-size: 2.4rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  font-size: 2rem; font-weight: 900; font-family: 'Cairo', sans-serif;
   line-height: 1.1; letter-spacing: -1px;
 }
 .team-score.orange .score-num { color: #ffd700; text-shadow: 0 0 18px rgba(255,215,0,0.8); }
@@ -206,24 +212,26 @@ header {
 
 .btn-round-winner {
   background: linear-gradient(135deg, #ff8c00, #ffd700);
-  color: #1a1a2e; font-size: 0.95rem; padding: 12px 22px;
+  color: #1a1a2e; font-size: 0.85rem; padding: 10px 14px;
   border-radius: 12px; border: none; font-weight: 900; cursor: pointer;
   transition: all 0.2s; font-family: 'Tajawal', sans-serif; white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(255,140,0,0.55);
+  box-shadow: 0 4px 16px rgba(255,140,0,0.55); flex-shrink: 0;
 }
 .btn-round-winner:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,140,0,0.7); }
 
 /* ─── HEX GRID ─── */
 :root {
-  --hex-outer-w: 210px; --hex-outer-h: 226px;
-  --hex-inner-w: 196px; --hex-inner-h: 211px;
-  --hex-font: 2.6rem; --hex-gap: 5px;
-  --hex-overlap: -53px; --hex-offset: -200px;
+  --hex-outer-w: 180px; --hex-outer-h: 194px;
+  --hex-inner-w: 168px; --hex-inner-h: 181px;
+  --hex-font: 2.3rem; --hex-gap: 4px;
+  --hex-overlap: -46px; --hex-offset: -172px;
+  --header-h: 80px;
 }
 
 .board-wrapper {
   display: flex; align-items: center; justify-content: center;
-  min-height: calc(100vh - 97px); padding: 20px;
+  min-height: calc(100vh - var(--header-h)); padding: 16px;
+  overflow: hidden;
 }
 .hex-grid { display: flex; flex-direction: column; align-items: center; gap: 0; }
 .hex-row { display: flex; gap: var(--hex-gap); margin-bottom: var(--hex-overlap); }
@@ -825,39 +833,146 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 .auth-modal { position: relative; }
 
 /* ════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE — MOBILE FIRST
 ════════════════════════════════════════ */
-@media (max-width: 900px) {
-  :root { --hex-outer-w:150px; --hex-outer-h:162px; --hex-inner-w:140px; --hex-inner-h:151px; --hex-font:1.9rem; --hex-gap:4px; --hex-overlap:-38px; --hex-offset:-143px; }
-  header { padding: 10px 70px 10px 20px; min-height: 78px; }
-  .Logo { height: 65px; }
-  .team-score { padding: 8px 12px; min-width: 80px; }
+
+/* ── تلفاز / شاشات كبيرة جداً ── */
+@media (min-width: 1400px) {
+  :root {
+    --hex-outer-w: 220px; --hex-outer-h: 237px;
+    --hex-inner-w: 205px; --hex-inner-h: 221px;
+    --hex-font: 2.8rem; --hex-gap: 6px;
+    --hex-overlap: -56px; --hex-offset: -210px;
+    --header-h: 90px;
+  }
+  header { min-height: 90px; padding: 14px 100px 14px 30px; }
+  .Logo { height: 80px; }
+  .team-score { padding: 10px 20px; min-width: 110px; }
+  .team-score .score-num { font-size: 2.6rem; }
+  .btn-round-winner { font-size: 1rem; padding: 12px 22px; }
+}
+
+/* ── لاب توب / تابلت كبير ── */
+@media (max-width: 1024px) and (min-width: 769px) {
+  :root {
+    --hex-outer-w: 150px; --hex-outer-h: 162px;
+    --hex-inner-w: 140px; --hex-inner-h: 151px;
+    --hex-font: 1.9rem; --hex-gap: 4px;
+    --hex-overlap: -38px; --hex-offset: -143px;
+    --header-h: 75px;
+  }
+  header { min-height: 75px; padding: 10px 70px 10px 18px; }
+  .Logo { height: 62px; }
+  .team-score { padding: 8px 14px; min-width: 85px; }
   .team-score .score-num { font-size: 1.9rem; }
-  .btn-round-winner { font-size: 0.85rem; padding: 10px 14px; }
+  .btn-round-winner { font-size: 0.88rem; padding: 10px 16px; }
 }
-@media (max-width: 600px) {
-  :root { --hex-outer-w:108px; --hex-outer-h:117px; --hex-inner-w:101px; --hex-inner-h:109px; --hex-font:1.25rem; --hex-gap:3px; --hex-overlap:-24px; --hex-offset:-92px; }
-  header { padding: 8px 58px 8px 12px; min-height: 66px; gap: 10px; }
-  .Logo { height: 52px; }
-  .team-score { padding: 6px 10px; min-width: 68px; border-radius: 10px; }
-  .team-score .team-name { font-size: 0.65rem; }
-  .team-score .score-num { font-size: 1.5rem; }
-  .btn-round-winner { font-size: 0.75rem; padding: 8px 10px; border-radius: 9px; }
-  .hamburger-btn { top: 14px; right: 14px; width: 42px; height: 42px; }
-  .sidebar { width: 82vw; right: -82vw; }
-  .board-wrapper { min-height: calc(100vh - 68px); padding: 10px 6px; }
-  .setup-card { padding: 28px 22px; gap: 20px; }
-  .setup-logo { width: 120px; }
-  .modal-body { padding: 18px 20px 22px; }
-  .modal .letter-display { font-size: 4rem; }
-  .modal .question { font-size: 1rem; padding: 13px 14px; }
-  .page-card { padding: 28px 22px; }
-  .rule-img { width: 32px; height: 32px; }
+
+/* ── تابلت ── */
+@media (max-width: 768px) and (min-width: 481px) {
+  :root {
+    --hex-outer-w: 120px; --hex-outer-h: 130px;
+    --hex-inner-w: 112px; --hex-inner-h: 121px;
+    --hex-font: 1.5rem; --hex-gap: 3px;
+    --hex-overlap: -30px; --hex-offset: -115px;
+    --header-h: 68px;
+  }
+  header { min-height: 68px; padding: 8px 62px 8px 14px; gap: 8px; }
+  .Logo { height: 54px; }
+  .team-score { padding: 6px 10px; min-width: 72px; border-radius: 10px; }
+  .team-score .team-name { font-size: 0.68rem; }
+  .team-score .score-num { font-size: 1.6rem; }
+  .btn-round-winner { font-size: 0.8rem; padding: 9px 12px; border-radius: 10px; }
+  .hamburger-btn { top: 14px; right: 14px; width: 44px; height: 44px; }
+  .sidebar { width: 75vw; right: -75vw; }
+  .board-wrapper { padding: 14px 8px; }
+  .setup-card { padding: 32px 28px; gap: 22px; }
+  .modal-body { padding: 20px 22px 24px; }
 }
-@media (max-width: 380px) {
-  :root { --hex-outer-w:90px; --hex-outer-h:97px; --hex-inner-w:84px; --hex-inner-h:91px; --hex-font:1.05rem; --hex-gap:2px; --hex-overlap:-20px; --hex-offset:-76px; }
-  .Logo { height: 46px; }
-  .team-score .score-num { font-size: 1.3rem; }
+
+/* ── جوال كبير (390-480px مثل iPhone 14 Pro) ── */
+@media (max-width: 480px) and (min-width: 391px) {
+  :root {
+    --hex-outer-w: 96px; --hex-outer-h: 104px;
+    --hex-inner-w: 90px; --hex-inner-h: 97px;
+    --hex-font: 1.1rem; --hex-gap: 3px;
+    --hex-overlap: -21px; --hex-offset: -82px;
+    --header-h: 62px;
+  }
+  header {
+    min-height: 62px; padding: 6px 54px 6px 10px;
+    gap: 6px;
+  }
+  .Logo { height: 48px; }
+  .scores { gap: 5px; }
+  .team-score { padding: 5px 8px; min-width: 64px; border-radius: 9px; }
+  .team-score .team-name { font-size: 0.6rem; }
+  .team-score .score-num { font-size: 1.4rem; }
+  .btn-round-winner { font-size: 0.7rem; padding: 7px 9px; border-radius: 8px; }
+  .hamburger-btn { top: 12px; right: 12px; width: 40px; height: 40px; }
+  .sidebar { width: 85vw; right: -85vw; }
+  .board-wrapper { min-height: calc(100vh - 62px); padding: 8px 4px; }
+  .setup-card { padding: 24px 18px; gap: 18px; }
+  .setup-logo { width: 110px; }
+  .modal-body { padding: 16px 18px 20px; }
+  .modal .letter-display { font-size: 3.8rem; }
+  .modal .question { font-size: 0.97rem; padding: 12px 12px; }
+  .page-card { padding: 26px 18px; }
+  .rule-img { width: 30px; height: 30px; }
+  .auth-modal { padding: 36px 26px; }
+}
+
+/* ── جوال عادي (320-390px مثل iPhone SE و iPhone 14) ── */
+@media (max-width: 390px) and (min-width: 321px) {
+  :root {
+    --hex-outer-w: 84px; --hex-outer-h: 91px;
+    --hex-inner-w: 78px; --hex-inner-h: 85px;
+    --hex-font: 0.95rem; --hex-gap: 2px;
+    --hex-overlap: -18px; --hex-offset: -71px;
+    --header-h: 58px;
+  }
+  header {
+    min-height: 58px; padding: 5px 50px 5px 8px;
+    gap: 5px;
+  }
+  .Logo { height: 44px; }
+  .scores { gap: 4px; }
+  .team-score { padding: 4px 7px; min-width: 58px; border-radius: 8px; }
+  .team-score .team-name { font-size: 0.55rem; }
+  .team-score .score-num { font-size: 1.25rem; }
+  .btn-round-winner { font-size: 0.65rem; padding: 6px 8px; border-radius: 8px; }
+  .hamburger-btn { top: 10px; right: 10px; width: 38px; height: 38px; }
+  .hamburger-btn span { width: 18px; }
+  .sidebar { width: 88vw; right: -88vw; }
+  .board-wrapper { min-height: calc(100vh - 58px); padding: 6px 2px; }
+  .setup-card { padding: 20px 16px; gap: 16px; }
+  .setup-logo { width: 100px; }
+  .setup-title { font-size: 1.1rem; }
+  .modal-body { padding: 14px 16px 18px; }
+  .modal .letter-display { font-size: 3.2rem; }
+  .modal .question { font-size: 0.9rem; padding: 10px 10px; }
+  .page-card { padding: 22px 16px; }
+  .auth-modal { padding: 30px 20px; }
+}
+
+/* ── أصغر جوال (أقل من 320px) ── */
+@media (max-width: 320px) {
+  :root {
+    --hex-outer-w: 72px; --hex-outer-h: 78px;
+    --hex-inner-w: 67px; --hex-inner-h: 73px;
+    --hex-font: 0.82rem; --hex-gap: 2px;
+    --hex-overlap: -15px; --hex-offset: -61px;
+    --header-h: 54px;
+  }
+  header { min-height: 54px; padding: 4px 46px 4px 6px; gap: 4px; }
+  .Logo { height: 40px; }
+  .team-score { padding: 4px 6px; min-width: 52px; }
+  .team-score .team-name { font-size: 0.5rem; }
+  .team-score .score-num { font-size: 1.1rem; }
+  .btn-round-winner { font-size: 0.6rem; padding: 5px 7px; }
+  .hamburger-btn { top: 8px; right: 8px; width: 36px; height: 36px; }
+  .sidebar { width: 92vw; right: -92vw; }
+  .board-wrapper { min-height: calc(100vh - 54px); padding: 4px 1px; }
 }
 </style>
 </head>
@@ -1770,6 +1885,63 @@ function openContact() {
 }
 
 // ════════════════════════════════════════
+// DYNAMIC HEX SIZE — يضبط حجم اللوحة تلقائياً
+// ════════════════════════════════════════
+function calcHexSize() {
+  const headerH = document.querySelector('header')?.offsetHeight || 70;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  // اللوحة 5 خلايا عرضاً و5 صفوف
+  // نحسب الحجم المناسب بناءً على العرض والارتفاع المتاح
+  const availW = vw - 8; // هامش صغير
+  const availH = vh - headerH - 20;
+
+  // عرض اللوحة = 5 خلايا + 4 فراغات
+  // ارتفاع اللوحة = 5 صفوف مع overlap
+  // نبدأ بتقدير الحجم من العرض
+  const hexGap = vw < 400 ? 2 : 3;
+  let outerW = Math.floor((availW - hexGap * 4) / 5);
+
+  // نسبة hex: height = width * 1.0775
+  let outerH = Math.round(outerW * 1.0775);
+
+  // تأكد أن اللوحة تناسب الارتفاع أيضاً
+  // ارتفاع اللوحة = outerH * 5 + overlap * 4 ≈ outerH * 5 - (outerH*0.25)*4 = outerH * 4
+  const boardH = outerH * 4 + 20;
+  if (boardH > availH) {
+    outerH = Math.floor(availH / 4.2);
+    outerW = Math.round(outerH / 1.0775);
+  }
+
+  // حد أقصى وأدنى
+  outerW = Math.max(68, Math.min(outerW, 220));
+  outerH = Math.round(outerW * 1.0775);
+
+  const innerW = Math.round(outerW * 0.935);
+  const innerH = Math.round(outerH * 0.933);
+  const font   = Math.max(0.75, Math.min(outerW * 0.013, 2.8));
+  const overlap = -Math.round(outerH * 0.235);
+  const offset  = -(outerW * 2.5 + hexGap * 2.5);
+
+  const root = document.documentElement;
+  root.style.setProperty('--hex-outer-w', outerW + 'px');
+  root.style.setProperty('--hex-outer-h', outerH + 'px');
+  root.style.setProperty('--hex-inner-w', innerW + 'px');
+  root.style.setProperty('--hex-inner-h', innerH + 'px');
+  root.style.setProperty('--hex-font', font + 'rem');
+  root.style.setProperty('--hex-gap', hexGap + 'px');
+  root.style.setProperty('--hex-overlap', overlap + 'px');
+  root.style.setProperty('--hex-offset', offset + 'px');
+  root.style.setProperty('--header-h', headerH + 'px');
+}
+
+// شغّل عند التحميل وعند تغيير الحجم
+window.addEventListener('resize', calcHexSize);
+window.addEventListener('orientationchange', () => { setTimeout(calcHexSize, 150); });
+document.addEventListener('DOMContentLoaded', calcHexSize);
+
+// ════════════════════════════════════════
 // GAME VARIABLES
 // ════════════════════════════════════════
 const allLetters = ['أ','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
@@ -1790,6 +1962,7 @@ let currentQ      = null; // السؤال الحالي من Firestore
 // BUILD GRID
 // ════════════════════════════════════════
 function buildGrid() {
+  calcHexSize(); // احسب الحجم أولاً
   const grid = document.getElementById('hexGrid');
   grid.innerHTML = '';
   cells = [];
