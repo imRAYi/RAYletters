@@ -59,6 +59,7 @@ body.dark-mode {
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { overflow-x: hidden; }
 body {
   background-image: url(BackGround.jpeg);
   background-size: cover; background-position: center;
@@ -176,23 +177,22 @@ body.dark-mode { filter: brightness(0.82) saturate(0.85); }
 /* ─── HEADER ─── */
 header {
   width: 100%; background: var(--header-bg); backdrop-filter: blur(14px);
-  padding: 10px 70px 10px 16px;
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 14px 78px 14px 30px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
   box-shadow: 0 4px 30px rgba(0,0,0,0.6);
   border-bottom: 2px solid rgba(255,215,0,0.25);
-  position: relative; min-height: 80px; transition: background 0.4s;
-  flex-wrap: nowrap;
+  position: relative; min-height: 95px; transition: background 0.4s;
 }
 .Logo {
   position: absolute; left: 50%; transform: translateX(-50%);
-  height: 70px; width: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
+  height: 85px; width: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
   pointer-events: none;
 }
-.scores { display: flex; gap: 8px; flex-shrink: 0; }
+.scores { display: flex; gap: 14px; flex-shrink: 0; }
 .team-score {
   display: flex; flex-direction: column; align-items: center;
-  background: rgba(255,255,255,0.06); border-radius: 12px;
-  padding: 7px 12px; min-width: 80px;
+  background: rgba(255,255,255,0.06); border-radius: 14px;
+  padding: 10px 18px; min-width: 100px;
   border: 2px solid transparent; position: relative; overflow: hidden;
 }
 .team-score::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
@@ -200,19 +200,18 @@ header {
 .team-score.orange::after { background: linear-gradient(90deg, #ff8c00, #ffd700); }
 .team-score.green  { border-color: rgba(46,204,64,0.55); }
 .team-score.green::after  { background: linear-gradient(90deg, #2ecc40, #00ff88); }
-.team-score .team-name { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3px; }
+.team-score .team-name { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.3px; }
 .team-score.orange .team-name { color: #ffb347; }
 .team-score.green  .team-name { color: #5dff70; }
 .team-score .score-num {
-  font-size: 2rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  font-size: 2.4rem; font-weight: 900; font-family: 'Cairo', sans-serif;
   line-height: 1.1; letter-spacing: -1px;
 }
 .team-score.orange .score-num { color: #ffd700; text-shadow: 0 0 18px rgba(255,215,0,0.8); }
 .team-score.green  .score-num { color: #5dff70; text-shadow: 0 0 18px rgba(93,255,112,0.8); }
-
 .btn-round-winner {
   background: linear-gradient(135deg, #ff8c00, #ffd700);
-  color: #1a1a2e; font-size: 0.85rem; padding: 10px 14px;
+  color: #1a1a2e; font-size: 0.95rem; padding: 12px 22px;
   border-radius: 12px; border: none; font-weight: 900; cursor: pointer;
   transition: all 0.2s; font-family: 'Tajawal', sans-serif; white-space: nowrap;
   box-shadow: 0 4px 16px rgba(255,140,0,0.55); flex-shrink: 0;
@@ -221,17 +220,15 @@ header {
 
 /* ─── HEX GRID ─── */
 :root {
-  --hex-outer-w: 180px; --hex-outer-h: 194px;
-  --hex-inner-w: 168px; --hex-inner-h: 181px;
-  --hex-font: 2.3rem; --hex-gap: 4px;
-  --hex-overlap: -46px; --hex-offset: -172px;
-  --header-h: 80px;
+  --hex-outer-w: 210px; --hex-outer-h: 226px;
+  --hex-inner-w: 196px; --hex-inner-h: 211px;
+  --hex-font: 2.6rem; --hex-gap: 5px;
+  --hex-overlap: -53px; --hex-offset: -200px;
 }
 
 .board-wrapper {
   display: flex; align-items: center; justify-content: center;
-  min-height: calc(100vh - var(--header-h)); padding: 16px;
-  overflow: hidden;
+  min-height: calc(100vh - 97px); padding: 20px;
 }
 .hex-grid { display: flex; flex-direction: column; align-items: center; gap: 0; }
 .hex-row { display: flex; gap: var(--hex-gap); margin-bottom: var(--hex-overlap); }
@@ -833,155 +830,138 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 .auth-modal { position: relative; }
 
 /* ════════════════════════════════════════
-   RESPONSIVE — MOBILE FIRST
+   RESPONSIVE
 ════════════════════════════════════════ */
 
-/* ── تلفاز / شاشات كبيرة جداً ── */
+/* ── تلفاز 1400px+ ── */
 @media (min-width: 1400px) {
-  :root {
-    --hex-outer-w: 220px; --hex-outer-h: 237px;
-    --hex-inner-w: 205px; --hex-inner-h: 221px;
-    --hex-font: 2.8rem; --hex-gap: 6px;
-    --hex-overlap: -56px; --hex-offset: -210px;
-    --header-h: 90px;
-  }
-  header { min-height: 90px; padding: 14px 100px 14px 30px; }
-  .Logo { height: 80px; }
-  .team-score { padding: 10px 20px; min-width: 110px; }
-  .team-score .score-num { font-size: 2.6rem; }
-  .btn-round-winner { font-size: 1rem; padding: 12px 22px; }
+  :root { --hex-outer-w:230px;--hex-outer-h:248px;--hex-inner-w:215px;--hex-inner-h:232px;--hex-font:2.9rem;--hex-gap:5px;--hex-overlap:-58px;--hex-offset:-219px; }
+  header { min-height: 100px; padding: 14px 90px 14px 30px; }
+  .Logo { height: 90px; }
+  .team-score { padding: 12px 22px; min-width: 110px; }
+  .team-score .score-num { font-size: 2.7rem; }
+  .btn-round-winner { font-size: 1rem; padding: 13px 24px; }
+  .board-wrapper { min-height: calc(100vh - 102px); }
 }
 
-/* ── لاب توب / تابلت كبير ── */
+/* ── لاب توب 769-1024px ── */
 @media (max-width: 1024px) and (min-width: 769px) {
-  :root {
-    --hex-outer-w: 150px; --hex-outer-h: 162px;
-    --hex-inner-w: 140px; --hex-inner-h: 151px;
-    --hex-font: 1.9rem; --hex-gap: 4px;
-    --hex-overlap: -38px; --hex-offset: -143px;
-    --header-h: 75px;
-  }
-  header { min-height: 75px; padding: 10px 70px 10px 18px; }
-  .Logo { height: 62px; }
-  .team-score { padding: 8px 14px; min-width: 85px; }
-  .team-score .score-num { font-size: 1.9rem; }
+  :root { --hex-outer-w:152px;--hex-outer-h:164px;--hex-inner-w:142px;--hex-inner-h:153px;--hex-font:2rem;--hex-gap:4px;--hex-overlap:-38px;--hex-offset:-145px; }
+  header { min-height: 82px; padding: 12px 78px 12px 22px; }
+  .Logo { height: 70px; }
+  .team-score { padding: 8px 14px; min-width: 86px; }
+  .team-score .score-num { font-size: 2rem; }
   .btn-round-winner { font-size: 0.88rem; padding: 10px 16px; }
+  .board-wrapper { min-height: calc(100vh - 84px); }
 }
 
-/* ── تابلت ── */
+/* ── تابلت 481-768px ── */
 @media (max-width: 768px) and (min-width: 481px) {
-  :root {
-    --hex-outer-w: 120px; --hex-outer-h: 130px;
-    --hex-inner-w: 112px; --hex-inner-h: 121px;
-    --hex-font: 1.5rem; --hex-gap: 3px;
-    --hex-overlap: -30px; --hex-offset: -115px;
-    --header-h: 68px;
-  }
-  header { min-height: 68px; padding: 8px 62px 8px 14px; gap: 8px; }
-  .Logo { height: 54px; }
-  .team-score { padding: 6px 10px; min-width: 72px; border-radius: 10px; }
-  .team-score .team-name { font-size: 0.68rem; }
-  .team-score .score-num { font-size: 1.6rem; }
-  .btn-round-winner { font-size: 0.8rem; padding: 9px 12px; border-radius: 10px; }
-  .hamburger-btn { top: 14px; right: 14px; width: 44px; height: 44px; }
+  :root { --hex-outer-w:108px;--hex-outer-h:116px;--hex-inner-w:101px;--hex-inner-h:108px;--hex-font:1.35rem;--hex-gap:3px;--hex-overlap:-27px;--hex-offset:-103px; }
+  header { min-height: 74px; padding: 10px 72px 10px 16px; gap: 12px; }
+  .Logo { height: 58px; }
+  .team-score { padding: 7px 12px; min-width: 74px; border-radius: 11px; }
+  .team-score .team-name { font-size: 0.7rem; }
+  .team-score .score-num { font-size: 1.65rem; }
+  .btn-round-winner { font-size: 0.78rem; padding: 9px 12px; }
+  .hamburger-btn { top: 18px; right: 14px; width: 44px; height: 44px; }
   .sidebar { width: 75vw; right: -75vw; }
-  .board-wrapper { padding: 14px 8px; }
-  .setup-card { padding: 32px 28px; gap: 22px; }
-  .modal-body { padding: 20px 22px 24px; }
+  .board-wrapper { min-height: calc(100vh - 76px); padding: 14px 10px; }
+  .setup-card { padding: 32px 28px; }
+  .modal-body { padding: 20px 24px 24px; }
+  .page-card { padding: 28px 24px; }
 }
 
-/* ── جوال كبير (390-480px مثل iPhone 14 Pro) ── */
-@media (max-width: 480px) and (min-width: 391px) {
-  :root {
-    --hex-outer-w: 96px; --hex-outer-h: 104px;
-    --hex-inner-w: 90px; --hex-inner-h: 97px;
-    --hex-font: 1.1rem; --hex-gap: 3px;
-    --hex-overlap: -21px; --hex-offset: -82px;
-    --header-h: 62px;
-  }
+/* ══════════════════════════════════════
+   جوال ≤ 480px
+   الهيدر صفين:
+   صف1: [زر فائز] ──[LOGO]── [فراغ48px]
+   صف2: [score برتقالي] [score أخضر]
+   همبرغر: fixed top-right
+══════════════════════════════════════ */
+@media (max-width: 480px) {
+  .hamburger-btn { top: 10px; right: 10px; width: 42px; height: 42px; }
+
   header {
-    min-height: 62px; padding: 6px 54px 6px 10px;
-    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 8px 12px;
+    min-height: auto;
+    gap: 0;
+    row-gap: 6px;
   }
-  .Logo { height: 48px; }
-  .scores { gap: 5px; }
-  .team-score { padding: 5px 8px; min-width: 64px; border-radius: 9px; }
-  .team-score .team-name { font-size: 0.6rem; }
-  .team-score .score-num { font-size: 1.4rem; }
-  .btn-round-winner { font-size: 0.7rem; padding: 7px 9px; border-radius: 8px; }
-  .hamburger-btn { top: 12px; right: 12px; width: 40px; height: 40px; }
+
+  /* صف أول: زر | لوغو وسط | فراغ يساوي همبرغر */
+  .btn-round-winner {
+    order: 1; flex-shrink: 0;
+    font-size: 0.72rem; padding: 7px 11px; border-radius: 10px;
+  }
+  .Logo {
+    order: 2;
+    position: absolute; left: 50%; transform: translateX(-50%);
+    height: 42px; pointer-events: none;
+  }
+  /* فراغ وهمي بعرض الهمبرغر عشان يوازن الصف ويحافظ اللوغو في الوسط */
+  .header-ghost { order: 3; width: 42px; flex-shrink: 0; height: 1px; }
+
+  /* صف ثاني: نتائج */
+  .scores {
+    order: 4; width: 100%;
+    display: flex; gap: 8px; justify-content: center;
+    padding-top: 2px;
+  }
+  .team-score {
+    flex: 1; max-width: 170px; min-width: 0;
+    padding: 5px 10px; border-radius: 10px;
+  }
+  .team-score .team-name { font-size: 0.65rem; }
+  .team-score .score-num { font-size: 1.5rem; }
+
   .sidebar { width: 85vw; right: -85vw; }
-  .board-wrapper { min-height: calc(100vh - 62px); padding: 8px 4px; }
+  .board-wrapper { min-height: calc(100vh - 106px); padding: 8px 4px; }
   .setup-card { padding: 24px 18px; gap: 18px; }
   .setup-logo { width: 110px; }
   .modal-body { padding: 16px 18px 20px; }
   .modal .letter-display { font-size: 3.8rem; }
-  .modal .question { font-size: 0.97rem; padding: 12px 12px; }
+  .modal .question { font-size: 0.97rem; padding: 12px; }
   .page-card { padding: 26px 18px; }
   .rule-img { width: 30px; height: 30px; }
-  .auth-modal { padding: 36px 26px; }
+  .auth-modal { padding: 36px 24px; }
 }
 
-/* ── جوال عادي (320-390px مثل iPhone SE و iPhone 14) ── */
-@media (max-width: 390px) and (min-width: 321px) {
-  :root {
-    --hex-outer-w: 84px; --hex-outer-h: 91px;
-    --hex-inner-w: 78px; --hex-inner-h: 85px;
-    --hex-font: 0.95rem; --hex-gap: 2px;
-    --hex-overlap: -18px; --hex-offset: -71px;
-    --header-h: 58px;
-  }
-  header {
-    min-height: 58px; padding: 5px 50px 5px 8px;
-    gap: 5px;
-  }
-  .Logo { height: 44px; }
-  .scores { gap: 4px; }
-  .team-score { padding: 4px 7px; min-width: 58px; border-radius: 8px; }
-  .team-score .team-name { font-size: 0.55rem; }
+/* hex sizes 391-480px */
+@media (max-width: 480px) and (min-width: 391px) {
+  :root { --hex-outer-w:93px;--hex-outer-h:100px;--hex-inner-w:87px;--hex-inner-h:93px;--hex-font:1.1rem;--hex-gap:3px;--hex-overlap:-23px;--hex-offset:-89px; }
+}
+/* hex sizes ≤390px */
+@media (max-width: 390px) {
+  :root { --hex-outer-w:84px;--hex-outer-h:90px;--hex-inner-w:78px;--hex-inner-h:84px;--hex-font:0.97rem;--hex-gap:2px;--hex-overlap:-21px;--hex-offset:-80px; }
+  .team-score .score-num { font-size: 1.4rem; }
+  .btn-round-winner { font-size: 0.67rem; padding: 6px 9px; }
+  .Logo { height: 38px; }
+  .modal .letter-display { font-size: 3.4rem; }
+  .page-card { padding: 22px 14px; }
+  .auth-modal { padding: 30px 18px; }
+}
+/* hex sizes ≤360px */
+@media (max-width: 360px) {
+  :root { --hex-outer-w:76px;--hex-outer-h:82px;--hex-inner-w:71px;--hex-inner-h:77px;--hex-font:0.88rem;--hex-gap:2px;--hex-overlap:-19px;--hex-offset:-72px; }
+  .Logo { height: 34px; }
   .team-score .score-num { font-size: 1.25rem; }
-  .btn-round-winner { font-size: 0.65rem; padding: 6px 8px; border-radius: 8px; }
-  .hamburger-btn { top: 10px; right: 10px; width: 38px; height: 38px; }
-  .hamburger-btn span { width: 18px; }
-  .sidebar { width: 88vw; right: -88vw; }
-  .board-wrapper { min-height: calc(100vh - 58px); padding: 6px 2px; }
-  .setup-card { padding: 20px 16px; gap: 16px; }
-  .setup-logo { width: 100px; }
-  .setup-title { font-size: 1.1rem; }
-  .modal-body { padding: 14px 16px 18px; }
-  .modal .letter-display { font-size: 3.2rem; }
-  .modal .question { font-size: 0.9rem; padding: 10px 10px; }
-  .page-card { padding: 22px 16px; }
-  .auth-modal { padding: 30px 20px; }
+  .btn-round-winner { font-size: 0.62rem; padding: 5px 8px; }
+  .hamburger-btn { top: 8px; right: 8px; width: 38px; height: 38px; }
+  .sidebar { width: 90vw; right: -90vw; }
 }
-
-/* ── أصغر جوال (أقل من 320px) ── */
+/* hex sizes ≤320px */
 @media (max-width: 320px) {
-  :root {
-    --hex-outer-w: 72px; --hex-outer-h: 78px;
-    --hex-inner-w: 67px; --hex-inner-h: 73px;
-    --hex-font: 0.82rem; --hex-gap: 2px;
-    --hex-overlap: -15px; --hex-offset: -61px;
-    --header-h: 54px;
-  }
-  header { min-height: 54px; padding: 4px 46px 4px 6px; gap: 4px; }
-  .Logo { height: 40px; }
-  .team-score { padding: 4px 6px; min-width: 52px; }
-  .team-score .team-name { font-size: 0.5rem; }
+  :root { --hex-outer-w:66px;--hex-outer-h:71px;--hex-inner-w:62px;--hex-inner-h:66px;--hex-font:0.78rem;--hex-gap:2px;--hex-overlap:-17px;--hex-offset:-63px; }
+  .Logo { height: 30px; }
   .team-score .score-num { font-size: 1.1rem; }
-  .btn-round-winner { font-size: 0.6rem; padding: 5px 7px; }
-  .hamburger-btn { top: 8px; right: 8px; width: 36px; height: 36px; }
-  .sidebar { width: 92vw; right: -92vw; }
-  .board-wrapper { min-height: calc(100vh - 54px); padding: 4px 1px; }
+  .btn-round-winner { font-size: 0.58rem; padding: 5px 7px; }
 }
 </style>
 </head>
 <body>
-
-<!-- HAMBURGER -->
-<button class="hamburger-btn" onclick="toggleSidebar()">
-  <span></span><span></span><span></span>
-</button>
 
 <!-- SIDEBAR OVERLAY -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -1343,8 +1323,14 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
   </div>
 </div>
 
+<!-- HAMBURGER — fixed top right -->
+<button class="hamburger-btn" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+
 <!-- HEADER -->
 <header>
+  <!-- RTL ترتيب: scores(يمين) | logo(وسط مطلق) | btn(يسار) -->
   <div class="scores">
     <div class="team-score orange" id="scoreOrange">
       <span class="team-name" id="orangeLabel">برتقالي</span>
@@ -1356,6 +1342,7 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
     </div>
   </div>
   <img class="Logo" src="Logo.png" alt="حروف مع ريان">
+  <div class="header-ghost"></div>
   <button class="btn-round-winner" onclick="openRoundModal()">فائز الجولة</button>
 </header>
 
@@ -1885,63 +1872,6 @@ function openContact() {
 }
 
 // ════════════════════════════════════════
-// DYNAMIC HEX SIZE — يضبط حجم اللوحة تلقائياً
-// ════════════════════════════════════════
-function calcHexSize() {
-  const headerH = document.querySelector('header')?.offsetHeight || 70;
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-
-  // اللوحة 5 خلايا عرضاً و5 صفوف
-  // نحسب الحجم المناسب بناءً على العرض والارتفاع المتاح
-  const availW = vw - 8; // هامش صغير
-  const availH = vh - headerH - 20;
-
-  // عرض اللوحة = 5 خلايا + 4 فراغات
-  // ارتفاع اللوحة = 5 صفوف مع overlap
-  // نبدأ بتقدير الحجم من العرض
-  const hexGap = vw < 400 ? 2 : 3;
-  let outerW = Math.floor((availW - hexGap * 4) / 5);
-
-  // نسبة hex: height = width * 1.0775
-  let outerH = Math.round(outerW * 1.0775);
-
-  // تأكد أن اللوحة تناسب الارتفاع أيضاً
-  // ارتفاع اللوحة = outerH * 5 + overlap * 4 ≈ outerH * 5 - (outerH*0.25)*4 = outerH * 4
-  const boardH = outerH * 4 + 20;
-  if (boardH > availH) {
-    outerH = Math.floor(availH / 4.2);
-    outerW = Math.round(outerH / 1.0775);
-  }
-
-  // حد أقصى وأدنى
-  outerW = Math.max(68, Math.min(outerW, 220));
-  outerH = Math.round(outerW * 1.0775);
-
-  const innerW = Math.round(outerW * 0.935);
-  const innerH = Math.round(outerH * 0.933);
-  const font   = Math.max(0.75, Math.min(outerW * 0.013, 2.8));
-  const overlap = -Math.round(outerH * 0.235);
-  const offset  = -(outerW * 2.5 + hexGap * 2.5);
-
-  const root = document.documentElement;
-  root.style.setProperty('--hex-outer-w', outerW + 'px');
-  root.style.setProperty('--hex-outer-h', outerH + 'px');
-  root.style.setProperty('--hex-inner-w', innerW + 'px');
-  root.style.setProperty('--hex-inner-h', innerH + 'px');
-  root.style.setProperty('--hex-font', font + 'rem');
-  root.style.setProperty('--hex-gap', hexGap + 'px');
-  root.style.setProperty('--hex-overlap', overlap + 'px');
-  root.style.setProperty('--hex-offset', offset + 'px');
-  root.style.setProperty('--header-h', headerH + 'px');
-}
-
-// شغّل عند التحميل وعند تغيير الحجم
-window.addEventListener('resize', calcHexSize);
-window.addEventListener('orientationchange', () => { setTimeout(calcHexSize, 150); });
-document.addEventListener('DOMContentLoaded', calcHexSize);
-
-// ════════════════════════════════════════
 // GAME VARIABLES
 // ════════════════════════════════════════
 const allLetters = ['أ','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
@@ -1962,7 +1892,6 @@ let currentQ      = null; // السؤال الحالي من Firestore
 // BUILD GRID
 // ════════════════════════════════════════
 function buildGrid() {
-  calcHexSize(); // احسب الحجم أولاً
   const grid = document.getElementById('hexGrid');
   grid.innerHTML = '';
   cells = [];
