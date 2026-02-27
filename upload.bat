@@ -1,9 +1,11 @@
 @echo off
-:: تنظيف الشاشة
 cls
-echo 🚀 Starting Rayan's Auto-Upload...
+echo 🚀 Starting Rayan's Auto-Upload to RAYanime...
 
-:: تنفيذ أوامر الـ Git
+:: المزامنة أولاً لتجنب الـ Rejection
+git pull origin RAYanime
+
+:: الرفع
 git add .
 git commit -m "Auto-update from Rayan Tool"
 git push origin RAYanime
