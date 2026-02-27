@@ -1,14 +1,8 @@
 @echo off
 cls
-echo 🚀 Starting Rayan's Auto-Upload to RAYanime...
-
-:: المزامنة أولاً لتجنب الـ Rejection
-git pull origin RAYanime
-
-:: الرفع
-git add .
-git commit -m "Auto-update from Rayan Tool"
+echo 🚀 Updating File Names for RayLetters...
+git add --all
+git commit -m "Update file names and icons"
 git push origin RAYanime
-
-echo ✨ DONE! Rayletters.life is now updating...
+echo ✨ Check GitHub now: github.com/imRAYi/RAYLetters
 pause
