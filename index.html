@@ -494,11 +494,43 @@ header {
 /* ─── UPDATES LIST (من Firestore) ─── */
 .update-card {
   background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.15);
-  border-radius: 16px; overflow: hidden; margin-bottom: 14px;
+  border-radius: 16px; overflow: hidden; margin-bottom: 14px; position: relative;
 }
-.update-card img { width: 100%; max-height: 200px; object-fit: cover; display: block; }
+.update-card-img {
+  width: 100%; display: block; cursor: pointer;
+  max-height: 360px; object-fit: cover;
+  border-radius: 16px 16px 0 0;
+  transition: opacity 0.2s;
+}
+.update-card-img:hover { opacity: 0.88; }
+/* أزرار الأدمن — جنب بعض */
+.admin-card-btns {
+  position: absolute; top: 10px; left: 10px;
+  display: flex; flex-direction: row; gap: 6px; z-index: 10;
+}
+.admin-edit-btn {
+  background: rgba(255,215,0,0.18); border: 1px solid rgba(255,215,0,0.5);
+  color: #ffd700; border-radius: 8px; padding: 5px 12px;
+  font-size: 0.82rem; font-weight: 700; cursor: pointer;
+  font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+}
+.admin-edit-btn:hover { background: rgba(255,215,0,0.32); }
 .update-card-text { padding: 14px 16px; color: rgba(255,255,255,0.85); font-size: 0.97rem; line-height: 1.65; }
-.update-card-date { font-size: 0.78rem; color: rgba(255,215,0,0.5); margin-top: 6px; }
+.update-card-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
+.update-card-date { font-size: 0.78rem; color: rgba(255,215,0,0.5); direction: ltr; }
+/* Lightbox */
+.img-lightbox {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.93); align-items: center; justify-content: center;
+  cursor: zoom-out; padding: 20px;
+}
+.img-lightbox.active { display: flex; }
+.img-lightbox img {
+  max-width: 90vw; max-height: 90vh; border-radius: 14px;
+  border: 3px solid #ffd700;
+  box-shadow: 0 0 60px rgba(255,215,0,0.4);
+  object-fit: contain; cursor: default;
+}
 
 /* ─── ADMIN ADD UPDATE BUTTON (مخفي افتراضياً) ─── */
 .admin-add-btn {
@@ -696,12 +728,12 @@ header {
 
 /* ─── ADMIN DELETE BTN (رفع مستواها) ─── */
 .admin-delete-btn {
-  background: rgba(255,60,60,0.1); border: 1px solid rgba(255,80,80,0.3); 
-  color: rgba(255,120,120,0.85); font-size: 0.82rem; cursor: pointer; 
-  position: absolute; top: 10px; left: 10px; border-radius: 8px; padding: 5px 10px;
+  background: rgba(255,60,60,0.15); border: 1px solid rgba(255,80,80,0.4);
+  color: rgba(255,120,120,0.9); border-radius: 8px; padding: 5px 12px;
+  font-size: 0.82rem; font-weight: 700; cursor: pointer;
   font-family: 'Tajawal', sans-serif; transition: all 0.2s;
 }
-.admin-delete-btn:hover { background: rgba(255,60,60,0.22); color: #ff7070; }
+.admin-delete-btn:hover { background: rgba(255,60,60,0.3); color: #ff6b6b; }
 .question-loading {
   font-size: 1rem; color: rgba(255,255,255,0.5);
   text-align: center; padding: 14px 0; display: none;
@@ -1493,55 +1525,84 @@ function toggleAdminForm() {
 
 async function saveUpdate() {
   const fileInput = document.getElementById('updateImgFile');
-  const text   = document.getElementById('updateText').value.trim();
-  if (!text) { showToast('أدخل نص التحديث'); return; }
+  const text      = document.getElementById('updateText').value.trim();
+  const btn       = document.querySelector('.btn-admin-save');
 
-  let imgUrl = '';
-  const btn = document.querySelector('.btn-admin-save');
+  if (!text) { showToast('أدخل نص التحديث'); return; }
+  if (!currentUser) { showToast('سجّل دخولك أولاً'); return; }
+  if (currentUser.uid !== ADMIN_UID) { showToast('ليس لديك صلاحية'); return; }
+
   btn.textContent = 'جاري الحفظ...';
   btn.disabled = true;
 
   try {
-    // محاولة رفع الصورة
+    let imgUrl = '';
+
     if (fileInput.files && fileInput.files[0]) {
-      const file = fileInput.files[0];
-      try {
-        // حاول رفع على Storage أولاً
-        const ref = storage.ref('updates/' + Date.now() + '_' + file.name);
-        await ref.put(file);
-        imgUrl = await ref.getDownloadURL();
-      } catch(storageErr) {
-        // إذا فشل Storage، احفظ كـ base64 مباشرة في Firestore
-        imgUrl = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = e => resolve(e.target.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      }
+      // ضغط الصورة قبل الحفظ (حد Firestore 1MB)
+      imgUrl = await compressImage(fileInput.files[0], 900, 0.75);
     }
 
     await db.collection('updates').add({
       imgUrl,
       text,
+      authorUid: currentUser.uid,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    // reset form
+    // تنظيف الفورم
     fileInput.value = '';
-    document.getElementById('imgPreview').style.display = 'none';
-    document.getElementById('imgUploadLabel').textContent = 'اضغط لاختيار صورة';
+    const preview = document.getElementById('imgPreview');
+    if (preview) { preview.style.display = 'none'; preview.src = ''; }
+    const lbl = document.getElementById('imgUploadLabel');
+    if (lbl) lbl.textContent = 'اضغط لاختيار صورة';
     document.getElementById('updateText').value = '';
-    toggleAdminForm();
-    loadUpdates();
+    adminFormVisible = false;
+    document.getElementById('adminForm').classList.remove('visible');
+    await loadUpdates();
     showToast('تم حفظ التحديث بنجاح');
+
   } catch(e) {
-    showToast('حدث خطأ: ' + e.message);
-    console.error(e);
+    console.error('saveUpdate:', e.code, e.message);
+    if (e.code === 'permission-denied' || String(e.message).includes('permission')) {
+      showToast('خطأ في Firestore Rules');
+    } else if (String(e.message).includes('longer than')) {
+      showToast('الصورة كبيرة جداً، جرّب صورة أصغر');
+    } else {
+      showToast('خطأ: ' + (e.message || 'حاول مرة أخرى'));
+    }
   } finally {
     btn.textContent = 'حفظ التحديث';
     btn.disabled = false;
   }
+}
+
+// ضغط الصورة بـ Canvas
+function compressImage(file, maxWidth, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('فشل قراءة الصورة'));
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('فشل تحميل الصورة'));
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        let q = quality;
+        let result = canvas.toDataURL('image/jpeg', q);
+        while (result.length > 800000 && q > 0.3) {
+          q -= 0.1;
+          result = canvas.toDataURL('image/jpeg', q);
+        }
+        resolve(result);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 let pendingDeleteId = null;
@@ -1563,33 +1624,69 @@ async function confirmDeleteUpdate() {
 async function loadUpdates() {
   const listEl  = document.getElementById('updatesList');
   const emptyEl = document.getElementById('updatesEmpty');
+  listEl.innerHTML = '';
+
   try {
     const snap = await db.collection('updates').orderBy('createdAt','desc').get();
     if (snap.empty) {
       emptyEl.style.display = 'block';
-      listEl.innerHTML = '';
       listEl.appendChild(emptyEl);
       return;
     }
-    listEl.innerHTML = '';
+
+    // cache للـ lightbox والـ edit modal
+    window._updatesCache = {};
+    snap.forEach(doc => { window._updatesCache[doc.id] = doc.data(); });
+
     snap.forEach(doc => {
-      const d = doc.data();
+      const d       = doc.data();
+      const isAdmin = currentUser && currentUser.uid === ADMIN_UID;
+      const docId   = doc.id;
+
+      // التاريخ بالإنجليزي
+      const dateStr = d.createdAt
+        ? new Date(d.createdAt.seconds * 1000).toLocaleDateString('en-GB', {
+            day: '2-digit', month: 'short', year: 'numeric'
+          })
+        : '';
+
       const card = document.createElement('div');
       card.className = 'update-card';
-      const isAdmin = currentUser && currentUser.uid === ADMIN_UID;
+
+      // زرّا التعديل والحذف جنب بعض
+      const adminBtns = isAdmin ? `
+        <div class="admin-card-btns">
+          <button class="admin-edit-btn"   onclick="openEditModal('${docId}')">تعديل</button>
+          <button class="admin-delete-btn" onclick="deleteUpdate('${docId}')">حذف</button>
+        </div>` : '';
+
+      // الصورة — اضغط عليها للمعاينة الكاملة
+      const imgHtml = d.imgUrl ? `
+        <img class="update-card-img"
+             src="${d.imgUrl}"
+             alt="تحديث"
+             onclick="openLightbox('${docId}')"
+             onerror="this.style.display='none'">` : '';
+
       card.innerHTML = `
-        ${isAdmin ? `<button class="admin-delete-btn" onclick="deleteUpdate('${doc.id}')">حذف</button>` : ''}
-        ${d.imgUrl ? `<img src="${d.imgUrl}" alt="تحديث" onerror="this.style.display='none'">` : ''}
+        ${adminBtns}
+        ${imgHtml}
         <div class="update-card-text">
-          ${d.text}
-          <div class="update-card-date">${d.createdAt ? new Date(d.createdAt.seconds*1000).toLocaleDateString('ar-SA') : ''}</div>
-        </div>
-      `;
+          <div>${d.text}</div>
+          <div class="update-card-footer">
+            <span class="update-card-date">${dateStr}</span>
+          </div>
+        </div>`;
+
       listEl.appendChild(card);
     });
+
   } catch(e) {
+    console.error('loadUpdates:', e);
+    listEl.innerHTML = '';
     emptyEl.style.display = 'block';
     emptyEl.textContent = 'قريباً... سيتم إضافة التحديثات هنا';
+    listEl.appendChild(emptyEl);
   }
 }
 
@@ -1628,7 +1725,7 @@ function toggleDarkMode(enabled) {
     icon.src  = 'Moon.png';
     label.textContent = 'الوضع الداكن';
   } else {
-    icon.src  = 'Sun.png';
+    icon.src  = 'sun.png';
     label.textContent = 'الوضع الطبيعي';
   }
 }
@@ -1979,6 +2076,99 @@ function startNextRound() {
   cells = []; usedQuestions = {};
   buildGrid();
 }
+
+// ── LIGHTBOX ─────────────────────────────────────────────────
+function openLightbox(docId) {
+  const data = window._updatesCache && window._updatesCache[docId];
+  if (!data || !data.imgUrl) return;
+  document.getElementById('lightboxImg').src = data.imgUrl;
+  document.getElementById('imgLightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('imgLightbox').classList.remove('active');
+  document.getElementById('lightboxImg').src = '';
+  document.body.style.overflow = '';
+}
+
+// ── EDIT UPDATE ───────────────────────────────────────────────
+function openEditModal(docId) {
+  const data = window._updatesCache && window._updatesCache[docId];
+  if (!data) return;
+  document.getElementById('editDocId').value      = docId;
+  document.getElementById('editUpdateText').value = data.text || '';
+  document.getElementById('editError').textContent = '';
+  document.getElementById('editUpdateOverlay').classList.add('active');
+}
+function closeEditModal() {
+  document.getElementById('editUpdateOverlay').classList.remove('active');
+}
+async function confirmEditUpdate() {
+  const docId   = document.getElementById('editDocId').value;
+  const newText = document.getElementById('editUpdateText').value.trim();
+  const errEl   = document.getElementById('editError');
+  if (!newText) { errEl.textContent = 'النص لا يمكن أن يكون فارغاً'; return; }
+  if (!currentUser || currentUser.uid !== ADMIN_UID) { errEl.textContent = 'ليس لديك صلاحية'; return; }
+  const allBtns = document.querySelectorAll('#editUpdateOverlay button');
+  allBtns.forEach(b => b.disabled = true);
+  try {
+    await db.collection('updates').doc(docId).update({ text: newText });
+    closeEditModal();
+    await loadUpdates();
+    showToast('تم تعديل التحديث بنجاح');
+  } catch(e) {
+    errEl.textContent = 'خطأ: ' + (e.message || 'حاول مرة أخرى');
+  } finally {
+    allBtns.forEach(b => b.disabled = false);
+  }
+}
+
+// إغلاق بـ Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeLightbox(); closeEditModal(); }
+});
 </script>
+
+<!-- LIGHTBOX -->
+<div class="img-lightbox" id="imgLightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
+<!-- EDIT UPDATE MODAL -->
+<div class="modal-overlay" id="editUpdateOverlay" style="z-index:9000">
+  <div style="background:linear-gradient(155deg,#1a0438,#2b0858);border-radius:20px;
+              padding:28px;max-width:480px;width:95%;
+              border:1.5px solid rgba(255,215,0,0.3);
+              box-shadow:0 30px 80px rgba(0,0,0,0.85);
+              direction:rtl;position:relative">
+    <button onclick="closeEditModal()"
+            style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.08);
+                   border:none;color:rgba(255,255,255,0.6);width:32px;height:32px;
+                   border-radius:8px;cursor:pointer;font-size:1.1rem">&#x2715;</button>
+    <h3 style="color:#ffd700;font-family:'Cairo',sans-serif;font-size:1.2rem;margin-bottom:16px">تعديل التحديث</h3>
+    <input type="hidden" id="editDocId">
+    <label style="color:rgba(255,255,255,0.65);font-size:0.85rem;font-weight:700;display:block;margin-bottom:6px">نص التحديث</label>
+    <textarea id="editUpdateText" rows="4"
+              style="width:100%;padding:11px 14px;border-radius:11px;
+                     border:1.5px solid rgba(255,255,255,0.2);
+                     background:rgba(255,255,255,0.08);color:#fff;
+                     font-family:'Tajawal',sans-serif;font-size:0.95rem;
+                     outline:none;resize:vertical;margin-bottom:14px;direction:rtl"></textarea>
+    <div style="display:flex;gap:10px">
+      <button onclick="confirmEditUpdate()"
+              style="flex:1;padding:12px;border-radius:11px;
+                     background:linear-gradient(135deg,#ff8c00,#ffd700);
+                     color:#1a1a2e;font-size:0.97rem;font-weight:900;
+                     border:none;cursor:pointer;font-family:'Tajawal',sans-serif">حفظ التعديل</button>
+      <button onclick="closeEditModal()"
+              style="padding:12px 18px;border-radius:11px;
+                     background:rgba(255,255,255,0.08);
+                     border:1px solid rgba(255,255,255,0.18);
+                     color:rgba(255,255,255,0.6);cursor:pointer;
+                     font-family:'Tajawal',sans-serif">إلغاء</button>
+    </div>
+    <div id="editError" style="color:#ff7070;font-size:0.85rem;margin-top:10px;min-height:18px"></div>
+  </div>
+</div>
 </body>
 </html>
