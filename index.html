@@ -2435,6 +2435,42 @@ let currentQ      = null; // السؤال الحالي من Firestore
 // ════════════════════════════════════════
 // BUILD GRID
 // ════════════════════════════════════════
+
+// بناء الشبكة بحروف محددة (من الهوست)
+function buildGridWithLetters(letters) {
+  const grid = document.getElementById('hexGrid');
+  grid.innerHTML = '';
+  cells = [];
+  firstMoveDone = false;
+  answerVisible = false;
+  currentGridLetters = letters;
+
+  const layout = [5, 5, 5, 5, 5];
+  let idx = 0;
+  layout.forEach((count, rowIdx) => {
+    const row = document.createElement('div');
+    row.className = 'hex-row' + (rowIdx % 2 !== 0 ? ' offset' : '');
+    for (let i = 0; i < count; i++) {
+      const letter = letters[idx];
+      const outer  = document.createElement('div');
+      outer.className = 'hex-outer';
+      const cell = document.createElement('div');
+      cell.className = 'hex-cell';
+      cell.textContent = letter;
+      cell.dataset.letter  = letter;
+      cell.dataset.index   = idx;
+      cell.dataset.claimed = 'false';
+      if (idx === 12) { cell.classList.add('gold-cell'); outer.classList.add('gold-outer'); }
+      cell.addEventListener('click', () => onCellClick(cell));
+      outer.appendChild(cell);
+      row.appendChild(outer);
+      cells.push(cell);
+      idx++;
+    }
+    grid.appendChild(row);
+  });
+}
+
 function buildGrid() {
   const grid = document.getElementById('hexGrid');
   grid.innerHTML = '';
@@ -3135,9 +3171,21 @@ async function startHostListener(sessionId) {
       stopWinEffects();
       document.getElementById('winScreen').classList.remove('active');
       document.getElementById('modalOverlay').classList.remove('active');
-      if (dnr.type === 'nextRound')  { currentRound++; startNextRound(); }
-      else if (dnr.type === 'tiebreak') { currentRound = 3; startNextRound(); }
-      else if (dnr.type === 'gameOver') { location.reload(); }
+      if (dnr.type === 'gameOver') { location.reload(); return; }
+      // تحديث رقم الجولة
+      if (dnr.type === 'nextRound')  currentRound++;
+      if (dnr.type === 'tiebreak')   currentRound = 3;
+      // إعادة تهيئة
+      scores = { orange:0, green:0 };
+      firstMoveDone = false;
+      currentTurn = 'orange';
+      cells = []; usedQuestions = {}; currentCell = null;
+      // بناء الشبكة بنفس الحروف التي أرسلها الهوست
+      if (dnr.letters && dnr.letters.length === 25) {
+        buildGridWithLetters(dnr.letters);
+      } else {
+        buildGrid();
+      }
       db.collection(HOST_COLL).doc(sessionId).update({ doNextRound: null });
     }
 
@@ -3649,27 +3697,30 @@ function showHostNextRoundBtn(winState) {
   const btn = document.getElementById('hostNextRoundBtn');
   if (!btn) return;
 
+  function sendNextRound(type) {
+    // توليد حروف عشوائية جديدة هنا في الهوست
+    const allL = ['أ','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
+    const newLetters = [...allL].sort(() => Math.random() - 0.5).slice(0, 25);
+    db.collection(HOST_COLL).doc(hostSessionId).update({
+      winState:    null,
+      gridLetters: newLetters,
+      grid:        [],
+      question:    null,
+      revealAnswer: false,
+      claimWinner:  null,
+      doNextRound: { type, ts: Date.now(), letters: newLetters }
+    });
+    resetHostNextRoundBtn();
+  }
+
   if (winState.type === 'nextRound') {
     btn.textContent = 'الاستمرار للجولة التالية';
     btn.style.background = 'linear-gradient(135deg,#FFAC1C,#ffd700)';
-    btn.onclick = () => {
-      // أرسل أمر للشاشة الرئيسية عبر Firestore
-      db.collection(HOST_COLL).doc(hostSessionId).update({
-        winState:      null,
-        doNextRound:   { type: 'nextRound', ts: Date.now() }
-      });
-      resetHostNextRoundBtn();
-    };
+    btn.onclick = () => sendNextRound('nextRound');
   } else if (winState.type === 'tiebreak') {
     btn.textContent = 'ابدأ الجولة الحاسمة';
     btn.style.background = 'linear-gradient(135deg,#FFAC1C,#ffd700)';
-    btn.onclick = () => {
-      db.collection(HOST_COLL).doc(hostSessionId).update({
-        winState:    null,
-        doNextRound: { type: 'tiebreak', ts: Date.now() }
-      });
-      resetHostNextRoundBtn();
-    };
+    btn.onclick = () => sendNextRound('tiebreak');
   } else if (winState.type === 'gameOver') {
     btn.textContent = 'إعادة اللعبة كاملة';
     btn.style.background = 'linear-gradient(135deg,#e05050,#ff7070)';
