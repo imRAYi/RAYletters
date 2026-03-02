@@ -2943,7 +2943,7 @@ document.addEventListener('keydown', e => {
         border:none;font-size:1.05rem;font-weight:900;cursor:pointer;
         font-family:'Tajawal',sans-serif;
         box-shadow:0 4px 16px rgba(255,172,28,0.4);
-        animation: pulse 1s infinite;">
+">
         الاستمرار للجولة التالية
       </button>
     </div>
@@ -3089,6 +3089,7 @@ async function startHostListener(sessionId) {
   let lastRoundWinner      = null;
   let lastWinState         = null;
   let lastContinueRound2Ts = 0;
+  let lastDoNextRoundTs    = 0;
 
   hostListener = db.collection(HOST_COLL).doc(sessionId).onSnapshot(snap => {
     if (!snap.exists) return;
@@ -3128,6 +3129,19 @@ async function startHostListener(sessionId) {
     if (data.winState && data.winState !== lastWinState) {
       lastWinState = data.winState;
       showHostNextRoundBtn(data.winState);
+    }
+
+    // ① تنفيذ الجولة التالية بأمر من الهوست
+    if (data.doNextRound && data.doNextRound.ts !== lastDoNextRoundTs) {
+      lastDoNextRoundTs = data.doNextRound.ts;
+      const dnr = data.doNextRound;
+      stopWinEffects();
+      document.getElementById('winScreen').classList.remove('active');
+      document.getElementById('modalOverlay').classList.remove('active');
+      if (dnr.type === 'nextRound')  { currentRound++; startNextRound(); }
+      else if (dnr.type === 'tiebreak') { currentRound = 3; startNextRound(); }
+      else if (dnr.type === 'gameOver') { location.reload(); }
+      db.collection(HOST_COLL).doc(sessionId).update({ doNextRound: null });
     }
 
     // ② فتح السؤال — الهوست اختار خلية جديدة
@@ -3626,31 +3640,31 @@ function showHostNextRoundBtn(winState) {
     btn.textContent = 'الاستمرار للجولة التالية';
     btn.style.background = 'linear-gradient(135deg,#FFAC1C,#ffd700)';
     btn.onclick = () => {
-      stopWinEffects();
-      currentRound++;
-      document.getElementById('winScreen').classList.remove('active');
-      startNextRound();
-      db.collection(HOST_COLL).doc(hostSessionId).update({ winState: null });
-      // إعادة الزر لوضعه الافتراضي
+      // أرسل أمر للشاشة الرئيسية عبر Firestore
+      db.collection(HOST_COLL).doc(hostSessionId).update({
+        winState:      null,
+        doNextRound:   { type: 'nextRound', ts: Date.now() }
+      });
       resetHostNextRoundBtn();
     };
   } else if (winState.type === 'tiebreak') {
     btn.textContent = 'ابدأ الجولة الحاسمة';
     btn.style.background = 'linear-gradient(135deg,#FFAC1C,#ffd700)';
     btn.onclick = () => {
-      stopWinEffects();
-      currentRound = 3;
-      document.getElementById('winScreen').classList.remove('active');
-      startNextRound();
-      db.collection(HOST_COLL).doc(hostSessionId).update({ winState: null });
+      db.collection(HOST_COLL).doc(hostSessionId).update({
+        winState:    null,
+        doNextRound: { type: 'tiebreak', ts: Date.now() }
+      });
       resetHostNextRoundBtn();
     };
   } else if (winState.type === 'gameOver') {
     btn.textContent = 'إعادة اللعبة كاملة';
     btn.style.background = 'linear-gradient(135deg,#e05050,#ff7070)';
     btn.onclick = () => {
-      stopWinEffects();
-      location.reload();
+      db.collection(HOST_COLL).doc(hostSessionId).update({
+        winState:    null,
+        doNextRound: { type: 'gameOver', ts: Date.now() }
+      });
     };
   }
 }
