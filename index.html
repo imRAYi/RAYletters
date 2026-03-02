@@ -2928,7 +2928,7 @@ document.addEventListener('keydown', e => {
       <div class="host-action-btns">
         <button class="host-btn-orange" id="hostBtnOrange" onclick="hostClaimCell('orange')">فاز البرتقالي</button>
         <button class="host-btn-green"  id="hostBtnGreen"  onclick="hostClaimCell('green')">فاز الأخضر</button>
-        <button class="host-btn-skip"   onclick="hostSkip()" style="display:flex;align-items:center;justify-content:center;gap:6px;"><img src="Switch.jpg" alt="تغيير" style="height:28px;width:auto;object-fit:contain;filter:brightness(1.2);"></button>
+        <button class="host-btn-skip"   onclick="hostSkip()" style="display:flex;align-items:center;justify-content:center;gap:6px;"><img src="Change.jpg" alt="تغيير" style="height:28px;width:auto;object-fit:contain;filter:brightness(1.2);"></button>
       </div>
     </div>
 
@@ -2944,7 +2944,7 @@ document.addEventListener('keydown', e => {
         font-family:'Tajawal',sans-serif;
         box-shadow:0 4px 16px rgba(255,172,28,0.4);
         animation: pulse 1s infinite;">
-        ابدأ الجولة التالية
+        الاستمرار للجولة التالية
       </button>
     </div>
   </div>
@@ -3114,16 +3114,12 @@ async function startHostListener(sessionId) {
       db.collection(HOST_COLL).doc(sessionId).update({ continueRound2: null });
     }
 
-    // ① فتح مودال فائز الجولة
-    if (data.openRoundModal && data.openRoundModal !== lastRoundModalTs) {
-      lastRoundModalTs = data.openRoundModal;
-      openRoundModal();
-    }
+    // ① فتح مودال فائز الجولة — للهوست فقط (الشاشة الرئيسية لا تفتحه)
+    // لا نفعل شيئاً هنا — الهوست يفتح مودال الجولة محلياً
 
-    // ① إعلان فائز الجولة
+    // ① إعلان فائز الجولة — الشاشة الرئيسية تطبق النتيجة مباشرة بدون مودال
     if (data.roundWinner && data.roundWinner !== lastRoundWinner) {
       lastRoundWinner = data.roundWinner;
-      closeRoundModal();
       announceRoundWinner(data.roundWinner);
       db.collection(HOST_COLL).doc(sessionId).update({ roundWinner: null });
     }
@@ -3620,7 +3616,7 @@ function showHostNextRoundBtn(winState) {
   el.style.display = 'block';
 
   if (winState.type === 'nextRound') {
-    btn.textContent = 'ابدأ الجولة التالية';
+    btn.textContent = 'الاستمرار للجولة التالية';
     btn.onclick = () => {
       el.style.display = 'none';
       stopWinEffects();
@@ -3657,7 +3653,7 @@ function hostContinueRound2() {
   if (!hostSessionId) return;
 
   // تأكيد قبل الاستمرار
-  if (!confirm('هل تريد الاستمرار للجولة الثانية؟ سيتم إعادة ترتيب الخلايا عشوائياً.')) return;
+  if (!confirm('الاستمرار للجولة التالية؟ سيتم إعادة ترتيب الخلايا عشوائياً.')) return;
 
   // إرسال أمر لإعادة الشبكة مع إبقاء النقاط
   db.collection(HOST_COLL).doc(hostSessionId).update({
