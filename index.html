@@ -3125,11 +3125,8 @@ async function startHostListener(sessionId) {
       db.collection(HOST_COLL).doc(sessionId).update({ roundWinner: null });
     }
 
-    // ① عرض زر "ابدأ الجولة التالية / الحاسمة / إعادة" للهوست
-    if (data.winState && data.winState !== lastWinState) {
-      lastWinState = data.winState;
-      showHostNextRoundBtn(data.winState);
-    }
+    // winState — الشاشة الرئيسية تتجاهله (الهوست يتعامل معه في initHostMobile)
+    if (data.winState) { lastWinState = data.winState; }
 
     // ① تنفيذ الجولة التالية بأمر من الهوست
     if (data.doNextRound && data.doNextRound.ts !== lastDoNextRoundTs) {
@@ -3278,8 +3275,24 @@ async function initHostMobile(sessionId) {
     if (data.grid && data.grid.length > 0) {
       updateHostMiniGrid(data.grid);
     }
+
+    // ★ عرض زر الجولة التالية للهوست بعد اختيار فائز الجولة
+    if (data.winState && JSON.stringify(data.winState) !== hostLastWinState) {
+      hostLastWinState = JSON.stringify(data.winState);
+      showHostNextRoundBtn(data.winState);
+    }
+
+    // ★ بعد تنفيذ doNextRound — أعد الشبكة المصغرة للهوست
+    if (data.doNextRound && data.doNextRound.ts !== hostLastDoNextTs) {
+      hostLastDoNextTs = data.doNextRound.ts;
+      // الشاشة الرئيسية تتولى إعادة البناء — الهوست فقط يصفّر عرض السؤال
+      document.getElementById('hostQuestionView').classList.remove('active');
+    }
   });
 }
+
+let hostLastWinState  = null;
+let hostLastDoNextTs  = 0;
 
 function buildHostMiniGrid(letters) {
   // نستخدم نفس ترتيب الشاشة الرئيسية تماماً
