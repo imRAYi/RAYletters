@@ -4,6 +4,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>حروف مع ريان</title>
+
+<!-- ═══ SEO Core ═══ -->
+<meta name="description" content="لعبة الخلايا بالحروف العربية | العاب جماعية وعائلية مع تحديات واسئلة متنوعة ومجانية">
+<meta name="keywords" content="حروف مع ريان, RAYletters, لعبة خلايا, لعبة حروف عربية, لعبة ريان, لعبة خلايا الحروف, حروف مع عزيز, العاب عربية, لعبة كلمات عربية, خلايا النحل, لعبة تفاعلية, العاب جماعية, لعبة عائلية, RAY letters, حروف ريان, لعبة حروف, خلايا حروف, لعبة اونلاين عربية, العاب تعليمية, لعبة كلمات, حروف عربية">
+<meta name="author" content="RAYteam - ريان">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="language" content="Arabic">
+<meta name="revisit-after" content="3 days">
+<meta name="rating" content="general">
+<link rel="canonical" href="https://rayletters.life/">
+
+<!-- ═══ Open Graph (مشاركة على السوشيال ميديا) ═══ -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rayletters.com/">
+<meta property="og:title" content="حروف مع ريان | لعبة خلايا الحروف العربية">
+<meta property="og:description" content="العب حروف مع ريان - لعبة خلايا الحروف العربية التفاعلية! تحدّ أصدقاءك واختر الكلمات من الخلايا. RAYletters - أفضل لعبة حروف عربية.">
+<meta property="og:image" content="https://rayletters.com/Logo.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ar_SA">
+<meta property="og:site_name" content="حروف مع ريان - RAYletters">
+
+<!-- ═══ Twitter Card ═══ -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@RAYletters1">
+<meta name="twitter:creator" content="@RAYletters1">
+<meta name="twitter:title" content="حروف مع ريان | لعبة خلايا الحروف العربية">
+<meta name="twitter:description" content="لعبة خلايا الحروف العربية التفاعلية - حروف مع ريان RAYletters">
+<meta name="twitter:image" content="https://rayletters.com/Logo.png">
+
+<!-- ═══ Schema.org Structured Data ═══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "حروف مع ريان",
+  "alternateName": ["RAYletters", "لعبة خلايا", "حروف ريان", "RAY letters"],
+  "url": "https://rayletters.com/",
+  "description": "لعبة خلايا الحروف العربية التفاعلية - حروف مع ريان. العب مع أصدقائك وعائلتك في تحدي اختيار الكلمات من خلايا الحروف.",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Web Browser",
+  "inLanguage": "ar",
+  "isAccessibleForFree": true,
+  "author": {
+    "@type": "Organization",
+    "name": "RAYteam",
+    "url": "https://rayletters.com/",
+    "sameAs": [
+      "https://x.com/RAYletters1",
+      "https://www.tiktok.com/@rayletters.1"
+    ]
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "SAR"
+  },
+  "keywords": "حروف مع ريان, RAYletters, لعبة خلايا, لعبة حروف عربية"
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Cairo:wght@700;900&display=swap" rel="stylesheet">
 
 <link rel="icon" type="image/png" href="favicon.png">
@@ -59,7 +119,8 @@ body.dark-mode {
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { overflow-x: hidden; }
+html, body { overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 body {
   background-image: url(BackGround.jpeg);
   background-size: cover; background-position: center;
@@ -177,46 +238,62 @@ body.dark-mode { filter: brightness(0.82) saturate(0.85); }
 /* ─── HEADER ─── */
 header {
   width: 100%; background: var(--header-bg); backdrop-filter: blur(14px);
-  padding: 14px 78px 14px 30px;
+  padding: 16px 90px 16px 30px;
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
   box-shadow: 0 4px 30px rgba(0,0,0,0.6);
   border-bottom: 2px solid rgba(255,215,0,0.25);
-  position: relative; min-height: 95px; transition: background 0.4s;
+  position: relative; min-height: 110px; transition: background 0.4s;
 }
 .Logo {
   position: absolute; left: 50%; transform: translateX(-50%);
-  height: 85px; width: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
+  height: 100px; width: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
   pointer-events: none;
 }
 .scores { display: flex; gap: 14px; flex-shrink: 0; }
 .team-score {
   display: flex; flex-direction: column; align-items: center;
-  background: rgba(255,255,255,0.06); border-radius: 14px;
-  padding: 10px 18px; min-width: 100px;
+  background: rgba(255,255,255,0.06); border-radius: 16px;
+  padding: 12px 22px; min-width: 120px;
   border: 2px solid transparent; position: relative; overflow: hidden;
 }
 .team-score::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
-.team-score.orange { border-color: rgba(255,140,0,0.55); }
-.team-score.orange::after { background: linear-gradient(90deg, #ff8c00, #ffd700); }
-.team-score.green  { border-color: rgba(46,204,64,0.55); }
-.team-score.green::after  { background: linear-gradient(90deg, #2ecc40, #00ff88); }
-.team-score .team-name { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.3px; }
-.team-score.orange .team-name { color: #ffb347; }
-.team-score.green  .team-name { color: #5dff70; }
+.team-score.orange { border-color: #FFAC1C; }
+.team-score.orange::after { background: #FFAC1C; }
+.team-score.green  { border-color: #2afc00; }
+.team-score.green::after  { background: #2afc00; }
+.team-score .team-name { font-size: 0.88rem; font-weight: 700; letter-spacing: 0.3px; }
+.team-score.orange .team-name { color: #FFAC1C; }
+.team-score.green  .team-name { color: #2afc00; }
 .team-score .score-num {
-  font-size: 2.4rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  font-size: 2.8rem; font-weight: 900; font-family: 'Cairo', sans-serif;
   line-height: 1.1; letter-spacing: -1px;
 }
-.team-score.orange .score-num { color: #ffd700; text-shadow: 0 0 18px rgba(255,215,0,0.8); }
-.team-score.green  .score-num { color: #5dff70; text-shadow: 0 0 18px rgba(93,255,112,0.8); }
+.team-score.orange .score-num { color: #FFAC1C; }
+.team-score.green  .score-num { color: #2afc00; }
+/* زر فائز الجولة */
 .btn-round-winner {
   background: linear-gradient(135deg, #ff8c00, #ffd700);
-  color: #1a1a2e; font-size: 0.95rem; padding: 12px 22px;
-  border-radius: 12px; border: none; font-weight: 900; cursor: pointer;
+  color: #1a1a2e; font-size: 1.05rem; padding: 13px 26px;
+  border-radius: 13px; border: none; font-weight: 900; cursor: pointer;
   transition: all 0.2s; font-family: 'Tajawal', sans-serif; white-space: nowrap;
   box-shadow: 0 4px 16px rgba(255,140,0,0.55); flex-shrink: 0;
+  display: none; /* مخفي في الشاشة الرئيسية — يظهر للهوست فقط */
 }
 .btn-round-winner:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,140,0,0.7); }
+/* زر مالك الخلية (QR Host) */
+.btn-host-qr {
+  background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  font-size: 0.82rem; padding: 7px 14px;
+  border-radius: 10px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; font-family: 'Tajawal', sans-serif;
+  white-space: nowrap; display: block; margin-bottom: 5px;
+}
+.btn-host-qr:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,215,0,0.4); color: #ffd700; }
+/* wrapper للزرين */
+.header-right-btns {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0;
+}
 
 /* ─── HEX GRID ─── */
 :root {
@@ -253,10 +330,10 @@ header {
   font-family: 'Cairo', 'Tajawal', sans-serif;
 }
 .hex-cell:hover:not(.claimed) { background: var(--hex-hover); transform: scale(1.05); }
-.hex-outer.claimed-orange { background: #b85e00; }
-.hex-outer.claimed-green  { background: #1a7a28; }
-.hex-cell.claimed-orange  { background: #ff8c00; color: white; cursor: default; }
-.hex-cell.claimed-green   { background: #2ecc40; color: white; cursor: default; }
+.hex-outer.claimed-orange { background: #c07800 !important; }
+.hex-outer.claimed-green  { background: #18a800 !important; }
+.hex-cell.claimed-orange  { background: #FFAC1C !important; color: transparent !important; cursor: default; }
+.hex-cell.claimed-green   { background: #2afc00 !important; color: transparent !important; cursor: default; }
 .hex-cell.claimed { cursor: default; }
 .hex-cell.pulse { animation: pulse 0.5s ease; }
 @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.15)} 100%{transform:scale(1)} }
@@ -298,8 +375,8 @@ header {
   font-size: 5.5rem; font-weight: 900; font-family: 'Cairo', sans-serif;
   line-height: 1; margin: 4px 0 14px;
 }
-.orange-modal .letter-display { color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.55); }
-.green-modal  .letter-display { color: #5dff70; text-shadow: 0 0 30px rgba(93,255,112,0.55); }
+.orange-modal .letter-display,
+.green-modal  .letter-display { color: #ffd700; }
 
 .modal .question {
   font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.9);
@@ -329,8 +406,9 @@ header {
 }
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
-.action-buttons { display: none; margin-top: 8px; }
-.action-buttons.visible { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.action-buttons { display: none !important; margin-top: 8px; }
+/* تظهر فقط عند الهوست عبر كلاس host-can-act */
+.host-can-act .action-buttons.visible { display: flex !important; justify-content: center; flex-wrap: wrap; gap: 8px; }
 
 .btn {
   display: inline-block; padding: 11px 24px; border-radius: 12px;
@@ -366,9 +444,9 @@ header {
   border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
   display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
-.round-team-btn.orange-btn { background: rgba(255,140,0,0.12); border-color: rgba(255,140,0,0.6); color: #ffb347; }
+.round-team-btn.orange-btn { background: rgba(255,172,28,0.12); border-color: #FFAC1C; color: #FFAC1C; }
 .round-team-btn.orange-btn:hover { background: #ff8c00; color: white; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,140,0,0.5); }
-.round-team-btn.green-btn  { background: rgba(46,204,64,0.12); border-color: rgba(46,204,64,0.6); color: #5dff70; }
+.round-team-btn.green-btn  { background: rgba(42,252,0,0.10); border-color: #2afc00; color: #2afc00; }
 .round-team-btn.green-btn:hover  { background: #2ecc40; color: white; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(46,204,64,0.5); }
 .btn-cancel-round {
   background: none; border: 1px solid rgba(255,255,255,0.18);
@@ -400,39 +478,40 @@ header {
 .setup-screen > * { position: relative; z-index: 1; }
 .setup-card {
   background: var(--card-bg); backdrop-filter: blur(20px);
-  border: 1.5px solid var(--card-border); border-radius: 28px;
-  padding: 42px 50px; display: flex; flex-direction: column;
-  align-items: center; gap: 26px; box-shadow: 0 25px 70px rgba(0,0,0,0.6);
-  width: 100%; max-width: 560px;
+  border: 1.5px solid var(--card-border); border-radius: 36px;
+  padding: 64px 80px; display: flex; flex-direction: column;
+  align-items: center; gap: 34px; box-shadow: 0 30px 80px rgba(0,0,0,0.65);
+  width: 100%; max-width: 760px;
 }
-.setup-logo { width: 160px; filter: drop-shadow(0 8px 22px rgba(255,215,0,0.5)); }
-.setup-title { font-size: 1.45rem; font-weight: 900; color: #ffd700; text-shadow: 0 2px 12px rgba(255,215,0,0.4); text-align: center; }
-.team-setup { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; width: 100%; }
+.setup-logo { width: 190px; filter: drop-shadow(0 8px 22px rgba(255,215,0,0.5)); }
+.setup-title { font-size: 1.6rem; font-weight: 900; color: #ffd700; text-align: center; }
+.team-setup { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; }
 .team-box {
-  background: rgba(255,255,255,0.055); border-radius: 16px; padding: 20px 22px;
-  border: 2px solid; text-align: center; flex: 1; min-width: 140px; transition: transform 0.2s;
+  background: rgba(255,255,255,0.055); border-radius: 18px; padding: 24px 26px;
+  border: 2px solid; text-align: center; flex: 1; min-width: 160px; transition: transform 0.2s;
 }
 .team-box:hover { transform: translateY(-3px); }
-.team-box.orange { border-color: #ff8c00; box-shadow: 0 4px 20px rgba(255,140,0,0.2); }
-.team-box.green  { border-color: #2ecc40; box-shadow: 0 4px 20px rgba(46,204,64,0.2); }
-.team-box label { display: block; font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
-.team-box.orange label { color: #ffb347; }
-.team-box.green  label { color: #5dff70; }
+.team-box.orange { border-color: #FFAC1C; box-shadow: none; }
+.team-box.green  { border-color: #2afc00; box-shadow: none; }
+.team-box label { display: block; font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; }
+.team-box.orange label { color: #FFAC1C; }
+.team-box.green  label { color: #2afc00; }
 .team-box input {
-  width: 100%; padding: 10px 14px; border-radius: 10px;
-  border: 2px solid rgba(255,255,255,0.18); font-size: 1rem;
+  width: 100%; padding: 12px 16px; border-radius: 11px;
+  border: 2px solid rgba(255,255,255,0.18); font-size: 1.05rem;
   font-family: 'Tajawal', sans-serif; text-align: center;
   background: rgba(255,255,255,0.1); color: #fff; outline: none; transition: border-color 0.2s;
 }
+.team-box input::placeholder { color: rgba(255,255,255,0.35); }
 .team-box.orange input:focus { border-color: #ff8c00; }
 .team-box.green  input:focus { border-color: #2ecc40; }
 .btn-start {
-  background: linear-gradient(135deg,#ff8c00,#ffd700); color: #1a1a2e;
-  font-size: 1.28rem; padding: 14px 55px; border-radius: 14px; font-weight: 900;
+  background: #ffc232; color: #1a1a2e;
+  font-size: 1.38rem; padding: 16px 65px; border-radius: 16px; font-weight: 900;
   border: none; cursor: pointer; transition: all 0.2s;
-  box-shadow: 0 5px 20px rgba(255,140,0,0.5); font-family: 'Tajawal', sans-serif;
+  box-shadow: 0 5px 20px rgba(255,194,50,0.4); font-family: 'Tajawal', sans-serif;
 }
-.btn-start:hover { transform: translateY(-3px); box-shadow: 0 9px 30px rgba(255,140,0,0.7); }
+.btn-start:hover { transform: translateY(-3px); box-shadow: 0 9px 30px rgba(255,194,50,0.6); background: #ffcd4a; }
 
 /* ─── NOTICE TOAST ─── */
 .custom-notice {
@@ -812,12 +891,12 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 .auth-input:focus { border-color: rgba(255,215,0,0.5); }
 .btn-auth-submit {
   width: 100%; padding: 13px; border-radius: 12px;
-  background: linear-gradient(135deg,#ff8c00,#ffd700); color: #1a1a2e;
+  background: #ffc232; color: #1a1a2e;
   font-size: 1.05rem; font-weight: 900; border: none; cursor: pointer;
   font-family: 'Tajawal', sans-serif; transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(255,140,0,0.4); margin-top: 4px;
+  margin-top: 4px;
 }
-.btn-auth-submit:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(255,140,0,0.6); }
+.btn-auth-submit:hover { transform: translateY(-2px); background: #ffcd4a; }
 .auth-error { color: #ff7070; font-size: 0.88rem; margin-top: 10px; min-height: 20px; }
 .auth-close {
   position: absolute; top: 14px; left: 14px;
@@ -836,8 +915,8 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 /* ── تلفاز 1400px+ ── */
 @media (min-width: 1400px) {
   :root { --hex-outer-w:230px;--hex-outer-h:248px;--hex-inner-w:215px;--hex-inner-h:232px;--hex-font:2.9rem;--hex-gap:5px;--hex-overlap:-58px;--hex-offset:-219px; }
-  header { min-height: 100px; padding: 14px 90px 14px 30px; }
-  .Logo { height: 90px; }
+  header { min-height: 120px; padding: 16px 100px 16px 32px; }
+  .Logo { height: 108px; }
   .team-score { padding: 12px 22px; min-width: 110px; }
   .team-score .score-num { font-size: 2.7rem; }
   .btn-round-winner { font-size: 1rem; padding: 13px 24px; }
@@ -931,11 +1010,11 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 
 /* hex sizes 391-480px */
 @media (max-width: 480px) and (min-width: 391px) {
-  :root { --hex-outer-w:93px;--hex-outer-h:100px;--hex-inner-w:87px;--hex-inner-h:93px;--hex-font:1.1rem;--hex-gap:3px;--hex-overlap:-23px;--hex-offset:-89px; }
+  :root { --hex-outer-w:72px;--hex-outer-h:77px;--hex-inner-w:67px;--hex-inner-h:72px;--hex-font:1.0rem;--hex-gap:3px;--hex-overlap:-18px;--hex-offset:-68px; }
 }
 /* hex sizes ≤390px */
 @media (max-width: 390px) {
-  :root { --hex-outer-w:84px;--hex-outer-h:90px;--hex-inner-w:78px;--hex-inner-h:84px;--hex-font:0.97rem;--hex-gap:2px;--hex-overlap:-21px;--hex-offset:-80px; }
+  :root { --hex-outer-w:64px;--hex-outer-h:69px;--hex-inner-w:59px;--hex-inner-h:64px;--hex-font:0.88rem;--hex-gap:2px;--hex-overlap:-16px;--hex-offset:-61px; }
   .team-score .score-num { font-size: 1.4rem; }
   .btn-round-winner { font-size: 0.67rem; padding: 6px 9px; }
   .Logo { height: 38px; }
@@ -945,7 +1024,7 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 }
 /* hex sizes ≤360px */
 @media (max-width: 360px) {
-  :root { --hex-outer-w:76px;--hex-outer-h:82px;--hex-inner-w:71px;--hex-inner-h:77px;--hex-font:0.88rem;--hex-gap:2px;--hex-overlap:-19px;--hex-offset:-72px; }
+  :root { --hex-outer-w:57px;--hex-outer-h:61px;--hex-inner-w:53px;--hex-inner-h:57px;--hex-font:0.78rem;--hex-gap:2px;--hex-overlap:-14px;--hex-offset:-54px; }
   .Logo { height: 34px; }
   .team-score .score-num { font-size: 1.25rem; }
   .btn-round-winner { font-size: 0.62rem; padding: 5px 8px; }
@@ -954,11 +1033,382 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 }
 /* hex sizes ≤320px */
 @media (max-width: 320px) {
-  :root { --hex-outer-w:66px;--hex-outer-h:71px;--hex-inner-w:62px;--hex-inner-h:66px;--hex-font:0.78rem;--hex-gap:2px;--hex-overlap:-17px;--hex-offset:-63px; }
+  :root { --hex-outer-w:50px;--hex-outer-h:54px;--hex-inner-w:46px;--hex-inner-h:50px;--hex-font:0.7rem;--hex-gap:2px;--hex-overlap:-12px;--hex-offset:-47px; }
   .Logo { height: 30px; }
   .team-score .score-num { font-size: 1.1rem; }
   .btn-round-winner { font-size: 0.58rem; padding: 5px 7px; }
 }
+
+/* ─── HOST QR OVERLAY ─── */
+.host-qr-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,0,25,0.88); backdrop-filter: blur(10px);
+  z-index: 3000; align-items: center; justify-content: center; padding: 20px;
+}
+.host-qr-overlay.active { display: flex; }
+.host-qr-card {
+  background: linear-gradient(155deg,#1a0438,#2b0858);
+  border-radius: 28px; padding: 36px 44px; max-width: 560px; width: 100%;
+  text-align: center; border: 1.5px solid rgba(255,215,0,0.3);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+  animation: slideIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+}
+.host-qr-close {
+  position: absolute; top: 14px; left: 14px;
+  background: rgba(255,255,255,0.08); border: none;
+  color: rgba(255,255,255,0.6); width: 34px; height: 34px;
+  border-radius: 9px; cursor: pointer; font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.host-qr-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.host-qr-title {
+  font-size: 1.3rem; font-weight: 900; color: #ffd700;
+  font-family: 'Cairo', sans-serif; margin-bottom: 6px;
+}
+.host-qr-subtitle {
+  color: rgba(255,255,255,0.55); font-size: 0.88rem; margin-bottom: 22px;
+}
+#qrCanvas {
+  border-radius: 16px; border: 4px solid rgba(255,215,0,0.3);
+  box-shadow: 0 0 30px rgba(255,215,0,0.15);
+  display: block; margin: 0 auto;
+  width: 320px !important; height: 320px !important;
+}
+.host-qr-url {
+  margin-top: 16px; padding: 10px 16px;
+  background: rgba(255,255,255,0.07); border-radius: 10px;
+  color: rgba(255,255,255,0.6); font-size: 0.8rem;
+  word-break: break-all; border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer; transition: all 0.2s;
+}
+.host-qr-url:hover { background: rgba(255,255,255,0.12); color: #fff; }
+.host-qr-note {
+  margin-top: 14px; color: rgba(255,215,0,0.65);
+  font-size: 0.82rem; line-height: 1.6;
+}
+
+/* ─── HOST MOBILE VIEW ─── */
+/* شاشة الهوست على الجوال — تُعرض بدلاً من اللوحة الكاملة */
+.host-mobile-screen {
+  display: none; position: fixed; inset: 0;
+  background-image: url('Background2.jpeg');
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+  z-index: 500; flex-direction: column; align-items: center;
+  justify-content: flex-start; padding: 0;
+}
+.host-mobile-screen::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(8,0,20,0.75); z-index: 0; pointer-events: none;
+}
+.host-mobile-screen > * { position: relative; z-index: 1; }
+.host-mobile-screen.active { display: flex; }
+.host-mobile-header {
+  width: 100%; padding: 16px 18px;
+  background: rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,215,0,0.2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.host-mobile-header h2 {
+  font-size: 1rem; font-weight: 900; color: #ffd700;
+  font-family: 'Cairo', sans-serif;
+}
+.host-badge {
+  background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.4);
+  color: #ffd700; font-size: 0.75rem; font-weight: 700;
+  padding: 4px 12px; border-radius: 20px;
+}
+.host-grid-wrap {
+  flex: 1; overflow-y: auto; padding: 14px;
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; scrollbar-width: none;
+}
+.host-grid-wrap::-webkit-scrollbar { display: none; }
+.host-question-view {
+  width: 100%; max-width: 440px;
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,215,0,0.2);
+  border-radius: 20px; padding: 20px;
+  margin-bottom: 16px; display: none;
+}
+.host-question-view.active { display: block; }
+.host-q-letter {
+  font-size: 3.5rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  color: #ffd700; text-align: center; margin-bottom: 8px;
+}
+.host-q-text {
+  font-size: 1rem; color: rgba(255,255,255,0.88);
+  background: rgba(255,255,255,0.07); padding: 12px 16px;
+  border-radius: 12px; margin-bottom: 14px; line-height: 1.7;
+  text-align: center;
+}
+.host-q-answer {
+  font-size: 1.2rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  background: linear-gradient(135deg,#1a0438,#2b0858);
+  border: 2px solid rgba(255,215,0,0.4);
+  color: #ffd700; padding: 12px 20px; border-radius: 13px;
+  text-align: center; margin-bottom: 16px;
+}
+.host-action-btns {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+}
+.host-btn-orange {
+  flex: 1; min-width: 120px; padding: 12px 10px;
+  background: rgba(255,140,0,0.15); border: 1.5px solid #ff8c00;
+  color: #FFAC1C; border-radius: 13px; font-size: 0.93rem; font-weight: 900;
+  cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+}
+.host-btn-orange:hover { background: #ff8c00; color: #fff; }
+.host-btn-green {
+  flex: 1; min-width: 120px; padding: 12px 10px;
+  background: rgba(46,204,64,0.15); border: 1.5px solid #2ecc40;
+  color: #2afc00; border-radius: 13px; font-size: 0.93rem; font-weight: 900;
+  cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+}
+.host-btn-green:hover { background: #2ecc40; color: #fff; }
+.host-btn-skip {
+  flex: 1; min-width: 120px; padding: 12px 10px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.55); border-radius: 13px; font-size: 0.88rem; font-weight: 700;
+  cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+}
+.host-btn-skip:hover { background: rgba(255,255,255,0.14); }
+.host-btn-reveal {
+  width: 100%; padding: 11px; margin-bottom: 12px;
+  background: rgba(255,215,0,0.12); border: 1.5px solid rgba(255,215,0,0.4);
+  color: #ffd700; border-radius: 12px; font-size: 0.93rem; font-weight: 700;
+  cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+}
+.host-btn-reveal:hover { background: rgba(255,215,0,0.22); }
+.host-scores {
+  display: flex; gap: 12px; width: 100%; max-width: 440px; margin-bottom: 16px;
+}
+.host-score-card {
+  flex: 1; padding: 12px; border-radius: 14px; text-align: center;
+  border: 1.5px solid; font-family: 'Cairo', sans-serif;
+}
+.host-score-card.orange { border-color: #FFAC1C; background: rgba(255,172,28,0.1); }
+.host-score-card.green  { border-color: #2afc00; background: rgba(42,252,0,0.08); }
+.host-score-name { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.6); }
+.host-score-num  { font-size: 2rem; font-weight: 900; }
+.host-score-card.orange .host-score-num { color: #FFAC1C; }
+.host-score-card.green  .host-score-num { color: #2afc00; }
+
+/* الشبكة المصغرة للهوست */
+/* ─── HOST MINI GRID — نفس ألوان الشاشة الرئيسية تماماً ─── */
+.host-mini-grid { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.host-mini-row { display: flex; gap: 3px; margin-bottom: -16px; }
+.host-mini-row:last-child { margin-bottom: 0; }
+.host-mini-row.offset { margin-right: -58px; }
+
+/* الخلية الخارجية — نفس --hex-border */
+.host-hex-outer {
+  width: 60px; height: 64px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: var(--hex-border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; cursor: pointer; transition: background 0.2s;
+}
+
+/* الخلية الداخلية — نفس --hex-cell-bg و --hex-cell-color */
+.host-hex-cell {
+  width: 55px; height: 59px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: var(--hex-cell-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; font-weight: 900; color: var(--hex-cell-color);
+  font-family: 'Cairo', 'Tajawal', sans-serif; pointer-events: none;
+  transition: background 0.2s;
+}
+
+/* hover — نفس --hex-hover */
+.host-hex-outer:not(.h-claimed-orange):not(.h-claimed-green):not(.h-gold):hover .host-hex-cell {
+  background: var(--hex-hover);
+}
+
+/* خلايا مطالب بها — نفس ألوان .hex-outer.claimed-* و .hex-cell.claimed-* */
+.host-hex-outer.h-claimed-orange              { background: #c07800; }
+.host-hex-outer.h-claimed-orange .host-hex-cell { background: #FFAC1C; color: transparent; }
+.host-hex-outer.h-claimed-green               { background: #18a800; }
+.host-hex-outer.h-claimed-green  .host-hex-cell { background: #2afc00; color: transparent; }
+
+/* خلية ذهبية — نفس .gold-cell و .hex-outer.gold-outer */
+.host-hex-outer.h-gold { background: #b8860b; animation: goldOuterAnim 3s infinite linear; }
+.host-hex-outer.h-gold .host-hex-cell {
+  background: linear-gradient(135deg, #ffd700, #ff8c00, #ffd700);
+  background-size: 200% 200%; color: #1a1a2e;
+  animation: goldShimmer 3s infinite linear;
+}
+
+
+/* ─── SCORES BAR (تحت الهيدر) — يمين ويسار كبير ─── */
+.scores-bar {
+  width: 100%; display: flex; justify-content: center;
+  padding: 8px 16px;
+  background: var(--header-bg); backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,215,0,0.15);
+}
+.scores-bar .scores { gap: 14px; }
+
+/* ─── تعديل هيدر على الجوال ≤480px ─── */
+@media (max-width: 480px) {
+  /* الهيدر يكون فقط شعار + زر */
+  header {
+    flex-wrap: nowrap !important;
+    padding: 8px 60px 8px 14px !important;
+    min-height: 56px !important;
+    row-gap: 0 !important;
+    gap: 10px !important;
+  }
+  .Logo {
+    order: unset !important; position: absolute !important;
+    left: 50% !important; transform: translateX(-50%) !important;
+    height: 44px !important;
+  }
+  .btn-round-winner {
+    order: unset !important; flex-shrink: 0;
+    font-size: 0.72rem; padding: 7px 11px; border-radius: 10px;
+  }
+  .header-ghost { display: none !important; }
+  /* scores-bar على الجوال */
+  .scores-bar { padding: 5px 10px; }
+  .scores-bar .scores { gap: 8px; }
+  /* حجم الخلايا الجوال المصغر */
+  .board-wrapper { min-height: calc(100vh - 108px); padding: 8px 4px; }
+}
+
+/* إزالة scores من الهيدر نفسه (لا تظهر فيه) */
+header .scores { display: none; }
+
+
+/* ─── HOST SCREEN تحسينات ─── */
+.host-mobile-screen { overflow-y: auto; }
+.host-hex-outer { transition: opacity 0.2s; }
+.host-hex-outer:hover { opacity: 0.85; }
+/* تأكد من إخفاء الـ hamburger بالكامل في host mode */
+.host-active-hamburger-hide .hamburger-btn { display: none !important; }
+
+
+/* ─── DARK READER FIX ─── */
+/* منع Dark Reader من تغيير ألوان العناصر الأساسية */
+.hex-cell,
+.hex-outer,
+.hex-cell.claimed-orange,
+.hex-cell.claimed-green,
+.hex-cell.gold-cell,
+.hex-outer.claimed-orange,
+.hex-outer.claimed-green,
+.hex-outer.gold-outer,
+header,
+.team-score,
+.scores-bar,
+.modal,
+.setup-screen,
+.setup-card,
+.sidebar,
+.btn-round-winner,
+.btn-start {
+  -webkit-filter: none !important;
+  filter: none !important;
+}
+/* إجبار ألوان الخلايا */
+/* hex-cell default colors — لا تكتب فوق الخلايا المطالب بها */
+.hex-cell:not(.claimed-orange):not(.claimed-green):not(.gold-cell) {
+  background-color: var(--hex-cell-bg) !important;
+  color: var(--hex-cell-color) !important;
+}
+.hex-outer:not(.claimed-orange):not(.claimed-green):not(.gold-outer) {
+  background-color: var(--hex-border) !important;
+}
+.hex-cell.claimed-orange  { background-color: #FFAC1C !important; color: transparent !important; }
+.hex-outer.claimed-orange { background-color: #c07800 !important; }
+.hex-cell.claimed-green   { background-color: #2afc00 !important; color: transparent !important; }
+.hex-outer.claimed-green  { background-color: #18a800 !important; }
+.gold-cell {
+  background: linear-gradient(135deg, #ffd700, #ff8c00, #ffd700) !important;
+  color: #1a1a2e !important;
+}
+.hex-outer.gold-outer { background-color: #b8860b !important; }
+
+
+/* ─── SETUP NAV BAR ─── */
+.setup-navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1002;
+  background: rgba(10,0,25,0.88); backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255,215,0,0.15);
+  height: 110px; display: flex; align-items: center;
+  padding: 0 40px; gap: 0;
+}
+/* الشعار — يمين (RTL) */
+.setup-navbar .nav-logo {
+  height: 72px; flex-shrink: 0;
+  filter: drop-shadow(0 2px 8px rgba(255,215,0,0.35));
+}
+/* روابط التنقل — وسط */
+.setup-navbar .nav-links {
+  display: flex; align-items: center; gap: 6px;
+  flex: 1; justify-content: center;
+}
+.setup-navbar .nav-link {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.78); font-size: 1.15rem; font-weight: 700;
+  font-family: 'Tajawal', sans-serif; padding: 12px 22px; border-radius: 14px;
+  transition: all 0.18s; white-space: nowrap; display: flex; align-items: center; gap: 7px;
+}
+.setup-navbar .nav-link img { width: 26px; height: 26px; object-fit: contain; }
+.setup-navbar .nav-link:hover { background: rgba(255,255,255,0.09); color: #ffd700; }
+/* منطقة المستخدم — يسار (RTL) */
+.setup-navbar .nav-user {
+  flex-shrink: 0; display: flex; align-items: center; gap: 12px;
+}
+.setup-navbar .nav-login-btn {
+  background: none; border: 1.5px solid rgba(255,215,0,0.45); cursor: pointer;
+  color: rgba(255,255,255,0.88); font-size: 1.05rem; font-weight: 700;
+  font-family: 'Tajawal', sans-serif; padding: 11px 26px; border-radius: 26px;
+  transition: all 0.18s; white-space: nowrap;
+}
+.setup-navbar .nav-login-btn:hover { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.08); }
+/* زر المستخدم — أيقونة + اسم */
+.setup-navbar .nav-avatar-btn {
+  display: flex; align-items: center;
+  background: transparent; border: none; padding: 0;
+  cursor: pointer; flex-shrink: 0; transition: all 0.18s;
+}
+.setup-navbar .nav-avatar-chip {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,194,50,0.4);
+  border-radius: 50px; padding: 4px 16px 4px 4px;
+  transition: all 0.18s;
+}
+.setup-navbar .nav-avatar-btn:hover .nav-avatar-chip {
+  background: rgba(255,194,50,0.1); border-color: #ffc232;
+}
+.setup-navbar .nav-avatar-img {
+  width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
+  border: 2px solid #ffc232; flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(255,194,50,0.15);
+}
+.setup-navbar .nav-avatar-name {
+  color: #ffc232; font-size: 0.95rem; font-weight: 700;
+  font-family: 'Tajawal', sans-serif; max-width: 110px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* إضافة مسافة أعلى setup-screen لتعويض الشريط */
+.setup-screen { padding-top: 110px; }
+
+/* إخفاء الـ hamburger في صفحة الـ setup */
+body.on-setup .hamburger-btn { display: none !important; }
+
+/* على الجوال — الروابط المتوسطة تختصر */
+@media (max-width: 600px) {
+  .setup-navbar .nav-link span { display: none; }
+  .setup-navbar .nav-link img { width: 22px; height: 22px; }
+  .setup-navbar .nav-link { padding: 8px 10px; }
+  .setup-navbar .nav-login-btn { padding: 6px 12px; font-size: 0.82rem; }
+}
+
 </style>
 </head>
 <body>
@@ -997,6 +1447,11 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
       <img src="HowToPlay.png" class="item-icon" alt="شرح اللعبة">
       <span>شرح اللعبة</span>
     </div>
+    <!-- زر إضافة سؤال — للأدمن فقط، مخفي افتراضياً -->
+    <div class="sidebar-item" id="addQuestBtn" onclick="openAddQuestionPage()" style="display:none;">
+      <img src="write.png" class="item-icon" alt="إضافة سؤال">
+      <span>إضافة سؤال</span>
+    </div>
     <div class="sidebar-item" onclick="openPage('updates')">
       <img src="updates.png" class="item-icon" alt="التحديثات">
       <span>التحديثات</span>
@@ -1009,6 +1464,7 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
       <img src="Contact.png" class="item-icon" alt="تواصل معنا">
       <span>تواصل معنا</span>
     </div>
+
   </div>
 
   <!-- Social links -->
@@ -1166,7 +1622,7 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b1e3f0e8c5d4d0dc83818387f1dec4c5dddededa9fd2dedc">[email&#160;protected]</a></span></p>
+      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700">RAYteam2026@outlook.com</span></p>
     </div>
 
     <div class="policy-section">
@@ -1223,7 +1679,7 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="de8c9f87aabbbfb3eceeece89eb1abaab2b1b1b5f0bdb1b3">[email&#160;protected]</a></span></p>
+      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700">RAYteam2026@outlook.com</span></p>
     </div>
   </div>
 </div>
@@ -1298,6 +1754,47 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 </div>
 
 <!-- SETUP SCREEN -->
+<!-- SETUP NAV BAR — يظهر فقط في شاشة الـ setup -->
+<nav class="setup-navbar" id="setupNavbar" style="display:flex;">
+  <!-- شعار -->
+  <img src="Logo.png" class="nav-logo" alt="حروف مع ريان">
+
+  <!-- روابط -->
+  <div class="nav-links">
+    <button class="nav-link" onclick="openPage('howtoplay')">
+      <img src="HowToPlay.png" alt="">
+      <span>شرح اللعبة</span>
+    </button>
+    <button class="nav-link" onclick="openPage('updates')">
+      <img src="updates.png" alt="">
+      <span>التحديثات</span>
+    </button>
+    <button class="nav-link" onclick="openPage('settings')">
+      <img src="Settings.png" alt="">
+      <span>الاعدادات</span>
+    </button>
+    <button class="nav-link" onclick="openContact()">
+      <img src="Contact.png" alt="">
+      <span>تواصل معنا</span>
+    </button>
+  </div>
+
+  <!-- منطقة المستخدم -->
+  <div class="nav-user">
+    <!-- لو مو مسجل دخول -->
+    <button class="nav-login-btn" id="navLoginBtn" onclick="openAuthModal()" style="display:flex;">
+      تسجيل الدخول
+    </button>
+    <!-- لو مسجل دخول — صورة فقط -->
+    <button class="nav-avatar-btn" id="navAvatarBtn" onclick="openUserProfile()" style="display:none;">
+      <div class="nav-avatar-chip">
+        <img src="" id="navAvatarImg" class="nav-avatar-img" alt="">
+        <span class="nav-avatar-name" id="navAvatarName"></span>
+      </div>
+    </button>
+  </div>
+</nav>
+
 <div class="setup-screen" id="setupScreen">
   <div class="setup-card">
     <img src="Logo.png" class="setup-logo" alt="Logo">
@@ -1305,21 +1802,21 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
     <div class="team-setup">
       <div class="team-box orange">
         <label>الفريق البرتقالي</label>
-        <input type="text" id="orangeName" value="الفريق البرتقالي" />
+        <input type="text" id="orangeName" placeholder="الفريق البرتقالي" />
       </div>
       <div class="team-box green">
         <label>الفريق الأخضر</label>
-        <input type="text" id="greenName" value="الفريق الأخضر" />
+        <input type="text" id="greenName" placeholder="الفريق الأخضر" />
       </div>
     </div>
-    <button class="btn btn-start" onclick="startGame()">ابدأ اللعبة</button>
+    <button class="btn btn-start" onclick="startGame()">ابدأ اللعب</button>
   </div>
 </div>
 
 <!-- NOTICE TOAST -->
 <div id="customNotice" class="custom-notice">
   <div class="notice-content">
-    <p>يجب أن تبدأ اللعب من الخلية الذهبية في المنتصف</p>
+    <p>مالك الخلية هو من يختار السؤال</p>
   </div>
 </div>
 
@@ -1330,7 +1827,13 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
 
 <!-- HEADER -->
 <header>
-  <!-- RTL ترتيب: scores(يمين) | logo(وسط مطلق) | btn(يسار) -->
+  <!-- logo وسط | زر يسار -->
+  <img class="Logo" src="Logo.png" alt="حروف مع ريان">
+  <div class="header-ghost"></div>
+  <button class="btn-round-winner" onclick="openRoundModal()">فائز الجولة</button>
+</header>
+<!-- النتائج — خارج الهيدر على الجوال -->
+<div class="scores-bar" id="scoresBar">
   <div class="scores">
     <div class="team-score orange" id="scoreOrange">
       <span class="team-name" id="orangeLabel">برتقالي</span>
@@ -1341,10 +1844,7 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
       <span class="score-num" id="greenScore">0</span>
     </div>
   </div>
-  <img class="Logo" src="Logo.png" alt="حروف مع ريان">
-  <div class="header-ghost"></div>
-  <button class="btn-round-winner" onclick="openRoundModal()">فائز الجولة</button>
-</header>
+</div>
 
 <!-- ROUND WINNER MODAL -->
 <div class="modal-overlay" id="roundWinnerOverlay">
@@ -1377,7 +1877,7 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
   <div class="modal" id="questionModal">
     <div class="modal-top-bar"></div>
     <div class="modal-body">
-      <h2>السؤال عن حرف</h2>
+      
       <div class="letter-display" id="modalLetter">ب</div>
       <div class="question" id="questionText">
         <span class="question-loading visible" id="questionLoading">جاري تحميل السؤال...</span>
@@ -1399,11 +1899,13 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
   <div class="win-content">
     <h1 id="winTitle">فاز الفريق</h1>
     <p id="winSubtitle">النتيجة النهائية</p>
-    <button class="btn btn-restart" onclick="location.reload()">العب مرة ثانية</button>
+    <!-- هذا الزر يُخفى لو في هوست نشط — الهوست يتحكم من جواله -->
+    <button class="btn btn-restart" id="btnRestart" onclick="location.reload()">العب مرة ثانية</button>
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 // ════════════════════════════════════════
 const firebaseConfig = {
@@ -1435,35 +1937,54 @@ auth.onAuthStateChanged(user => {
 });
 
 function updateAuthUI(user) {
-  const loginBtn  = document.getElementById('sidebarLoginBtn');
-  const userInfo  = document.getElementById('sidebarUserInfo');
-  const userName  = document.getElementById('userName');
+  const loginBtn   = document.getElementById('sidebarLoginBtn');
+  const userInfo   = document.getElementById('sidebarUserInfo');
+  const userName   = document.getElementById('userName');
   const userAvatar = document.getElementById('userAvatar');
+  const navLoginBtn  = document.getElementById('navLoginBtn');
+  const navAvatarBtn = document.getElementById('navAvatarBtn');
+  const navAvatarImg = document.getElementById('navAvatarImg');
+  const defaultAvatar = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffd700"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
 
   if (user) {
+    // Sidebar
     loginBtn.style.display = 'none';
     userInfo.classList.add('visible');
     userName.textContent = user.displayName || user.email.split('@')[0];
-    if (user.photoURL) userAvatar.src = user.photoURL;
-    else userAvatar.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffd700"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
+    const avatar = user.photoURL || defaultAvatar;
+    userAvatar.src = avatar;
+    // Navbar
+    if (navLoginBtn)  navLoginBtn.style.display  = 'none';
+    if (navAvatarBtn) navAvatarBtn.style.display  = 'flex';
+    if (navAvatarImg) navAvatarImg.src = avatar;
+    const navAvatarName = document.getElementById('navAvatarName');
+    if (navAvatarName) navAvatarName.textContent = user.displayName || user.email.split('@')[0];
   } else {
+    // Sidebar
     loginBtn.style.display = 'flex';
     userInfo.classList.remove('visible');
+    // Navbar
+    if (navLoginBtn)  navLoginBtn.style.display  = 'flex';
+    if (navAvatarBtn) navAvatarBtn.style.display  = 'none';
   }
 }
 
 function checkAdminAccess(user) {
-  const adminBtn = document.getElementById('adminAddBtn');
+  const adminBtn    = document.getElementById('adminAddBtn');
+  const addQuestBtn = document.getElementById('addQuestBtn');
   if (user && user.uid === ADMIN_UID) {
     adminBtn.classList.add('visible');
+    if (addQuestBtn) addQuestBtn.style.display = 'flex';
   } else {
     adminBtn.classList.remove('visible');
     document.getElementById('adminForm').classList.remove('visible');
+    if (addQuestBtn) addQuestBtn.style.display = 'none';
   }
 }
 
 function openAuthModal() {
-  toggleSidebar();
+  const sb = document.getElementById('sidebar');
+  if (sb && sb.classList.contains('open')) toggleSidebar();
   document.getElementById('authModalOverlay').classList.add('active');
 }
 function closeAuthModal() {
@@ -1542,7 +2063,9 @@ async function logoutUser() {
 function openUserProfile() {
   const user = currentUser;
   if (!user) return;
-  toggleSidebar();
+  // فقط أغلق الـ sidebar لو كان مفتوحاً
+  const sb = document.getElementById('sidebar');
+  if (sb && sb.classList.contains('open')) toggleSidebar();
   document.getElementById('profileName').textContent = user.displayName || user.email.split('@')[0];
   document.getElementById('profileEmail').textContent = user.email;
   const avatar = document.getElementById('profileAvatar');
@@ -1852,11 +2375,16 @@ function toggleSidebar() {
   document.getElementById('sidebarOverlay').classList.toggle('active');
 }
 function goHome() {
-  toggleSidebar();
+  const sb = document.getElementById('sidebar');
+  if (sb && sb.classList.contains('open')) toggleSidebar();
   document.getElementById('setupScreen').style.display = 'flex';
+  document.getElementById('setupNavbar').style.display = 'flex';
+  document.body.classList.add('on-setup');
 }
 function openPage(id) {
-  toggleSidebar();
+  // إغلاق sidebar فقط لو كان مفتوحاً
+  const sb = document.getElementById('sidebar');
+  if (sb && sb.classList.contains('open')) toggleSidebar();
   if (id === 'updates') loadUpdates();
   document.getElementById(id + 'Overlay').classList.add('active');
 }
@@ -1867,7 +2395,8 @@ function closePage(id) {
   document.getElementById(id).classList.remove('active');
 }
 function openContact() {
-  toggleSidebar();
+  const sb = document.getElementById('sidebar');
+  if (sb && sb.classList.contains('open')) toggleSidebar();
   window.location.href = 'mailto:RAYteam2026@outlook.com';
 }
 
@@ -1875,6 +2404,7 @@ function openContact() {
 // GAME VARIABLES
 // ════════════════════════════════════════
 const allLetters = ['أ','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
+let currentGridLetters = []; // ترتيب الحروف الحالي — مشترك مع الهوست
 
 let teamNames     = { orange:'الفريق البرتقالي', green:'الفريق الأخضر' };
 let scores        = { orange:0, green:0 };
@@ -1899,6 +2429,11 @@ function buildGrid() {
   answerVisible = false;
 
   const shuffled = [...allLetters].sort(() => Math.random() - 0.5).slice(0, 25);
+  currentGridLetters = shuffled; // حفظ الترتيب للهوست
+  // رفع الترتيب لـ Firestore فور بناء الشبكة
+  if (hostSessionId) {
+    db.collection(HOST_COLL).doc(hostSessionId).update({ gridLetters: shuffled }).catch(()=>{});
+  }
   const layout = [5, 5, 5, 5, 5];
   let idx = 0;
 
@@ -1936,10 +2471,17 @@ function buildGrid() {
 // GAME LOGIC
 // ════════════════════════════════════════
 function startGame() {
-  const oName = document.getElementById('orangeName').value;
-  const gName = document.getElementById('greenName').value;
+  const oName = document.getElementById('orangeName').value.trim();
+  const gName = document.getElementById('greenName').value.trim();
   teamNames.orange = oName || 'الفريق البرتقالي';
   teamNames.green  = gName || 'الفريق الأخضر';
+  // فتح QR أولاً — اللعبة تبدأ بعد مسح QR
+  openHostQR();
+}
+
+function _launchGame() {
+  document.body.classList.remove('on-setup');
+  document.getElementById('setupNavbar').style.display = 'none';
   document.getElementById('orangeLabel').textContent  = teamNames.orange;
   document.getElementById('greenLabel').textContent   = teamNames.green;
   document.getElementById('btnOrangeWin').textContent = 'فاز ' + teamNames.orange;
@@ -1955,6 +2497,10 @@ function startGame() {
 }
 
 async function onCellClick(cell) {
+  // الشاشة الرئيسية لا تقبل ضغط — فقط الهوست يضغط
+  showNotice();
+  return;
+  // (الكود التالي يُستخدم من الهوست فقط عبر hostSelectCell)
   if (cell.dataset.claimed === 'true') return;
   const cellIdx = parseInt(cell.dataset.index);
   if (!firstMoveDone && cellIdx !== 12) { showNotice(); return; }
@@ -1988,12 +2534,16 @@ async function onCellClick(cell) {
     currentQ = qList[chosen];
     document.getElementById('questionContent').textContent = currentQ.q;
     document.getElementById('answerText').textContent      = currentQ.a;
+    syncQuestionToHost(letter, currentQ.q, currentQ.a);
   } else {
-    // fallback: مؤقت حتى تضيف الأسئلة
     currentQ = { q: `اذكر كلمة تبدأ بحرف (${letter})`, a: 'أي إجابة صحيحة' };
     document.getElementById('questionContent').textContent = currentQ.q;
     document.getElementById('answerText').textContent      = currentQ.a;
+    syncQuestionToHost(letter, currentQ.q, currentQ.a);
   }
+  // إخفاء زر الكشف إذا يوجد هوست نشط
+  const revBtn = document.getElementById('revealBtn');
+  if (revBtn) revBtn.style.display = hostSessionId ? 'none' : 'inline-block';
 }
 
 function revealAnswer() {
@@ -2023,9 +2573,25 @@ function claimCell(winner) {
     outer.classList.add('claimed-'+winner);
   }
   firstMoveDone = true;
-  scores[winner]++;
   closeModal();
+  syncGridToHost();
   switchTurn();
+  // إبلاغ الهوست بالدور الجديد + تحديث الشبكة
+  if (hostSessionId) {
+    db.collection(HOST_COLL).doc(hostSessionId).update({ turn: currentTurn }).catch(()=>{});
+  }
+}
+
+function syncGridToHost() {
+  if (!hostSessionId) return;
+  const cells = document.querySelectorAll('.hex-cell');
+  const grid  = [];
+  cells.forEach(cell => {
+    if (cell.classList.contains('claimed-orange')) grid.push('orange');
+    else if (cell.classList.contains('claimed-green')) grid.push('green');
+    else grid.push(null);
+  });
+  db.collection(HOST_COLL).doc(hostSessionId).update({ grid });
 }
 
 function skipTurn()  { closeModal(); switchTurn(); }
@@ -2083,8 +2649,8 @@ let confettiInterval = null;
 function launchWinEffects(side) {
   // ألوان بناءً على الفريق
   const colors = side === 'orange'
-    ? ['#ff8c00','#ffd700','#ffb347','#fff']
-    : ['#2ecc40','#00ff88','#5dff70','#fff'];
+    ? ['#FFAC1C','#ffd700','#ff8c00','#fff']
+    : ['#2afc00','#00dd00','#18a800','#fff'];
 
   // إطلاق confetti متعدد الموجات
   const count = 200;
@@ -2140,6 +2706,7 @@ function announceRoundWinner(side) {
   roundWins[side]++;
   document.getElementById('orangeScore').textContent = roundWins.orange;
   document.getElementById('greenScore').textContent  = roundWins.green;
+  syncScoresToHost();
 
   const wn   = teamNames[side];
   const ws   = document.getElementById('winScreen');
@@ -2148,12 +2715,18 @@ function announceRoundWinner(side) {
   const rb   = document.querySelector('.btn-restart');
 
   if (roundWins[side] >= 2) {
-    wt.textContent  = wn + ' بطل اللعبة 🏆';
+    wt.textContent  = wn + ' بطل اللعبة ';
     wsub.textContent = 'فاز بـ ' + roundWins[side] + ' جولات';
     rb.textContent  = 'إعادة اللعبة كاملة';
     rb.onclick      = () => { stopWinEffects(); location.reload(); };
+    if (hostSessionId) rb.style.display = 'none';
     ws.classList.add('active');
     launchWinEffects(side);
+    if (hostSessionId) {
+      db.collection(HOST_COLL).doc(hostSessionId).update({
+        winState: { type:'gameOver', side }
+      });
+    }
     return;
   }
   if (roundWins.orange === 1 && roundWins.green === 1) {
@@ -2161,19 +2734,35 @@ function announceRoundWinner(side) {
     wsub.textContent = teamNames.orange+': '+roundWins.orange+' | '+teamNames.green+': '+roundWins.green;
     rb.textContent  = 'ابدأ الجولة الحاسمة';
     rb.onclick = () => { stopWinEffects(); currentRound=3; ws.classList.remove('active'); startNextRound(); };
-    ws.classList.add('active'); return;
+    if (hostSessionId) rb.style.display = 'none';
+    ws.classList.add('active');
+    if (hostSessionId) {
+      db.collection(HOST_COLL).doc(hostSessionId).update({
+        winState: { type:'tiebreak', side }
+      });
+    }
+    return;
   }
   const rn = currentRound===1?'الأولى':'الثانية';
-  wt.textContent  = wn + ' فاز بالجولة ' + rn + ' 🎉';
+  wt.textContent  = wn + ' فاز بالجولة ' + rn + ' ';
   wsub.textContent = teamNames.orange+': '+roundWins.orange+' | '+teamNames.green+': '+roundWins.green;
   rb.textContent  = 'ابدأ الجولة التالية';
   rb.onclick = () => { stopWinEffects(); currentRound++; ws.classList.remove('active'); startNextRound(); };
+  // إخفاء الزر من الشاشة الرئيسية لو الهوست هو المتحكم
+  if (hostSessionId) rb.style.display = 'none';
   ws.classList.add('active');
   launchWinEffects(side);
+  // إرسال حالة "انتظر الهوست" للهوست
+  if (hostSessionId) {
+    db.collection(HOST_COLL).doc(hostSessionId).update({
+      winState: { type:'nextRound', side, round: currentRound }
+    });
+  }
 }
 
 function startNextRound() {
   scores = { orange:0, green:0 };
+  firstMoveDone = false;
   currentTurn = 'orange';
   cells = []; usedQuestions = {};
   buildGrid();
@@ -2246,7 +2835,7 @@ document.addEventListener('keydown', e => {
     <button onclick="closeEditModal()"
             style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.08);
                    border:none;color:rgba(255,255,255,0.6);width:32px;height:32px;
-                   border-radius:8px;cursor:pointer;font-size:1.1rem">&#x2715;</button>
+                   border-radius:8px;cursor:pointer;font-size:1.1rem"></button>
     <h3 style="color:#ffd700;font-family:'Cairo',sans-serif;font-size:1.2rem;margin-bottom:16px">تعديل التحديث</h3>
     <input type="hidden" id="editDocId">
     <label style="color:rgba(255,255,255,0.65);font-size:0.85rem;font-weight:700;display:block;margin-bottom:6px">نص التحديث</label>
@@ -2272,8 +2861,110 @@ document.addEventListener('keydown', e => {
     <div id="editError" style="color:#ff7070;font-size:0.85rem;margin-top:10px;min-height:18px"></div>
   </div>
 </div>
-</body>
-</html>
+
+<!-- ══ HOST QR OVERLAY ══ -->
+<div class="host-qr-overlay" id="hostQrOverlay">
+  <div class="host-qr-card">
+    <button class="host-qr-close" onclick="closeHostQR()">&#x2715;</button>
+    <div class="host-qr-title">مالك الخلية</div>
+    <canvas id="qrCanvas" width="200" height="200"></canvas>
+    <div class="host-qr-url" id="hostQrUrl" onclick="copyHostUrl(this)" style="display:none;">جاري التحميل...</div>
+    <button id="qrStartGameBtn" onclick="qrStartGame()"
+      style="display:none;margin-top:16px;width:100%;padding:13px;border-radius:13px;
+      background:#ffc232;color:#1a1a2e;border:none;
+      font-size:1.1rem;font-weight:900;cursor:pointer;font-family:'Tajawal',sans-serif;">
+      ابدأ اللعب
+    </button>
+  </div>
+</div>
+
+<!-- ══ HOST MOBILE SCREEN ══ -->
+<div class="host-mobile-screen" id="hostMobileScreen">
+  <div class="host-mobile-header">
+    <img src="Logo.png" style="height:44px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));" alt="حروف مع ريان">
+    <span class="host-badge">HOST</span>
+  </div>
+  <div class="host-grid-wrap">
+    <!-- نتائج + زر فائز الجولة -->
+    <div class="host-scores" id="hostScores">
+      <div class="host-score-card orange">
+        <div class="host-score-name" id="hostOrangeName">برتقالي</div>
+        <div class="host-score-num" id="hostOrangeScore">0</div>
+      </div>
+      <div class="host-score-card green">
+        <div class="host-score-name" id="hostGreenName">أخضر</div>
+        <div class="host-score-num" id="hostGreenScore">0</div>
+      </div>
+    </div>
+    <button onclick="hostOpenRoundModal()" style="
+      width:100%;max-width:440px;padding:12px;border-radius:13px;
+      background:linear-gradient(135deg,#ff8c00,#ffd700);color:#1a1a2e;
+      border:none;font-size:1rem;font-weight:900;cursor:pointer;
+      font-family:'Tajawal',sans-serif;margin-bottom:14px;
+      box-shadow:0 4px 16px rgba(255,140,0,0.4);">
+       فائز الجولة
+    </button>
+
+    <!-- عرض السؤال للهوست -->
+    <div class="host-question-view" id="hostQuestionView">
+      <div class="host-q-letter" id="hostQLetter"></div>
+      <div class="host-q-text" id="hostQText">جاري التحميل...</div>
+      <div class="host-q-answer" id="hostQAnswer" style="display:none"></div>
+      <button class="host-btn-reveal" id="hostRevealBtn" onclick="hostRevealAnswer()"> إظهار الإجابة للجميع</button>
+      <div class="host-action-btns">
+        <button class="host-btn-orange" id="hostBtnOrange" onclick="hostClaimCell('orange')">فاز البرتقالي</button>
+        <button class="host-btn-green"  id="hostBtnGreen"  onclick="hostClaimCell('green')">فاز الأخضر</button>
+        <button class="host-btn-skip"   onclick="hostSkip()">لا أحد</button>
+      </div>
+    </div>
+
+    <!-- شبكة الحروف المصغرة -->
+    <div class="host-mini-grid" id="hostMiniGrid"></div>
+
+    <!-- زرابدأ الجولة التالية — يظهر للهوست فقط بعد انتهاء الجولة -->
+    <div id="hostNextRoundWrap" style="display:none;width:100%;max-width:440px;margin-top:16px;">
+      <button id="hostNextRoundBtn" style="
+        width:100%;padding:14px;border-radius:13px;
+        background:linear-gradient(135deg,#FFAC1C,#ffd700);color:#1a1a2e;
+        border:none;font-size:1.05rem;font-weight:900;cursor:pointer;
+        font-family:'Tajawal',sans-serif;
+        box-shadow:0 4px 16px rgba(255,172,28,0.4);
+        animation: pulse 1s infinite;">
+        ابدأ الجولة التالية
+      </button>
+    </div>
+  </div>
+
+  <!-- مودال فائز الجولة على جوال الهوست -->
+  <div id="hostRoundModalOverlay" style="
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);
+    z-index:6000;align-items:center;justify-content:center;padding:20px;
+  ">
+    <div style="
+      background:linear-gradient(155deg,#1a0438,#2b0858);
+      border-radius:22px;padding:28px 24px;width:100%;max-width:360px;
+      text-align:center;border:1.5px solid rgba(255,215,0,0.3);
+    ">
+      <div style="font-size:1.2rem;font-weight:900;color:#ffd700;font-family:'Cairo',sans-serif;margin-bottom:18px;">
+        اختر فائز الجولة
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <button id="hostRoundOrangeBtn" onclick="hostAnnounceRoundWinner('orange')" style="
+          padding:14px;border-radius:13px;background:rgba(255,140,0,0.15);
+          border:1.5px solid #FFAC1C;color:#FFAC1C;font-size:1rem;font-weight:900;
+          cursor:pointer;font-family:'Tajawal',sans-serif;">فاز البرتقالي</button>
+        <button id="hostRoundGreenBtn" onclick="hostAnnounceRoundWinner('green')" style="
+          padding:14px;border-radius:13px;background:rgba(40,160,64,0.15);
+          border:1.5px solid #2afc00;color:#2afc00;font-size:1rem;font-weight:900;
+          cursor:pointer;font-family:'Tajawal',sans-serif;">فاز الأخضر</button>
+        <button onclick="document.getElementById('hostRoundModalOverlay').style.display='none'" style="
+          padding:11px;border-radius:11px;background:rgba(255,255,255,0.07);
+          border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);
+          font-size:0.9rem;cursor:pointer;font-family:'Tajawal',sans-serif;">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WR2L8EQQEM"></script>
@@ -2283,4 +2974,665 @@ document.addEventListener('keydown', e => {
   gtag('js', new Date());
 
   gtag('config', 'G-WR2L8EQQEM');
+
+// ════════════════════════════════════════════════════
+// HOST SYSTEM — Firestore-based real-time host
+// ════════════════════════════════════════════════════
+
+let isHostMode   = false;   // هل هذه الشاشة شاشة هوست جوال؟
+let hostSessionId = null;   // معرف الجلسة
+let hostListener  = null;   // unsubscribe listener
+
+// ─── توليد معرف جلسة عشوائي ─────────────────────
+function generateSessionId() {
+  return Math.random().toString(36).substring(2, 10).toUpperCase();
+}
+
+// ─── فتح QR ──────────────────────────────────────
+function openHostQR() {
+  // نولّد session ID جديد إذا ما في واحد
+  if (!hostSessionId) {
+    hostSessionId = generateSessionId();
+  }
+  // إظهار/إخفاء زر "ابدأ الآن" حسب ما إذا جاء من setup أم من الهيدر
+  const startBtn = document.getElementById('qrStartGameBtn');
+  if (startBtn) {
+    const fromSetup = document.getElementById('setupScreen').style.display !== 'none';
+    startBtn.style.display = fromSetup ? 'block' : 'none';
+  }
+
+  const hostUrl = window.location.origin + window.location.pathname + '?host=' + hostSessionId;
+  const urlEl   = document.getElementById('hostQrUrl');
+  urlEl.textContent = hostUrl;
+
+  // رسم QR على الـ canvas
+  const canvas = document.getElementById('qrCanvas');
+  canvas.width = 320; canvas.height = 320;
+  const ctx    = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 320, 320);
+  try {
+    // نستخدم QRCode lib
+    const qrDiv = document.createElement('div');
+    new QRCode(qrDiv, {
+      text: hostUrl, width: 312, height: 312,
+      colorDark: '#1a0438', colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    setTimeout(() => {
+      const img = qrDiv.querySelector('img');
+      if (img) {
+        const tmpImg = new Image();
+        tmpImg.onload = () => { ctx.drawImage(tmpImg, 4, 4, 312, 312); };
+        tmpImg.src = img.src;
+      }
+    }, 100);
+  } catch(e) {
+    // fallback: نرسم نص الـ URL
+    ctx.fillStyle = '#1a0438'; ctx.fillRect(0,0,200,200);
+    ctx.fillStyle = '#ffd700'; ctx.font = '12px Tajawal';
+    ctx.textAlign = 'center';
+    ctx.fillText('افتح الرابط أدناه', 100, 100);
+  }
+
+  // بدء استماع Firestore لحالة الهوست
+  startHostListener(hostSessionId);
+
+  document.getElementById('hostQrOverlay').classList.add('active');
+}
+
+function closeHostQR() {
+  document.getElementById('hostQrOverlay').classList.remove('active');
+}
+function qrStartGame() {
+  document.getElementById('hostQrOverlay').classList.remove('active');
+  _launchGame();
+}
+
+function copyHostUrl(el) {
+  navigator.clipboard.writeText(el.textContent).then(() => showToast('تم نسخ الرابط'));
+}
+
+// ─── Firestore host session ────────────────────────
+const HOST_COLL = 'hostSessions';
+
+async function startHostListener(sessionId) {
+  if (hostListener) hostListener();
+  // كتابة بيانات الجلسة الأولية
+  await db.collection(HOST_COLL).doc(sessionId).set({
+    active:    true,
+    scores:    { orange: 0, green: 0 },
+    teamNames: teamNames,
+    grid:      [],
+    question:  null,
+    revealAnswer: false,
+    claimWinner:  null,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+
+  // ─── استماع للتغييرات من الهوست ──────────────────────
+  let lastOpenedAt    = 0; // منع تكرار فتح نفس السؤال
+  let lastRoundModalTs = 0;
+  let lastRoundWinner  = null;
+  let lastWinState     = null;
+
+  hostListener = db.collection(HOST_COLL).doc(sessionId).onSnapshot(snap => {
+    if (!snap.exists) return;
+    const data = snap.data();
+
+    // ① إشعار الخلية الذهبية
+    if (data.notice === 'gold_only') {
+      showNotice();
+      db.collection(HOST_COLL).doc(sessionId).update({ notice: null });
+    }
+
+    // ① فتح مودال فائز الجولة
+    if (data.openRoundModal && data.openRoundModal !== lastRoundModalTs) {
+      lastRoundModalTs = data.openRoundModal;
+      openRoundModal();
+    }
+
+    // ① إعلان فائز الجولة
+    if (data.roundWinner && data.roundWinner !== lastRoundWinner) {
+      lastRoundWinner = data.roundWinner;
+      closeRoundModal();
+      announceRoundWinner(data.roundWinner);
+      db.collection(HOST_COLL).doc(sessionId).update({ roundWinner: null });
+    }
+
+    // ① عرض زر "ابدأ الجولة التالية / الحاسمة / إعادة" للهوست
+    if (data.winState && data.winState !== lastWinState) {
+      lastWinState = data.winState;
+      showHostNextRoundBtn(data.winState);
+    }
+
+    // ② فتح السؤال — الهوست اختار خلية جديدة
+    if (data.question && data.openedAt && data.openedAt !== lastOpenedAt) {
+      lastOpenedAt = data.openedAt;
+      const { letter, q, a } = data.question;
+      const turn = data.turn || 'orange';
+
+      // حفظ السؤال الحالي + الخلية
+      currentQ = { q, a };
+      currentCell = null;
+      if (data.currentCellIdx !== undefined) {
+        const mainCells = document.querySelectorAll('.hex-cell');
+        mainCells.forEach(mc => {
+          if (parseInt(mc.dataset.index) === data.currentCellIdx) currentCell = mc;
+        });
+      }
+      currentTurn = turn;
+
+      // فتح المودال على الشاشة الرئيسية
+      document.getElementById('modalLetter').textContent      = letter;
+      document.getElementById('questionContent').textContent  = q;
+      document.getElementById('answerText').textContent       = a;
+      document.getElementById('answerText').style.display     = 'none';
+      document.getElementById('questionLoading').classList.remove('visible');
+      document.getElementById('actionButtons').className      = 'action-buttons';
+      document.getElementById('revealBtn').style.display      = 'none'; // الهوست يكشف
+      answerVisible = false;
+      const modal = document.getElementById('questionModal');
+      modal.className = 'modal ' + (turn === 'orange' ? 'orange-modal' : 'green-modal');
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    // ③ إظهار الإجابة للجميع — الهوست ضغط "إظهار"
+    if (data.revealAnswer && data.question && !answerVisible) {
+      document.getElementById('answerText').style.display    = 'block';
+      document.getElementById('actionButtons').className     = 'action-buttons visible';
+      answerVisible = true;
+    }
+
+    // ④ الهوست يقرر الفائز بالسؤال
+    if (data.claimWinner && data.claimWinner !== 'done' && data.claimWinner !== '_skip_') {
+      const winner = data.claimWinner;
+      if (currentCell) {
+        claimCell(winner);
+      }
+      db.collection(HOST_COLL).doc(sessionId).update({ claimWinner: 'done', claimCell: null });
+    }
+
+    // ⑤ تخطي السؤال
+    if (data.claimWinner === '_skip_') {
+      closeModal();
+      switchTurn();
+      db.collection(HOST_COLL).doc(sessionId).update({ claimWinner: 'done', question: null });
+    }
+  });
+}
+
+// تحديث بيانات الجلسة عند فتح سؤال
+async function syncQuestionToHost(letter, q, a) {
+  if (!hostSessionId) return;
+  await db.collection(HOST_COLL).doc(hostSessionId).update({
+    question:     { letter, q, a },
+    revealAnswer: false,
+    claimWinner:  null,
+    scores:       scores,
+    teamNames:    teamNames
+  });
+}
+
+// تحديث النتيجة بعد claim
+async function syncScoresToHost() {
+  if (!hostSessionId) return;
+  await db.collection(HOST_COLL).doc(hostSessionId).update({ scores });
+}
+
+// ─── وضع الهوست على الجوال ────────────────────────
+async function initHostMobile(sessionId) {
+  isHostMode    = true;
+  hostSessionId = sessionId;
+
+  // إخفاء كل شيء إلا شاشة الهوست
+  document.getElementById('setupScreen').style.display = 'none';
+  const header = document.querySelector('header');
+  if (header) header.style.display = 'none';
+  const scoresBar = document.getElementById('scoresBar');
+  if (scoresBar) scoresBar.style.display = 'none';
+  const board = document.querySelector('.board-wrapper');
+  if (board) board.style.display = 'none';
+  const hamburger = document.querySelector('.hamburger-btn');
+  if (hamburger) hamburger.style.display = 'none';
+  const setupNav = document.getElementById('setupNavbar');
+  if (setupNav) setupNav.style.display = 'none';
+  document.getElementById('hostMobileScreen').classList.add('active');
+
+  // بناء الشبكة المصغرة — ننتظر gridLetters من Firestore
+  // استماع للجلسة
+  db.collection(HOST_COLL).doc(sessionId).onSnapshot(snap => {
+    if (!snap.exists) return;
+    const data = snap.data();
+
+    // تحديث الأسماء
+    if (data.teamNames) {
+      document.getElementById('hostOrangeName').textContent = data.teamNames.orange || 'برتقالي';
+      document.getElementById('hostGreenName').textContent  = data.teamNames.green  || 'أخضر';
+      document.getElementById('hostBtnOrange').textContent  = 'فاز ' + (data.teamNames.orange || 'البرتقالي');
+      document.getElementById('hostBtnGreen').textContent   = 'فاز ' + (data.teamNames.green  || 'الأخضر');
+    }
+
+    // تحديث النتائج
+    if (data.scores) {
+      document.getElementById('hostOrangeScore').textContent = data.scores.orange || 0;
+      document.getElementById('hostGreenScore').textContent  = data.scores.green  || 0;
+    }
+
+    // إظهار السؤال للهوست
+    if (data.question && data.question.q) {
+      const qv = document.getElementById('hostQuestionView');
+      qv.classList.add('active');
+      document.getElementById('hostQLetter').textContent = data.question.letter || '';
+      document.getElementById('hostQText').textContent   = data.question.q;
+      document.getElementById('hostQAnswer').textContent = data.question.a;
+      document.getElementById('hostQAnswer').style.display = 'block';
+      document.getElementById('hostRevealBtn').style.display = 'block';
+    } else {
+      document.getElementById('hostQuestionView').classList.remove('active');
+    }
+
+    // بناء/تحديث الشبكة عند وصول ترتيب الحروف
+    if (data.gridLetters && data.gridLetters.length === 25) {
+      buildHostMiniGrid(data.gridLetters);
+    }
+    // تحديث حالة الخلايا في الشبكة المصغرة
+    if (data.grid && data.grid.length > 0) {
+      updateHostMiniGrid(data.grid);
+    }
+  });
+}
+
+function buildHostMiniGrid(letters) {
+  // نستخدم نفس ترتيب الشاشة الرئيسية تماماً
+  if (!letters || letters.length < 25) return;
+  // نفس ترتيب الصفوف مع buildGrid الرئيسي: 5,5,5,5,5 والصفوف الفردية offset
+  const ROWS    = [5, 5, 5, 5, 5];
+  const grid    = document.getElementById('hostMiniGrid');
+  grid.innerHTML = '';
+  let idx = 0;
+  ROWS.forEach((count, rowIdx) => {
+    const row = document.createElement('div');
+    // نفس منطق offset مع buildGrid: rowIdx % 2 !== 0
+    row.className = 'host-mini-row' + (rowIdx % 2 !== 0 ? ' offset' : '');
+    for (let i = 0; i < count; i++) {
+      if (idx >= letters.length) break;
+      const letter = letters[idx];
+      const outer  = document.createElement('div');
+      outer.className = 'host-hex-outer';
+      outer.dataset.idx    = idx;
+      outer.dataset.letter = letter;
+      if (idx === 12) outer.classList.add('h-gold');
+      const cell = document.createElement('div');
+      cell.className  = 'host-hex-cell';
+      cell.textContent = letter;
+      outer.onclick = () => hostSelectCell(outer);
+      outer.appendChild(cell);
+      row.appendChild(outer);
+      idx++;
+    }
+    grid.appendChild(row);
+  });
+}
+
+async function hostSelectCell(outer) {
+  if (outer.classList.contains('h-claimed-orange') || outer.classList.contains('h-claimed-green')) return;
+  const idx    = parseInt(outer.dataset.idx);
+  const letter = outer.dataset.letter;
+
+  // ─── التحقق من الخلية الذهبية ────────────────────
+  const sessionSnap = await db.collection(HOST_COLL).doc(hostSessionId).get();
+  const sessionData = sessionSnap.exists ? sessionSnap.data() : {};
+  const isFirstMove = !sessionData.firstMoveDone;
+
+  if (isFirstMove && idx !== 12) {
+    showHostNotice('ابدأ من الخلية الذهبية في المنتصف');
+    await db.collection(HOST_COLL).doc(hostSessionId).update({ notice: 'gold_only', noticeTs: Date.now() });
+    return;
+  }
+
+  // ─── جلب السؤال ──────────────────────────────────
+  document.getElementById('hostQLetter').textContent  = letter;
+  document.getElementById('hostQText').textContent    = 'جاري التحميل...';
+  document.getElementById('hostQAnswer').style.display  = 'none';
+  document.getElementById('hostRevealBtn').style.display = 'block';
+  document.getElementById('hostQuestionView').classList.add('active');
+
+  const qList = await fetchQuestionsForLetter(letter);
+  let chosenQ;
+  if (qList && qList.length > 0) {
+    if (!usedQuestions[letter]) usedQuestions[letter] = [];
+    const avail = qList.map((_,i)=>i).filter(i => !usedQuestions[letter].includes(i));
+    let chosen = avail.length > 0
+      ? avail[Math.floor(Math.random() * avail.length)]
+      : Math.floor(Math.random() * qList.length);
+    if (avail.length > 0) usedQuestions[letter].push(chosen);
+    chosenQ = qList[chosen];
+  } else {
+    chosenQ = { q: `اذكر كلمة تبدأ بحرف (${letter})`, a: 'أي إجابة صحيحة' };
+  }
+
+  // تحديث واجهة الهوست
+  document.getElementById('hostQText').textContent    = chosenQ.q;
+  document.getElementById('hostQAnswer').textContent  = chosenQ.a;
+  document.getElementById('hostQAnswer').style.display = 'block';
+
+  // ─── كتابة كل شيء على Firestore — الشاشة الرئيسية تسمع وتفتح المودال ───
+  await db.collection(HOST_COLL).doc(hostSessionId).update({
+    question:      { letter, q: chosenQ.q, a: chosenQ.a },
+    currentCellIdx: idx,
+    revealAnswer:  false,
+    claimWinner:   null,
+    claimCell:     null,
+    turn:          sessionData.turn || 'orange',
+    firstMoveDone: true,
+    openedAt:      Date.now()
+  });
+}
+
+function updateHostMiniGrid(gridData) {
+  const outers = document.querySelectorAll('.host-hex-outer');
+  outers.forEach(outer => {
+    const i = parseInt(outer.dataset.idx);
+    if (gridData[i]) {
+      outer.classList.remove('h-gold');
+      outer.classList.add('h-claimed-' + gridData[i]);
+    }
+  });
+}
+
+function hostRevealAnswer() {
+  if (!hostSessionId) return;
+  db.collection(HOST_COLL).doc(hostSessionId).update({ revealAnswer: true });
+  document.getElementById('hostRevealBtn').style.display = 'none';
+}
+
+function hostClaimCell(winner) {
+  if (!hostSessionId) return;
+  db.collection(HOST_COLL).doc(hostSessionId).update({
+    claimWinner: winner,
+    claimCell:   true,
+    question:    null,
+    revealAnswer: false
+  });
+  document.getElementById('hostQuestionView').classList.remove('active');
+}
+
+function hostSkip() {
+  if (!hostSessionId) return;
+  db.collection(HOST_COLL).doc(hostSessionId).update({
+    claimWinner: '_skip_',
+    claimCell:   null,
+    question:    null,
+    revealAnswer: false
+  });
+  document.getElementById('hostQuestionView').classList.remove('active');
+}
+
+// ─── تحقق من URL params عند التحميل ──────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const hostParam = params.get('host');
+  if (hostParam) {
+    const nb = document.getElementById('setupNavbar');
+    if (nb) nb.style.display = 'none';
+    initHostMobile(hostParam);
+  } else {
+    // صفحة setup — أخفِ hamburger وأظهر navbar
+    document.body.classList.add('on-setup');
+  }
+});
+
+
+function showHostNotice(msg) {
+  let el = document.getElementById('hostNotice');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'hostNotice';
+    el.style.cssText = `
+      position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-20px);
+      background:linear-gradient(135deg,#ff8c00,#ffd700);color:#1a1a2e;
+      padding:11px 22px;border-radius:40px;font-weight:900;font-size:0.9rem;
+      z-index:9999;pointer-events:none;opacity:0;transition:all 0.4s;
+      font-family:'Tajawal',sans-serif;white-space:nowrap;
+    `;
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.opacity = '1'; el.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(-20px)'; }, 2800);
+}
+
+
+// ════════════════════════════════════════
+// ADD QUESTION (Admin)
+// ════════════════════════════════════════
+const ALL_LETTERS = ['أ','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
+let selectedAddLetter = null;
+
+function openAddQuestionPage() {
+  toggleSidebar();
+  const grid = document.getElementById('letterGrid');
+  grid.innerHTML = '';
+  ALL_LETTERS.forEach(letter => {
+    const btn = document.createElement('button');
+    btn.textContent = letter;
+    btn.style.cssText = `
+      width:48px;height:48px;border-radius:12px;
+      background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);
+      color:rgba(255,255,255,0.85);font-size:1.2rem;font-weight:900;
+      cursor:pointer;font-family:'Cairo',sans-serif;transition:all 0.15s;
+    `;
+    btn.onclick = () => selectAddLetter(letter, btn);
+    grid.appendChild(btn);
+  });
+  document.getElementById('selectedLetterDisplay').style.display = 'none';
+  document.getElementById('addQForm').style.display = 'none';
+  document.getElementById('addQuestionOverlay').classList.add('active');
+  selectedAddLetter = null;
+}
+
+async function selectAddLetter(letter, btn) {
+  // إزالة تحديد سابق
+  document.querySelectorAll('#letterGrid button').forEach(b => {
+    b.style.background = 'rgba(255,255,255,0.07)';
+    b.style.borderColor = 'rgba(255,255,255,0.15)';
+    b.style.color = 'rgba(255,255,255,0.85)';
+    b.style.transform = 'scale(1)';
+  });
+  btn.style.background = 'rgba(255,215,0,0.2)';
+  btn.style.borderColor = '#ffd700';
+  btn.style.color = '#ffd700';
+  btn.style.transform = 'scale(1.1)';
+  selectedAddLetter = letter;
+
+  // جلب عدد الأسئلة الحالية
+  try {
+    const snap = await db.collection('questions').doc(letter).get();
+    const count = snap.exists ? (snap.data().questions || []).length : 0;
+    document.getElementById('selectedLetterBig').textContent = letter;
+    document.getElementById('selectedLetterCount').textContent = count + ' سؤال حالياً';
+  } catch(e) {
+    document.getElementById('selectedLetterCount').textContent = 'تعذّر التحقق';
+  }
+  document.getElementById('selectedLetterDisplay').style.display = 'block';
+  document.getElementById('addQForm').style.display = 'block';
+  document.getElementById('newQText').value = '';
+  document.getElementById('newQAnswer').value = '';
+}
+
+function resetAddQ() {
+  document.getElementById('addQForm').style.display = 'none';
+  document.getElementById('selectedLetterDisplay').style.display = 'none';
+  document.querySelectorAll('#letterGrid button').forEach(b => {
+    b.style.background = 'rgba(255,255,255,0.07)';
+    b.style.borderColor = 'rgba(255,255,255,0.15)';
+    b.style.color = 'rgba(255,255,255,0.85)';
+    b.style.transform = 'scale(1)';
+  });
+  selectedAddLetter = null;
+}
+
+async function saveNewQuestion() {
+  if (!selectedAddLetter) { showToast('اختر الحرف أولاً'); return; }
+  const q = document.getElementById('newQText').value.trim();
+  const a = document.getElementById('newQAnswer').value.trim();
+  if (!q || !a) { showToast('أدخل السؤال والإجابة'); return; }
+  if (!currentUser || currentUser.uid !== ADMIN_UID) { showToast('ليس لديك صلاحية'); return; }
+
+  try {
+    const ref  = db.collection('questions').doc(selectedAddLetter);
+    const snap = await ref.get();
+    let arr    = snap.exists ? (snap.data().questions || []) : [];
+    // تحقق من التكرار
+    const dup  = arr.some(item => item.q === q);
+    if (dup) { showToast('السؤال موجود مسبقاً'); return; }
+    arr.push({ q, a });
+    await ref.set({ questions: arr }, { merge: true });
+    // مسح الكاش
+    if (window.cachedQuestions) delete window.cachedQuestions[selectedAddLetter];
+    showToast('تم حفظ السؤال ');
+    document.getElementById('selectedLetterCount').textContent = arr.length + ' سؤال حالياً';
+    document.getElementById('newQText').value  = '';
+    document.getElementById('newQAnswer').value = '';
+  } catch(e) {
+    showToast('خطأ في الحفظ: ' + e.message);
+  }
+}
+
+
+// ═══════════════════════════════════════════════
+// HOST ROUND MODAL — via Firestore
+// ═══════════════════════════════════════════════
+function hostOpenRoundModal() {
+  if (!hostSessionId) return;
+  // فتح المودال على جوال الهوست
+  const el = document.getElementById('hostRoundModalOverlay');
+  if (el) { el.style.display = 'flex'; }
+  // وإرسال طلب لفتحه على الشاشة الرئيسية أيضاً
+  db.collection(HOST_COLL).doc(hostSessionId).update({
+    openRoundModal: Date.now()
+  });
+  // تحديث أسماء الفريقين في المودال
+  const orangeBtn = document.getElementById('hostRoundOrangeBtn');
+  const greenBtn  = document.getElementById('hostRoundGreenBtn');
+  if (orangeBtn) orangeBtn.textContent = 'فاز ' + (teamNames.orange || 'البرتقالي');
+  if (greenBtn)  greenBtn.textContent  = 'فاز ' + (teamNames.green  || 'الأخضر');
+}
+
+function hostAnnounceRoundWinner(side) {
+  if (!hostSessionId) return;
+
+  // 1) إظهار انيميشن الفوز داخل المودال
+  const card = document.getElementById('hostRoundModalOverlay').querySelector('div');
+  const winnerName = side === 'orange'
+    ? (teamNames.orange || 'البرتقالي')
+    : (teamNames.green  || 'الأخضر');
+  const winColor = side === 'orange' ? '#FFAC1C' : '#2afc00';
+
+  if (card) {
+    card.innerHTML = `
+      <div style="font-size:3.5rem;animation:pulse 0.6s 3;"></div>
+      <div style="font-size:1.4rem;font-weight:900;color:${winColor};
+        font-family:'Cairo',sans-serif;margin:12px 0 6px;">${winnerName}</div>
+      <div style="color:rgba(255,255,255,0.6);font-size:0.9rem;">فاز بالجولة!</div>
+    `;
+    card.style.border = `2px solid ${winColor}`;
+    card.style.boxShadow = `0 0 30px ${winColor}55`;
+  }
+
+  // 2) إرسال الفائز لـ Firestore بعد لحظة
+  setTimeout(() => {
+    db.collection(HOST_COLL).doc(hostSessionId).update({
+      roundWinner:    side,
+      openRoundModal: null
+    });
+  }, 400);
+
+  // 3) إغلاق المودال بعد انيميشن
+  setTimeout(() => {
+    document.getElementById('hostRoundModalOverlay').style.display = 'none';
+    // إعادة الكارد لحالتها الأصلية للمرة القادمة
+    if (card) {
+      card.innerHTML = `
+        <div style="font-size:1.2rem;font-weight:900;color:#ffd700;font-family:'Cairo',sans-serif;margin-bottom:18px;">اختر فائز الجولة</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <button id="hostRoundOrangeBtn" onclick="hostAnnounceRoundWinner('orange')" style="
+            padding:14px;border-radius:13px;background:rgba(255,172,28,0.15);
+            border:1.5px solid #FFAC1C;color:#FFAC1C;font-size:1rem;font-weight:900;
+            cursor:pointer;font-family:'Tajawal',sans-serif;">${teamNames.orange || 'البرتقالي'}</button>
+          <button id="hostRoundGreenBtn" onclick="hostAnnounceRoundWinner('green')" style="
+            padding:14px;border-radius:13px;background:rgba(42,252,0,0.10);
+            border:1.5px solid #2afc00;color:#2afc00;font-size:1rem;font-weight:900;
+            cursor:pointer;font-family:'Tajawal',sans-serif;">${teamNames.green || 'الأخضر'}</button>
+          <button onclick="document.getElementById('hostRoundModalOverlay').style.display='none'" style="
+            padding:11px;border-radius:11px;background:rgba(255,255,255,0.07);
+            border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);
+            font-size:0.9rem;cursor:pointer;font-family:'Tajawal',sans-serif;">إلغاء</button>
+        </div>
+      `;
+      card.style.border = '1.5px solid rgba(255,215,0,0.3)';
+      card.style.boxShadow = '';
+    }
+  }, 1800);
+}
+
+
+// ════════════════════════════════════
+// HOST — زرابدأ الجولة التالية
+// ════════════════════════════════════
+function showHostNextRoundBtn(winState) {
+  const el = document.getElementById('hostNextRoundWrap');
+  if (!el) return;
+  const btn = document.getElementById('hostNextRoundBtn');
+  if (!btn) return;
+
+  // إظهار الـ wrapper
+  el.style.display = 'block';
+
+  if (winState.type === 'nextRound') {
+    btn.textContent = 'ابدأ الجولة التالية';
+    btn.onclick = () => {
+      el.style.display = 'none';
+      stopWinEffects();
+      currentRound++;
+      document.getElementById('winScreen').classList.remove('active');
+      startNextRound();
+      db.collection(HOST_COLL).doc(hostSessionId).update({ winState: null });
+    };
+  } else if (winState.type === 'tiebreak') {
+    btn.textContent = 'ابدأ الجولة الحاسمة';
+    btn.onclick = () => {
+      el.style.display = 'none';
+      stopWinEffects();
+      currentRound = 3;
+      document.getElementById('winScreen').classList.remove('active');
+      startNextRound();
+      db.collection(HOST_COLL).doc(hostSessionId).update({ winState: null });
+    };
+  } else if (winState.type === 'gameOver') {
+    btn.textContent = 'إعادة اللعبة كاملة';
+    btn.onclick = () => {
+      stopWinEffects();
+      location.reload();
+    };
+  }
+}
+
 </script>
+
+<!-- ADD QUESTION PAGE (للأدمن فقط) -->
+<div class="full-page" id="addQuestionOverlay">
+  <div class="full-page-header">
+    <button class="full-page-back" onclick="closePage('addQuestionOverlay')">&#x2B60; رجوع</button>
+    <h2>إضافة سؤال</h2>
+    <div style="width:90px"></div>
+  </div>
+  <div class="full-page-body">
+    <!-- اختيار الحرف -->
+    <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:12px;text-align:center">اختر الحرف</p>
+    <div id="letterGrid" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px"></div>
+
+    <!-- عرض الحرف المختار -->
+    <div id="selectedLetterDisplay" style="display:none;text-align:center;margin-bottom:16px">
+      <div id="selectedLetterBig" style="font-size:3rem;font-weight:900;color:#ffd700;font-family:'Cairo',sans-serif;line-height:1"></div>
+      <div id="selectedLetterCount" style="color:rgba(255,255,25) 
