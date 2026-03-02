@@ -2936,7 +2936,7 @@ document.addEventListener('keydown', e => {
     <div class="host-mini-grid" id="hostMiniGrid"></div>
 
     <!-- زرابدأ الجولة التالية — يظهر للهوست فقط بعد انتهاء الجولة -->
-    <div id="hostNextRoundWrap" style="display:none;width:100%;max-width:440px;margin-top:16px;">
+    <div id="hostNextRoundWrap" style="display:block;width:100%;max-width:440px;margin-top:16px;">
       <button id="hostNextRoundBtn" style="
         width:100%;padding:14px;border-radius:13px;
         background:linear-gradient(135deg,#FFAC1C,#ffd700);color:#1a1a2e;
@@ -3619,41 +3619,48 @@ function hostAnnounceRoundWinner(side) {
 // HOST — زرابدأ الجولة التالية
 // ════════════════════════════════════
 function showHostNextRoundBtn(winState) {
-  const el = document.getElementById('hostNextRoundWrap');
-  if (!el) return;
   const btn = document.getElementById('hostNextRoundBtn');
   if (!btn) return;
 
-  // إظهار الـ wrapper
-  el.style.display = 'block';
-
   if (winState.type === 'nextRound') {
     btn.textContent = 'الاستمرار للجولة التالية';
+    btn.style.background = 'linear-gradient(135deg,#FFAC1C,#ffd700)';
     btn.onclick = () => {
-      el.style.display = 'none';
       stopWinEffects();
       currentRound++;
       document.getElementById('winScreen').classList.remove('active');
       startNextRound();
       db.collection(HOST_COLL).doc(hostSessionId).update({ winState: null });
+      // إعادة الزر لوضعه الافتراضي
+      resetHostNextRoundBtn();
     };
   } else if (winState.type === 'tiebreak') {
     btn.textContent = 'ابدأ الجولة الحاسمة';
+    btn.style.background = 'linear-gradient(135deg,#FFAC1C,#ffd700)';
     btn.onclick = () => {
-      el.style.display = 'none';
       stopWinEffects();
       currentRound = 3;
       document.getElementById('winScreen').classList.remove('active');
       startNextRound();
       db.collection(HOST_COLL).doc(hostSessionId).update({ winState: null });
+      resetHostNextRoundBtn();
     };
   } else if (winState.type === 'gameOver') {
     btn.textContent = 'إعادة اللعبة كاملة';
+    btn.style.background = 'linear-gradient(135deg,#e05050,#ff7070)';
     btn.onclick = () => {
       stopWinEffects();
       location.reload();
     };
   }
+}
+
+function resetHostNextRoundBtn() {
+  const btn = document.getElementById('hostNextRoundBtn');
+  if (!btn) return;
+  btn.textContent = 'الاستمرار للجولة التالية';
+  btn.style.background = 'linear-gradient(135deg,#FFAC1C,#ffd700)';
+  btn.onclick = null;
 }
 
 
