@@ -361,7 +361,7 @@ header {
 /* ─── QUESTION MODAL ─── */
 .modal {
   background: linear-gradient(155deg, var(--modal-from) 0%, var(--modal-to) 100%);
-  border-radius: 26px; padding: 0; max-width: 540px; width: 100%;
+  border-radius: 26px; padding: 0; max-width: 780px; width: 100%;
   text-align: center; animation: slideIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
   overflow: hidden; border: 1.5px solid rgba(255,255,255,0.1);
   box-shadow: 0 30px 90px rgba(0,0,0,0.8);
@@ -372,16 +372,16 @@ header {
 .modal-body { padding: 26px 34px 30px; }
 .modal h2 { font-size: 0.85rem; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 1px; margin-bottom: 2px; }
 .modal .letter-display {
-  font-size: 5.5rem; font-weight: 900; font-family: 'Cairo', sans-serif;
-  line-height: 1; margin: 4px 0 14px;
+  font-size: 8rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  line-height: 1; margin: 4px 0 18px;
 }
 .orange-modal .letter-display,
 .green-modal  .letter-display { color: #ffd700; }
 
 .modal .question {
-  font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.9);
-  background: rgba(255,255,255,0.07); padding: 17px 20px;
-  border-radius: 14px; margin: 0 0 16px; line-height: 1.75;
+  font-size: 2.2rem; font-weight: 700; color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.07); padding: 36px 32px;
+  border-radius: 18px; margin: 0 0 16px; line-height: 1.8;
   border: 1px solid rgba(255,255,255,0.09);
 }
 
@@ -1002,7 +1002,7 @@ input:checked + .toggle-slider::before { transform: translateX(24px); background
   .setup-logo { width: 110px; }
   .modal-body { padding: 16px 18px 20px; }
   .modal .letter-display { font-size: 3.8rem; }
-  .modal .question { font-size: 0.97rem; padding: 12px; }
+  .modal .question { font-size: 1.4rem; padding: 22px; }
   .page-card { padding: 26px 18px; }
   .rule-img { width: 30px; height: 30px; }
   .auth-modal { padding: 36px 24px; }
@@ -1636,7 +1636,7 @@ body.on-setup .hamburger-btn { display: none !important; }
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700">RAYteam2026@outlook.com</span></p>
+      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0e2f1e9c4d5d1dd82808286f0dfc5c4dcdfdfdb9ed3dfdd">[email&#160;protected]</a></span></p>
     </div>
 
     <div class="policy-section">
@@ -1693,7 +1693,7 @@ body.on-setup .hamburger-btn { display: none !important; }
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700">RAYteam2026@outlook.com</span></p>
+      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3664776f4253575b04060400765943425a59595d1855595b">[email&#160;protected]</a></span></p>
     </div>
   </div>
 </div>
@@ -1918,7 +1918,7 @@ body.on-setup .hamburger-btn { display: none !important; }
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 // ════════════════════════════════════════
@@ -2928,7 +2928,7 @@ document.addEventListener('keydown', e => {
       <div class="host-action-btns">
         <button class="host-btn-orange" id="hostBtnOrange" onclick="hostClaimCell('orange')">فاز البرتقالي</button>
         <button class="host-btn-green"  id="hostBtnGreen"  onclick="hostClaimCell('green')">فاز الأخضر</button>
-        <button class="host-btn-skip"   onclick="hostSkip()">لا أحد</button>
+        <button class="host-btn-skip"   onclick="hostSkip()" style="display:flex;align-items:center;justify-content:center;gap:6px;"><img src="Change.jpg" alt="تغيير" style="height:28px;width:auto;object-fit:contain;filter:brightness(1.2);"></button>
       </div>
     </div>
 
@@ -2981,14 +2981,14 @@ document.addEventListener('keydown', e => {
 </div>
 
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WR2L8EQQEM"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HLWV64Q7W4"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
-  gtag('config', 'G-WR2L8EQQEM');
-
+  gtag('config', 'G-HLWV64Q7W4');
+</script>
+<script>
 // ════════════════════════════════════════════════════
 // HOST SYSTEM — Firestore-based real-time host
 // ════════════════════════════════════════════════════
@@ -3085,9 +3085,10 @@ async function startHostListener(sessionId) {
 
   // ─── استماع للتغييرات من الهوست ──────────────────────
   let lastOpenedAt    = 0; // منع تكرار فتح نفس السؤال
-  let lastRoundModalTs = 0;
-  let lastRoundWinner  = null;
-  let lastWinState     = null;
+  let lastRoundModalTs    = 0;
+  let lastRoundWinner      = null;
+  let lastWinState         = null;
+  let lastContinueRound2Ts = 0;
 
   hostListener = db.collection(HOST_COLL).doc(sessionId).onSnapshot(snap => {
     if (!snap.exists) return;
@@ -3097,6 +3098,20 @@ async function startHostListener(sessionId) {
     if (data.notice === 'gold_only') {
       showNotice();
       db.collection(HOST_COLL).doc(sessionId).update({ notice: null });
+    }
+
+    // ① الاستمرار للجولة الثانية — إعادة الشبكة عشوائياً مع إبقاء النقاط
+    if (data.continueRound2 && data.continueRound2 !== lastContinueRound2Ts) {
+      lastContinueRound2Ts = data.continueRound2;
+      // أغلق أي مودال مفتوح
+      document.getElementById('modalOverlay').classList.remove('active');
+      document.getElementById('roundWinnerOverlay').classList.remove('active');
+      // أعد بناء الشبكة بترتيب جديد (تلقائياً buildGrid يشفل عشوائياً)
+      firstMoveDone = false;
+      usedQuestions = {};
+      currentCell = null;
+      buildGrid();
+      db.collection(HOST_COLL).doc(sessionId).update({ continueRound2: null });
     }
 
     // ① فتح مودال فائز الجولة
@@ -3631,6 +3646,31 @@ function showHostNextRoundBtn(winState) {
       location.reload();
     };
   }
+}
+
+
+// ════════════════════════════════════════
+// HOST — الاستمرار للجولة الثانية
+// (يعيد الشبكة بترتيب عشوائي جديد دون إعلان فائز)
+// ════════════════════════════════════════
+function hostContinueRound2() {
+  if (!hostSessionId) return;
+
+  // تأكيد قبل الاستمرار
+  if (!confirm('هل تريد الاستمرار للجولة الثانية؟ سيتم إعادة ترتيب الخلايا عشوائياً.')) return;
+
+  // إرسال أمر لإعادة الشبكة مع إبقاء النقاط
+  db.collection(HOST_COLL).doc(hostSessionId).update({
+    continueRound2: Date.now(),
+    question:       null,
+    revealAnswer:   false,
+    claimWinner:    null,
+    claimCell:      null,
+    openRoundModal: null
+  });
+
+  // إغلاق أي واجهة مفتوحة في الهوست
+  document.getElementById('hostQuestionView').classList.remove('active');
 }
 
 </script>
