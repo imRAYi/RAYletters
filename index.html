@@ -3623,70 +3623,87 @@ function hostOpenRoundModal() {
 function hostAnnounceRoundWinner(side) {
   if (!hostSessionId) return;
 
-  // 1) إظهار انيميشن الفوز داخل المودال
-  const card = document.getElementById('hostRoundModalOverlay').querySelector('div');
+  // منع الضغط المزدوج
+  const overlay = document.getElementById('hostRoundModalOverlay');
+  overlay.style.pointerEvents = 'none';
+
   const winnerName = side === 'orange'
     ? (teamNames.orange || 'البرتقالي')
     : (teamNames.green  || 'الأخضر');
   const winColor = side === 'orange' ? '#FFAC1C' : '#2afc00';
 
+  // 1) إظهار اسم الفائز
+  const card = overlay.querySelector('div');
   if (card) {
     card.innerHTML = `
-      <div style="font-size:3.5rem;animation:pulse 0.6s 3;"></div>
-      <div style="font-size:1.4rem;font-weight:900;color:${winColor};
-        font-family:'Cairo',sans-serif;margin:12px 0 6px;">${winnerName}</div>
-      <div style="color:rgba(255,255,255,0.6);font-size:0.9rem;">فاز بالجولة!</div>
+      <div style="font-size:1.6rem;font-weight:900;color:${winColor};
+        font-family:'Cairo',sans-serif;margin:16px 0 8px;">🏆 ${winnerName}</div>
+      <div style="color:rgba(255,255,255,0.6);font-size:0.95rem;">فاز بالجولة!</div>
     `;
     card.style.border = `2px solid ${winColor}`;
-    card.style.boxShadow = `0 0 30px ${winColor}55`;
   }
 
-  // 2) حساب winState وإرساله مع roundWinner
+  // 2) حساب winState وإرساله فوراً
+  const nextWins = { orange: roundWins.orange, green: roundWins.green };
+  nextWins[side]++;
+  let winStateType = 'nextRound';
+  if (nextWins[side] >= 2) winStateType = 'gameOver';
+  else if (nextWins.orange === 1 && nextWins.green === 1) winStateType = 'tiebreak';
+
+  db.collection(HOST_COLL).doc(hostSessionId).update({
+    roundWinner:    side,
+    openRoundModal: null,
+    winState:       { type: winStateType, side, round: currentRound }
+  });
+
+  // 3) إغلاق المودال وإعادة تهيئته بعد ثانية
   setTimeout(() => {
-    // حساب roundWins المتوقع بعد إضافة هذه النقطة
-    const nextWins = { orange: roundWins.orange, green: roundWins.green };
-    nextWins[side]++;
+    overlay.style.display = 'none';
+    overlay.style.pointerEvents = '';
+    // إعادة بناء محتوى الكارد بشكل صحيح مع event listeners
+    rebuildHostRoundModalCard();
+  }, 1000);
+}
 
-    let winStateType = 'nextRound';
-    if (nextWins[side] >= 2) {
-      winStateType = 'gameOver';
-    } else if (nextWins.orange === 1 && nextWins.green === 1) {
-      winStateType = 'tiebreak';
-    }
+function rebuildHostRoundModalCard() {
+  const overlay = document.getElementById('hostRoundModalOverlay');
+  const card = overlay.querySelector('div');
+  if (!card) return;
 
-    db.collection(HOST_COLL).doc(hostSessionId).update({
-      roundWinner:    side,
-      openRoundModal: null,
-      winState:       { type: winStateType, side, round: currentRound }
-    });
-  }, 400);
+  // نمسح المحتوى ونعيد بناءه بـ createElement لضمان صحة الأزرار
+  card.innerHTML = '';
+  card.style.border = '1.5px solid rgba(255,215,0,0.3)';
+  card.style.boxShadow = '';
 
-  // 3) إغلاق المودال بعد انيميشن
-  setTimeout(() => {
-    document.getElementById('hostRoundModalOverlay').style.display = 'none';
-    // إعادة الكارد لحالتها الأصلية للمرة القادمة
-    if (card) {
-      card.innerHTML = `
-        <div style="font-size:1.2rem;font-weight:900;color:#ffd700;font-family:'Cairo',sans-serif;margin-bottom:18px;">اختر فائز الجولة</div>
-        <div style="display:flex;flex-direction:column;gap:12px;">
-          <button id="hostRoundOrangeBtn" onclick="hostAnnounceRoundWinner('orange')" style="
-            padding:14px;border-radius:13px;background:rgba(255,172,28,0.15);
-            border:1.5px solid #FFAC1C;color:#FFAC1C;font-size:1rem;font-weight:900;
-            cursor:pointer;font-family:'Tajawal',sans-serif;">${teamNames.orange || 'البرتقالي'}</button>
-          <button id="hostRoundGreenBtn" onclick="hostAnnounceRoundWinner('green')" style="
-            padding:14px;border-radius:13px;background:rgba(42,252,0,0.10);
-            border:1.5px solid #2afc00;color:#2afc00;font-size:1rem;font-weight:900;
-            cursor:pointer;font-family:'Tajawal',sans-serif;">${teamNames.green || 'الأخضر'}</button>
-          <button onclick="document.getElementById('hostRoundModalOverlay').style.display='none'" style="
-            padding:11px;border-radius:11px;background:rgba(255,255,255,0.07);
-            border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);
-            font-size:0.9rem;cursor:pointer;font-family:'Tajawal',sans-serif;">إلغاء</button>
-        </div>
-      `;
-      card.style.border = '1.5px solid rgba(255,215,0,0.3)';
-      card.style.boxShadow = '';
-    }
-  }, 1800);
+  const title = document.createElement('div');
+  title.textContent = 'اختر فائز الجولة';
+  title.style.cssText = 'font-size:1.2rem;font-weight:900;color:#ffd700;font-family:Cairo,sans-serif;margin-bottom:18px;';
+  card.appendChild(title);
+
+  const btnsWrap = document.createElement('div');
+  btnsWrap.style.cssText = 'display:flex;flex-direction:column;gap:12px;';
+
+  const orangeBtn = document.createElement('button');
+  orangeBtn.id = 'hostRoundOrangeBtn';
+  orangeBtn.textContent = teamNames.orange || 'البرتقالي';
+  orangeBtn.style.cssText = 'padding:14px;border-radius:13px;background:rgba(255,172,28,0.15);border:1.5px solid #FFAC1C;color:#FFAC1C;font-size:1rem;font-weight:900;cursor:pointer;font-family:Tajawal,sans-serif;';
+  orangeBtn.addEventListener('click', () => hostAnnounceRoundWinner('orange'));
+
+  const greenBtn = document.createElement('button');
+  greenBtn.id = 'hostRoundGreenBtn';
+  greenBtn.textContent = teamNames.green || 'الأخضر';
+  greenBtn.style.cssText = 'padding:14px;border-radius:13px;background:rgba(42,252,0,0.10);border:1.5px solid #2afc00;color:#2afc00;font-size:1rem;font-weight:900;cursor:pointer;font-family:Tajawal,sans-serif;';
+  greenBtn.addEventListener('click', () => hostAnnounceRoundWinner('green'));
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'إلغاء';
+  cancelBtn.style.cssText = 'padding:11px;border-radius:11px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:0.9rem;cursor:pointer;font-family:Tajawal,sans-serif;';
+  cancelBtn.addEventListener('click', () => { overlay.style.display = 'none'; });
+
+  btnsWrap.appendChild(orangeBtn);
+  btnsWrap.appendChild(greenBtn);
+  btnsWrap.appendChild(cancelBtn);
+  card.appendChild(btnsWrap);
 }
 
 
