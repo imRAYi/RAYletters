@@ -729,6 +729,7 @@ header {
 
 /* ─── SIDEBAR POLICY LINKS ─── */
 .sidebar-policy-link {
+  background: none; border: none; cursor: pointer;
   color: rgba(255,255,255,0.45); font-size: 0.75rem;
   cursor: pointer; transition: color 0.2s;
   text-decoration: underline; text-underline-offset: 3px;
@@ -1560,9 +1561,9 @@ body.on-setup .hamburger-btn { display: none !important; }
 
   <div class="sidebar-footer">
     <div style="display:flex;gap:12px;justify-content:center;margin-bottom:8px">
-      <span class="sidebar-policy-link" onclick="openPolicyPage('privacyOverlay');toggleSidebar()">سياسة الخصوصية</span>
+      <button class="sidebar-policy-link" onclick="openPolicyPage('privacyOverlay');toggleSidebar()">سياسة الخصوصية</button>
       <span style="color:rgba(255,255,255,0.2)">|</span>
-      <span class="sidebar-policy-link" onclick="openPolicyPage('termsOverlay');toggleSidebar()">شروط الاستخدام</span>
+      <button class="sidebar-policy-link" onclick="openPolicyPage('termsOverlay');toggleSidebar()">شروط الاستخدام</button>
     </div>
     &#169; جميع الحقوق محفوظة لدى<br>
     <strong style="color:rgba(255,215,0,0.75)">RAYteam</strong>
@@ -1703,7 +1704,7 @@ body.on-setup .hamburger-btn { display: none !important; }
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0e2f1e9c4d5d1dd82808286f0dfc5c4dcdfdfdb9ed3dfdd">[email&#160;protected]</a></span></p>
+      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700">RAYteam2026@outlook.com</span></p>
     </div>
 
     <div class="policy-section">
@@ -1760,7 +1761,7 @@ body.on-setup .hamburger-btn { display: none !important; }
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3664776f4253575b04060400765943425a59595d1855595b">[email&#160;protected]</a></span></p>
+      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700">RAYteam2026@outlook.com</span></p>
     </div>
   </div>
 </div>
@@ -2824,7 +2825,7 @@ function announceRoundWinner(side) {
   roundWins[side]++;
   document.getElementById('orangeScore').textContent = roundWins.orange;
   document.getElementById('greenScore').textContent  = roundWins.green;
-  // إرسال النقاط المحدّثة للهوست (تشمل roundWins الآن)
+  // إرسال النقاط للهوست (بدون winState — الهوست يحسبه بنفسه)
   syncScoresToHost();
 
   const wn   = teamNames[side];
@@ -2842,11 +2843,6 @@ function announceRoundWinner(side) {
     if (hostSessionId) rb.style.display = 'none';
     ws.classList.add('active');
     launchWinEffects(side);
-    if (hostSessionId) {
-      db.collection(HOST_COLL).doc(hostSessionId).update({
-        winState: { type: 'gameOver', side }
-      });
-    }
     return;
   }
   // ── تعادل 1-1 → جولة حاسمة ──
@@ -2858,14 +2854,9 @@ function announceRoundWinner(side) {
     if (hostSessionId) rb.style.display = 'none';
     ws.classList.add('active');
     launchWinEffects(side);
-    if (hostSessionId) {
-      db.collection(HOST_COLL).doc(hostSessionId).update({
-        winState: { type: 'tiebreak', side }
-      });
-    }
     return;
   }
-  // ── فاز جولة واحدة (0-1 أو 1-0) → جولة تالية ──
+  // ── فاز جولة واحدة → جولة تالية ──
   const rn = currentRound === 1 ? 'الأولى' : 'الثانية';
   wt.textContent   = wn + ' فاز بالجولة ' + rn;
   wsub.textContent = teamNames.orange + ': ' + roundWins.orange + ' | ' + teamNames.green + ': ' + roundWins.green;
@@ -2874,11 +2865,6 @@ function announceRoundWinner(side) {
   if (hostSessionId) rb.style.display = 'none';
   ws.classList.add('active');
   launchWinEffects(side);
-  if (hostSessionId) {
-    db.collection(HOST_COLL).doc(hostSessionId).update({
-      winState: { type: 'nextRound', side, round: currentRound }
-    });
-  }
 }
 
 function startNextRound() {
@@ -3709,29 +3695,46 @@ function hostAnnounceRoundWinner(side) {
     : (teamNames.green  || 'الأخضر');
   const winColor = side === 'orange' ? '#FFAC1C' : '#2afc00';
 
-  // 1) إظهار اسم الفائز
+  // احسب roundWins الجديد — استخدم القيم الحالية من شاشة الهوست
+  const curOrange = parseInt(document.getElementById('hostOrangeScore').textContent) || 0;
+  const curGreen  = parseInt(document.getElementById('hostGreenScore').textContent)  || 0;
+  const newWins = {
+    orange: curOrange + (side === 'orange' ? 1 : 0),
+    green:  curGreen  + (side === 'green'  ? 1 : 0)
+  };
+
+  // حساب winState
+  let winStateType = 'nextRound';
+  if (newWins[side] >= 2)                                       winStateType = 'gameOver';
+  else if (newWins.orange >= 1 && newWins.green >= 1)           winStateType = 'tiebreak';
+
+  // 1) تحديث عداد النقاط فوراً في شاشة الهوست
+  document.getElementById('hostOrangeScore').textContent = newWins.orange;
+  document.getElementById('hostGreenScore').textContent  = newWins.green;
+
+  // 2) إظهار اسم الفائز داخل المودال
   const card = overlay.querySelector('div');
   if (card) {
     card.innerHTML = `
       <div style="font-size:1.6rem;font-weight:900;color:${winColor};
-        font-family:'Cairo',sans-serif;margin:16px 0 8px;">🏆 ${winnerName}</div>
+        font-family:'Cairo',sans-serif;margin:16px 0 8px;">${winnerName}</div>
       <div style="color:rgba(255,255,255,0.6);font-size:0.95rem;">فاز بالجولة!</div>
     `;
     card.style.border = `2px solid ${winColor}`;
   }
 
-  // 2) إرسال الفائز — الشاشة الرئيسية ستحسب winState وترسله
-  // (announceRoundWinner على الشاشة الرئيسية تتولى حساب roundWins الصحيح)
+  // 3) إرسال كل شيء دفعة واحدة لـ Firestore
   db.collection(HOST_COLL).doc(hostSessionId).update({
     roundWinner:    side,
-    openRoundModal: null
+    openRoundModal: null,
+    roundWins:      newWins,
+    winState:       { type: winStateType, side, round: currentRound }
   });
 
-  // 3) إغلاق المودال وإعادة تهيئته بعد ثانية
+  // 4) إغلاق المودال بعد ثانية
   setTimeout(() => {
     overlay.style.display = 'none';
     overlay.style.pointerEvents = '';
-    // إعادة بناء محتوى الكارد بشكل صحيح مع event listeners
     rebuildHostRoundModalCard();
   }, 1000);
 }
