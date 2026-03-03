@@ -3214,6 +3214,14 @@ async function startHostListener(sessionId) {
     // ① إعلان فائز الجولة — الشاشة الرئيسية تطبق النتيجة مباشرة بدون مودال
     if (data.roundWinner && data.roundWinner !== lastRoundWinner) {
       lastRoundWinner = data.roundWinner;
+      // مزامنة roundWins من الهوست أولاً (قبل الحساب)
+      // الهوست أرسل القيم المحدّثة — نستخدمها مباشرة بدل الحساب من الصفر
+      if (data.roundWins) {
+        // ضبط roundWins بالقيمة التي حسبها الهوست ناقص واحد
+        // لأن announceRoundWinner ستزيد واحد بنفسها
+        roundWins.orange = (data.roundWins.orange || 0) - (data.roundWinner === 'orange' ? 1 : 0);
+        roundWins.green  = (data.roundWins.green  || 0) - (data.roundWinner === 'green'  ? 1 : 0);
+      }
       announceRoundWinner(data.roundWinner);
       db.collection(HOST_COLL).doc(sessionId).update({ roundWinner: null });
     }
