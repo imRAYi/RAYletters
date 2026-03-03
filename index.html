@@ -3696,7 +3696,7 @@ function hostOpenRoundModal() {
 function hostAnnounceRoundWinner(side) {
   if (!hostSessionId) return;
 
-  // منع الضغط المزدوج
+  // منع الضغط المزدوج أثناء المعالجة
   const overlay = document.getElementById('hostRoundModalOverlay');
   overlay.style.pointerEvents = 'none';
 
@@ -3705,54 +3705,65 @@ function hostAnnounceRoundWinner(side) {
     : (teamNames.green  || 'الأخضر');
   const winColor = side === 'orange' ? '#FFAC1C' : '#2afc00';
 
-  // احسب roundWins الجديد — استخدم القيم الحالية من شاشة الهوست
+  // حساب النقاط الجديدة بناءً على النقاط الحالية المعروضة في شاشة الهوست
   const curOrange = parseInt(document.getElementById('hostOrangeScore').textContent) || 0;
   const curGreen  = parseInt(document.getElementById('hostGreenScore').textContent)  || 0;
+  
   const newWins = {
     orange: curOrange + (side === 'orange' ? 1 : 0),
     green:  curGreen  + (side === 'green'  ? 1 : 0)
   };
 
-  // حساب winState
+  // تحديد حالة الفوز النهائية
   let winStateType = 'nextRound';
-  if (newWins[side] >= 2)                                       winStateType = 'gameOver';
-  else if (newWins.orange >= 1 && newWins.green >= 1)           winStateType = 'tiebreak';
+  let statusText = 'فاز بالجولة!'; // النص الافتراضي
 
-  // 1) تحديث عداد النقاط فوراً في شاشة الهوست
+  if (newWins[side] >= 2) {
+    winStateType = 'gameOver';
+    statusText = 'بطل اللعبة! 🏆'; // نص الفوز النهائي (يغطي 2-0 و 2-1)
+  } else if (newWins.orange >= 1 && newWins.green >= 1) {
+    winStateType = 'tiebreak';
+    statusText = 'فاز بالجولة! (تعادل)';
+  }
+
+  // 1) تحديث عداد النقاط فوراً في واجهة الهوست
   document.getElementById('hostOrangeScore').textContent = newWins.orange;
   document.getElementById('hostGreenScore').textContent  = newWins.green;
 
-  // 2) إظهار اسم الفائز داخل المودال
+  // 2) تحديث شكل البطاقة في مودال الهوست لتظهر النتيجة النهائية
   const card = overlay.querySelector('div');
   if (card) {
     card.innerHTML = `
       <div style="font-size:1.6rem;font-weight:900;color:${winColor};
         font-family:'Cairo',sans-serif;margin:16px 0 8px;">${winnerName}</div>
-      <div style="color:rgba(255,255,255,0.6);font-size:0.95rem;">فاز بالجولة!</div>
+      <div style="color:rgba(255,255,255,0.9);font-size:1.1rem;font-weight:700;">${statusText}</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-top:10px;">النتيجة: ${newWins.orange} - ${newWins.green}</div>
     `;
     card.style.border = `2px solid ${winColor}`;
+    card.style.boxShadow = `0 0 20px ${winColor}44`;
   }
 
-  // 3) أرسل أولاً roundWinner: null لمسح القيمة القديمة
-  //    ثم أرسل القيمة الجديدة — هذا يضمن أن onSnapshot يستقبل التغيير دائماً
+  // 3) مزامنة البيانات مع Firestore
+  // نرسل أولاً حالة null لتصفير أي قيمة قديمة وضمان استجابة الشاشة الرئيسية
   db.collection(HOST_COLL).doc(hostSessionId).update({
-    roundWinner:    null,
-    openRoundModal: null,
-    roundWins:      newWins,
-    winState:       { type: winStateType, side, round: currentRound }
+    roundWinner: null,
+    winState: null
   }).then(() => {
-    // بعد مسح القيمة، أرسل الفائز الجديد
+    // إرسال البيانات الفعلية
     db.collection(HOST_COLL).doc(hostSessionId).update({
-      roundWinner: side
+      roundWinner: side,
+      roundWins:   newWins,
+      winState:    { type: winStateType, side: side, round: currentRound },
+      openRoundModal: null // إغلاق المودال في الشاشة الرئيسية
     });
   });
 
-  // 4) إغلاق المودال بعد ثانية
+  // 4) إغلاق المودال التفاعلي بعد ثانية ونصف ليعود الهوست للشاشة الرئيسية
   setTimeout(() => {
     overlay.style.display = 'none';
     overlay.style.pointerEvents = '';
-    rebuildHostRoundModalCard();
-  }, 1000);
+    rebuildHostRoundModalCard(); // إعادة بناء المودال للوضع الأصلي للجولة القادمة
+  }, 1500);
 }
 
 function rebuildHostRoundModalCard() {
