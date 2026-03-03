@@ -3334,11 +3334,12 @@ async function syncScoresToHost() {
 }
 
 // ─── وضع الهوست على الجوال ────────────────────────
+// استبدل الدالة بالكامل بهذا التنسيق للتأكد من إغلاق كل الأقواس
 async function initHostMobile(sessionId) {
   isHostMode    = true;
   hostSessionId = sessionId;
 
-  // إخفاء كل شيء إلا شاشة الهوست
+  // إخفاء العناصر غير الضرورية لشاشة الهوست
   document.getElementById('setupScreen').style.display = 'none';
   const header = document.querySelector('header');
   if (header) header.style.display = 'none';
@@ -3352,8 +3353,7 @@ async function initHostMobile(sessionId) {
   if (setupNav) setupNav.style.display = 'none';
   document.getElementById('hostMobileScreen').classList.add('active');
 
-  // بناء الشبكة المصغرة — ننتظر gridLetters من Firestore
-  // استماع للجلسة
+  // الاستماع للجلسة وتحديث الواجهة
   db.collection(HOST_COLL).doc(sessionId).onSnapshot(snap => {
     if (!snap.exists) return;
     const data = snap.data();
@@ -3366,7 +3366,7 @@ async function initHostMobile(sessionId) {
       document.getElementById('hostBtnGreen').textContent   = 'فاز ' + (data.teamNames.green  || 'الأخضر');
     }
 
-    // تحديث النتائج (نقاط الجولات)
+    // تحديث النتائج
     if (data.roundWins) {
       document.getElementById('hostOrangeScore').textContent = data.roundWins.orange || 0;
       document.getElementById('hostGreenScore').textContent  = data.roundWins.green  || 0;
@@ -3388,26 +3388,32 @@ async function initHostMobile(sessionId) {
       document.getElementById('hostQuestionView').classList.remove('active');
     }
 
-    // بناء/تحديث الشبكة عند وصول ترتيب الحروف
+    // بناء وتحديث الشبكة
     if (data.gridLetters && data.gridLetters.length === 25) {
       buildHostMiniGrid(data.gridLetters);
     }
-    // تحديث حالة الخلايا في الشبكة المصغرة
     if (data.grid && data.grid.length > 0) {
       updateHostMiniGrid(data.grid);
     }
 
-    // ★ عرض زر الجولة التالية للهوست بعد اختيار فائز الجولة
-    if (data.winState && JSON.stringify(data.winState) !== hostLastWinState) {
-      hostLastWinState = JSON.stringify(data.winState);
-      showHostNextRoundBtn(data.winState);
+    // --- نظام إخفاء وإظهار زر فائز الجولة ---
+    const hostRoundBtn = document.getElementById('hostRoundWinnerBtn');
+
+    if (data.winState) {
+      if (hostRoundBtn) hostRoundBtn.style.display = 'none';
+      if (JSON.stringify(data.winState) !== hostLastWinState) {
+        hostLastWinState = JSON.stringify(data.winState);
+        showHostNextRoundBtn(data.winState);
+      }
+    } else {
+      if (hostRoundBtn) hostRoundBtn.style.display = 'block';
     }
 
-    // ★ بعد تنفيذ doNextRound — أعد الشبكة المصغرة للهوست
+    // الاستجابة لبدء جولة جديدة
     if (data.doNextRound && data.doNextRound.ts !== hostLastDoNextTs) {
       hostLastDoNextTs = data.doNextRound.ts;
-      // الشاشة الرئيسية تتولى إعادة البناء — الهوست فقط يصفّر عرض السؤال
       document.getElementById('hostQuestionView').classList.remove('active');
+      if (hostRoundBtn) hostRoundBtn.style.display = 'block';
     }
   });
 }
