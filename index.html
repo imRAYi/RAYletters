@@ -3245,6 +3245,8 @@ async function startHostListener(sessionId) {
       firstMoveDone = false;
       currentTurn = 'orange';
       cells = []; usedQuestions = {}; currentCell = null;
+      // صفّر lastRoundWinner حتى يُقبل نفس الفريق فائزاً في الجولة القادمة
+      lastRoundWinner = null;
       // بناء الشبكة بنفس الحروف التي أرسلها الهوست
       if (dnr.letters && dnr.letters.length === 25) {
         buildGridWithLetters(dnr.letters);
@@ -3731,12 +3733,18 @@ function hostAnnounceRoundWinner(side) {
     card.style.border = `2px solid ${winColor}`;
   }
 
-  // 3) إرسال كل شيء دفعة واحدة لـ Firestore
+  // 3) أرسل أولاً roundWinner: null لمسح القيمة القديمة
+  //    ثم أرسل القيمة الجديدة — هذا يضمن أن onSnapshot يستقبل التغيير دائماً
   db.collection(HOST_COLL).doc(hostSessionId).update({
-    roundWinner:    side,
+    roundWinner:    null,
     openRoundModal: null,
     roundWins:      newWins,
     winState:       { type: winStateType, side, round: currentRound }
+  }).then(() => {
+    // بعد مسح القيمة، أرسل الفائز الجديد
+    db.collection(HOST_COLL).doc(hostSessionId).update({
+      roundWinner: side
+    });
   });
 
   // 4) إغلاق المودال بعد ثانية
