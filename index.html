@@ -1332,95 +1332,162 @@ header,
 
 
 /* ─── SETUP NAV BAR ─── */
+/* ══════════════════════════════════════════════
+   SETUP NAVBAR — fully responsive
+   TV/4K ≥1920 | Desktop 1025-1919 | Tablet 481-1024 | Mobile ≤480
+══════════════════════════════════════════════ */
+
+/* ─── Base (Desktop 1025px+) ─── */
 .setup-navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1002;
-  background: rgba(10,0,25,0.88); backdrop-filter: blur(18px);
+  background: rgba(10,0,25,0.92); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255,215,0,0.15);
-  height: 110px; display: flex; align-items: center;
-  padding: 0 40px; gap: 0;
+  height: clamp(60px, 7vw, 110px);
+  display: flex; align-items: center;
+  padding: 0 clamp(16px, 3vw, 48px);
+  gap: 0; box-sizing: border-box;
 }
-/* الشعار — يمين (RTL) */
+.setup-screen { padding-top: clamp(60px, 7vw, 110px); }
+
+/* إخفاء الـ hamburger في صفحة الـ setup */
+body.on-setup .hamburger-btn { display: none !important; }
+
+/* شعار */
 .setup-navbar .nav-logo {
-  height: 72px; flex-shrink: 0;
+  height: clamp(32px, 4.5vw, 72px);
+  flex-shrink: 0;
   filter: drop-shadow(0 2px 8px rgba(255,215,0,0.35));
 }
-/* روابط التنقل — وسط */
+
+/* روابط وسط */
 .setup-navbar .nav-links {
-  display: flex; align-items: center; gap: 6px;
-  flex: 1; justify-content: center;
+  display: flex; align-items: center;
+  gap: clamp(2px, 0.5vw, 8px);
+  flex: 1; justify-content: center; overflow: hidden;
 }
 .setup-navbar .nav-link {
   background: none; border: none; cursor: pointer;
-  color: rgba(255,255,255,0.78); font-size: 1.15rem; font-weight: 700;
-  font-family: 'Tajawal', sans-serif; padding: 12px 22px; border-radius: 14px;
-  transition: all 0.18s; white-space: nowrap; display: flex; align-items: center; gap: 7px;
+  color: rgba(255,255,255,0.78);
+  font-size: clamp(0.75rem, 1vw, 1.1rem);
+  font-weight: 700; font-family: 'Tajawal', sans-serif;
+  padding: clamp(6px,0.6vw,12px) clamp(8px,1.2vw,20px);
+  border-radius: 12px; transition: all 0.18s;
+  white-space: nowrap; display: flex; align-items: center;
+  gap: clamp(4px, 0.4vw, 8px); flex-shrink: 0;
 }
-.setup-navbar .nav-link img { width: 26px; height: 26px; object-fit: contain; }
+.setup-navbar .nav-link img {
+  width: clamp(16px, 1.4vw, 26px);
+  height: clamp(16px, 1.4vw, 26px);
+  object-fit: contain;
+}
 .setup-navbar .nav-link:hover { background: rgba(255,255,255,0.09); color: #ffd700; }
-/* منطقة المستخدم — يسار (RTL) */
+
+/* منطقة المستخدم */
 .setup-navbar .nav-user {
-  flex-shrink: 0; display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0; display: flex; align-items: center;
+  gap: clamp(6px, 0.8vw, 14px);
 }
 .setup-navbar .nav-login-btn {
-  background: none; border: 1.5px solid rgba(255,215,0,0.45); cursor: pointer;
-  color: rgba(255,255,255,0.88); font-size: 1.05rem; font-weight: 700;
-  font-family: 'Tajawal', sans-serif; padding: 11px 26px; border-radius: 26px;
-  transition: all 0.18s; white-space: nowrap;
+  background: none;
+  border: 1.5px solid rgba(255,215,0,0.45); cursor: pointer;
+  color: rgba(255,255,255,0.88);
+  font-size: clamp(0.72rem, 0.9vw, 1rem);
+  font-weight: 700; font-family: 'Tajawal', sans-serif;
+  padding: clamp(6px,0.6vw,11px) clamp(10px,1.4vw,24px);
+  border-radius: 50px; transition: all 0.18s; white-space: nowrap;
 }
 .setup-navbar .nav-login-btn:hover { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.08); }
-/* زر المستخدم — أيقونة + اسم */
+
+/* زر المستخدم */
 .setup-navbar .nav-avatar-btn {
   display: flex; align-items: center;
   background: transparent; border: none; padding: 0;
-  cursor: pointer; flex-shrink: 0; transition: all 0.18s;
+  cursor: pointer; flex-shrink: 0;
 }
 .setup-navbar .nav-avatar-chip {
-  display: flex; 
-  align-items: center; 
-  gap: 10px;
+  display: flex; align-items: center;
+  gap: clamp(6px, 0.6vw, 10px);
   background: rgba(255,255,255,0.05);
   border: 1.5px solid rgba(255,194,50,0.4);
-  border-radius: 50px; 
-  
-  /* التعديل هنا: جعلنا اليمين 3px واليسار 16px ليتوازن التصميم */
-  padding: 3px 3px 3px 16px; 
-  
+  border-radius: 50px;
+  padding: 3px 3px 3px clamp(8px,1vw,16px);
   transition: all 0.18s;
 }
 .setup-navbar .nav-avatar-btn:hover .nav-avatar-chip {
   background: rgba(255,194,50,0.1); border-color: #ffc232;
 }
 .setup-navbar .nav-avatar-img {
-  width: 38px; 
-  height: 38px; 
-  border-radius: 50%; 
-  object-fit: cover;
-  border: 2px solid #ffc232; 
-  flex-shrink: 0;
-  
-  /* الحل: إلغاء أي ظل أو هوامش خارجية */
+  width: clamp(26px, 2.4vw, 42px);
+  height: clamp(26px, 2.4vw, 42px);
+  border-radius: 50%; object-fit: cover;
+  border: 2px solid #ffc232; flex-shrink: 0;
   box-shadow: none !important;
-  margin-right: 0 !important; 
-  margin-left: 0 !important;
 }
 .setup-navbar .nav-avatar-name {
-  color: #ffc232; font-size: 0.95rem; font-weight: 700;
-  font-family: 'Tajawal', sans-serif; max-width: 110px;
+  color: #ffc232;
+  font-size: clamp(0.72rem, 0.85vw, 0.95rem);
+  font-weight: 700; font-family: 'Tajawal', sans-serif;
+  max-width: clamp(60px, 8vw, 120px);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-/* إضافة مسافة أعلى setup-screen لتعويض الشريط */
-.setup-screen { padding-top: 110px; }
+/* ─── TV / 4K ≥ 1920px ─── */
+@media (min-width: 1920px) {
+  .setup-navbar { height: 100px; padding: 0 80px; }
+  .setup-screen  { padding-top: 100px; }
+  .setup-navbar .nav-logo      { height: 68px; }
+  .setup-navbar .nav-link      { font-size: 1.2rem; padding: 12px 24px; }
+  .setup-navbar .nav-link img  { width: 28px; height: 28px; }
+  .setup-navbar .nav-login-btn { font-size: 1.05rem; padding: 11px 26px; }
+  .setup-navbar .nav-avatar-img  { width: 44px; height: 44px; }
+  .setup-navbar .nav-avatar-name { font-size: 1rem; max-width: 140px; }
+}
 
-/* إخفاء الـ hamburger في صفحة الـ setup */
-body.on-setup .hamburger-btn { display: none !important; }
+/* ─── Tablet 481–1024px ─── */
+@media (max-width: 1024px) and (min-width: 481px) {
+  .setup-navbar { height: 72px; padding: 0 20px; }
+  .setup-screen  { padding-top: 72px; }
+  .setup-navbar .nav-logo      { height: 46px; }
+  .setup-navbar .nav-link      { font-size: 0.88rem; padding: 8px 12px; }
+  .setup-navbar .nav-link img  { width: 18px; height: 18px; }
+  .setup-navbar .nav-login-btn { font-size: 0.85rem; padding: 8px 14px; }
+  .setup-navbar .nav-avatar-img  { width: 30px; height: 30px; }
+  .setup-navbar .nav-avatar-name { font-size: 0.8rem; max-width: 80px; }
+}
 
-/* على الجوال — الروابط المتوسطة تختصر */
-@media (max-width: 600px) {
+/* ─── Mobile ≤ 480px ─── */
+@media (max-width: 480px) {
+  .setup-navbar {
+    height: 56px; padding: 0 10px;
+    gap: 0;
+  }
+  .setup-screen  { padding-top: 56px; }
+  .setup-navbar .nav-logo { height: 34px; }
+
+  /* الروابط: أيقونات فقط */
   .setup-navbar .nav-link span { display: none; }
-  .setup-navbar .nav-link img { width: 22px; height: 22px; }
-  .setup-navbar .nav-link { padding: 8px 10px; }
-  .setup-navbar .nav-login-btn { padding: 6px 12px; font-size: 0.82rem; }
+  .setup-navbar .nav-link      { padding: 7px 8px; border-radius: 10px; }
+  .setup-navbar .nav-link img  { width: 20px; height: 20px; }
+
+  /* زر تسجيل الدخول */
+  .setup-navbar .nav-login-btn { font-size: 0.75rem; padding: 6px 10px; border-radius: 16px; }
+
+  /* زر المستخدم — اسم مخفي، أيقونة فقط */
+  .setup-navbar .nav-avatar-chip { padding: 3px; gap: 0; }
+  .setup-navbar .nav-avatar-name { display: none; }
+  .setup-navbar .nav-avatar-img  { width: 30px; height: 30px; }
+}
+
+/* ─── Very small ≤ 360px ─── */
+@media (max-width: 360px) {
+  .setup-navbar { height: 50px; padding: 0 6px; }
+  .setup-screen  { padding-top: 50px; }
+  .setup-navbar .nav-logo { height: 28px; }
+  .setup-navbar .nav-links { gap: 1px; }
+  .setup-navbar .nav-link  { padding: 5px 6px; }
+  .setup-navbar .nav-link img { width: 18px; height: 18px; }
+  .setup-navbar .nav-login-btn { font-size: 0.7rem; padding: 5px 8px; }
 }
 
 </style>
@@ -2753,9 +2820,11 @@ function closeRoundModal() {
 }
 function announceRoundWinner(side) {
   closeRoundModal();
+  // زيادة نقاط الجولة
   roundWins[side]++;
   document.getElementById('orangeScore').textContent = roundWins.orange;
   document.getElementById('greenScore').textContent  = roundWins.green;
+  // إرسال النقاط المحدّثة للهوست (تشمل roundWins الآن)
   syncScoresToHost();
 
   const wn   = teamNames[side];
@@ -2764,48 +2833,50 @@ function announceRoundWinner(side) {
   const wsub = document.getElementById('winSubtitle');
   const rb   = document.querySelector('.btn-restart');
 
+  // ── فوز كامل: 2-0 أو 2-1 ──
   if (roundWins[side] >= 2) {
-    wt.textContent  = wn + ' بطل اللعبة ';
-    wsub.textContent = 'فاز بـ ' + roundWins[side] + ' جولات';
-    rb.textContent  = 'إعادة اللعبة كاملة';
-    rb.onclick      = () => { stopWinEffects(); location.reload(); };
+    wt.textContent   = wn + ' بطل اللعبة';
+    wsub.textContent = teamNames.orange + ': ' + roundWins.orange + ' | ' + teamNames.green + ': ' + roundWins.green;
+    rb.textContent   = 'إعادة اللعبة كاملة';
+    rb.onclick       = () => { stopWinEffects(); location.reload(); };
     if (hostSessionId) rb.style.display = 'none';
     ws.classList.add('active');
     launchWinEffects(side);
     if (hostSessionId) {
       db.collection(HOST_COLL).doc(hostSessionId).update({
-        winState: { type:'gameOver', side }
+        winState: { type: 'gameOver', side }
       });
     }
     return;
   }
+  // ── تعادل 1-1 → جولة حاسمة ──
   if (roundWins.orange === 1 && roundWins.green === 1) {
-    wt.textContent  = 'تعادل - الجولة الثالثة الحاسمة';
-    wsub.textContent = teamNames.orange+': '+roundWins.orange+' | '+teamNames.green+': '+roundWins.green;
-    rb.textContent  = 'ابدأ الجولة الحاسمة';
-    rb.onclick = () => { stopWinEffects(); currentRound=3; ws.classList.remove('active'); startNextRound(); };
+    wt.textContent   = 'تعادل - الجولة الحاسمة';
+    wsub.textContent = teamNames.orange + ': ' + roundWins.orange + ' | ' + teamNames.green + ': ' + roundWins.green;
+    rb.textContent   = 'ابدأ الجولة الحاسمة';
+    rb.onclick = () => { stopWinEffects(); currentRound = 3; ws.classList.remove('active'); startNextRound(); };
     if (hostSessionId) rb.style.display = 'none';
     ws.classList.add('active');
+    launchWinEffects(side);
     if (hostSessionId) {
       db.collection(HOST_COLL).doc(hostSessionId).update({
-        winState: { type:'tiebreak', side }
+        winState: { type: 'tiebreak', side }
       });
     }
     return;
   }
-  const rn = currentRound===1?'الأولى':'الثانية';
-  wt.textContent  = wn + ' فاز بالجولة ' + rn + ' ';
-  wsub.textContent = teamNames.orange+': '+roundWins.orange+' | '+teamNames.green+': '+roundWins.green;
-  rb.textContent  = 'ابدأ الجولة التالية';
+  // ── فاز جولة واحدة (0-1 أو 1-0) → جولة تالية ──
+  const rn = currentRound === 1 ? 'الأولى' : 'الثانية';
+  wt.textContent   = wn + ' فاز بالجولة ' + rn;
+  wsub.textContent = teamNames.orange + ': ' + roundWins.orange + ' | ' + teamNames.green + ': ' + roundWins.green;
+  rb.textContent   = 'ابدأ الجولة التالية';
   rb.onclick = () => { stopWinEffects(); currentRound++; ws.classList.remove('active'); startNextRound(); };
-  // إخفاء الزر من الشاشة الرئيسية لو الهوست هو المتحكم
   if (hostSessionId) rb.style.display = 'none';
   ws.classList.add('active');
   launchWinEffects(side);
-  // إرسال حالة "انتظر الهوست" للهوست
   if (hostSessionId) {
     db.collection(HOST_COLL).doc(hostSessionId).update({
-      winState: { type:'nextRound', side, round: currentRound }
+      winState: { type: 'nextRound', side, round: currentRound }
     });
   }
 }
@@ -3260,7 +3331,10 @@ async function syncQuestionToHost(letter, q, a) {
 // تحديث النتيجة بعد claim
 async function syncScoresToHost() {
   if (!hostSessionId) return;
-  await db.collection(HOST_COLL).doc(hostSessionId).update({ scores });
+  await db.collection(HOST_COLL).doc(hostSessionId).update({
+    scores,
+    roundWins
+  });
 }
 
 // ─── وضع الهوست على الجوال ────────────────────────
@@ -3296,8 +3370,11 @@ async function initHostMobile(sessionId) {
       document.getElementById('hostBtnGreen').textContent   = 'فاز ' + (data.teamNames.green  || 'الأخضر');
     }
 
-    // تحديث النتائج
-    if (data.scores) {
+    // تحديث النتائج (نقاط الجولات)
+    if (data.roundWins) {
+      document.getElementById('hostOrangeScore').textContent = data.roundWins.orange || 0;
+      document.getElementById('hostGreenScore').textContent  = data.roundWins.green  || 0;
+    } else if (data.scores) {
       document.getElementById('hostOrangeScore').textContent = data.scores.orange || 0;
       document.getElementById('hostGreenScore').textContent  = data.scores.green  || 0;
     }
@@ -3643,17 +3720,11 @@ function hostAnnounceRoundWinner(side) {
     card.style.border = `2px solid ${winColor}`;
   }
 
-  // 2) حساب winState وإرساله فوراً
-  const nextWins = { orange: roundWins.orange, green: roundWins.green };
-  nextWins[side]++;
-  let winStateType = 'nextRound';
-  if (nextWins[side] >= 2) winStateType = 'gameOver';
-  else if (nextWins.orange === 1 && nextWins.green === 1) winStateType = 'tiebreak';
-
+  // 2) إرسال الفائز — الشاشة الرئيسية ستحسب winState وترسله
+  // (announceRoundWinner على الشاشة الرئيسية تتولى حساب roundWins الصحيح)
   db.collection(HOST_COLL).doc(hostSessionId).update({
     roundWinner:    side,
-    openRoundModal: null,
-    winState:       { type: winStateType, side, round: currentRound }
+    openRoundModal: null
   });
 
   // 3) إغلاق المودال وإعادة تهيئته بعد ثانية
