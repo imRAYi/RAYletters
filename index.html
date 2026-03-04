@@ -68,6 +68,9 @@
 
 <link rel="icon" type="image/png" href="favicon.png">
 
+<!-- Content Security Policy -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net https://www.googletagmanager.com https://pagead2.googlesyndication.com https://apis.google.com https://partner.googleadservices.com https://tpc.googlesyndication.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https: ; connect-src 'self' https://*.googleapis.com wss://*.firebaseio.com https://www.google-analytics.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; object-src 'none'; base-uri 'self';">
+
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2576310128869225"
      crossorigin="anonymous"></script>
@@ -1704,7 +1707,7 @@ body.on-setup .hamburger-btn { display: none !important; }
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700">RAYteam2026@outlook.com</span></p>
+      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e4b6a5bd90818589d6d4d6d2a48b9190888b8b8fca878b89">[email&#160;protected]</a></span></p>
     </div>
 
     <div class="policy-section">
@@ -1761,7 +1764,7 @@ body.on-setup .hamburger-btn { display: none !important; }
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700">RAYteam2026@outlook.com</span></p>
+      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="015340587564606c33313337416e74756d6e6e6a2f626e6c">[email&#160;protected]</a></span></p>
     </div>
   </div>
 </div>
@@ -1986,7 +1989,7 @@ body.on-setup .hamburger-btn { display: none !important; }
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 // ════════════════════════════════════════
@@ -2175,13 +2178,22 @@ function closeDeleteDialog() {
   document.getElementById('deleteAccountOverlay').classList.remove('active');
 }
 async function deleteUserAccount() {
+  if (!currentUser) { closeDeleteDialog(); return; }
   try {
+    // محاولة الحذف المباشر (تنجح لو سجّل دخول مؤخراً)
     await currentUser.delete();
     closeDeleteDialog();
+    showToast('تم حذف الحساب');
+    location.reload();
   } catch(e) {
     closeDeleteDialog();
-    // If requires re-auth, sign out instead
-    await auth.signOut();
+    if (e.code === 'auth/requires-recent-login') {
+      // Firebase تطلب إعادة تسجيل الدخول قبل الحذف
+      showToast('يرجى تسجيل الخروج والدخول مجدداً ثم إعادة المحاولة');
+      await auth.signOut();
+    } else {
+      showToast('تعذّر حذف الحساب، حاول مرة أخرى');
+    }
   }
 }
 
@@ -3092,7 +3104,10 @@ let hostListener  = null;   // unsubscribe listener
 
 // ─── توليد معرف جلسة عشوائي ─────────────────────
 function generateSessionId() {
-  return Math.random().toString(36).substring(2, 10).toUpperCase();
+  // crypto.getRandomValues أقوى من Math.random — لا يمكن التنبؤ بها
+  const arr = new Uint8Array(12);
+  crypto.getRandomValues(arr);
+  return Array.from(arr, b => b.toString(16).padStart(2,'0')).join('').toUpperCase();
 }
 
 // ─── فتح QR ──────────────────────────────────────
@@ -3165,8 +3180,11 @@ const HOST_COLL = 'hostSessions';
 async function startHostListener(sessionId) {
   if (hostListener) hostListener();
   // كتابة بيانات الجلسة الأولية
+  // نحفظ UID صاحب الجلسة — تستخدمه Firebase Rules للتحقق
+  const currentUid = auth.currentUser ? auth.currentUser.uid : null;
   await db.collection(HOST_COLL).doc(sessionId).set({
     active:    true,
+    hostUid:   currentUid,          // ← للتحقق في Rules
     scores:    { orange: 0, green: 0 },
     teamNames: teamNames,
     grid:      [],
