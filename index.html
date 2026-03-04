@@ -669,7 +669,7 @@ header {
   display: none; position: fixed; inset: 0;
   background-image: url(BackGround.jpeg);
   background-size: cover; background-position: center;
-  z-index: 1100; flex-direction: column; overflow: hidden;
+  z-index: 9999; flex-direction: column; overflow: hidden;
 }
 .full-page::before {
   content: ''; position: absolute; inset: 0;
@@ -733,11 +733,13 @@ header {
 /* ─── SIDEBAR POLICY LINKS ─── */
 .sidebar-policy-link {
   background: none; border: none; cursor: pointer;
-  color: rgba(255,255,255,0.45); font-size: 0.75rem;
-  cursor: pointer; transition: color 0.2s;
+  color: rgba(255,255,255,0.6); font-size: 0.85rem;
+  font-family: 'Tajawal', sans-serif; font-weight: 700;
+  transition: color 0.2s;
   text-decoration: underline; text-underline-offset: 3px;
+  padding: 0; display: inline;
 }
-.sidebar-policy-link:hover { color: rgba(255,215,0,0.75); }
+.sidebar-policy-link:hover { color: #ffd700; }
 
 /* ─── USER PROFILE MODAL ─── */
 .user-profile-overlay {
@@ -1707,7 +1709,7 @@ body.on-setup .hamburger-btn { display: none !important; }
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e4b6a5bd90818589d6d4d6d2a48b9190888b8b8fca878b89">[email&#160;protected]</a></span></p>
+      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="mailto:RAYteam2026@outlook.com" style="color:#ffd700;text-decoration:none;">RAYteam2026@outlook.com</a></span></p>
     </div>
 
     <div class="policy-section">
@@ -1764,7 +1766,7 @@ body.on-setup .hamburger-btn { display: none !important; }
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="015340587564606c33313337416e74756d6e6e6a2f626e6c">[email&#160;protected]</a></span></p>
+      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700"><a href="mailto:RAYteam2026@outlook.com" style="color:#ffd700;text-decoration:none;">RAYteam2026@outlook.com</a></span></p>
     </div>
   </div>
 </div>
@@ -2483,10 +2485,27 @@ function openPage(id) {
   document.getElementById(id + 'Overlay').classList.add('active');
 }
 function openPolicyPage(id) {
-  document.getElementById(id).classList.add('active');
+  // أغلق السايدبار أولاً لو مفتوح
+  const sb = document.getElementById('sidebar');
+  if (sb && sb.classList.contains('open')) {
+    sb.classList.remove('open');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (overlay) overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  // افتح الصفحة
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.display = 'flex';
+    el.classList.add('active');
+  }
 }
 function closePage(id) {
-  document.getElementById(id).classList.remove('active');
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.remove('active');
+    el.style.display = '';
+  }
 }
 function openContact() {
   const sb = document.getElementById('sidebar');
