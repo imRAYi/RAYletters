@@ -1566,9 +1566,9 @@ body.on-setup .hamburger-btn { display: none !important; }
 
   <div class="sidebar-footer">
     <div style="display:flex;gap:12px;justify-content:center;margin-bottom:8px">
-      <button class="sidebar-policy-link" onclick="toggleSidebar(); setTimeout(()=>openPolicyPage('privacyOverlay'),50)">سياسة الخصوصية</button>
+      <button class="sidebar-policy-link" onclick="event.stopPropagation(); toggleSidebar(); setTimeout(()=>openPolicyPage('privacyOverlay'),50)">سياسة الخصوصية</button>
       <span style="color:rgba(255,255,255,0.2)">|</span>
-      <button class="sidebar-policy-link" onclick="toggleSidebar(); setTimeout(()=>openPolicyPage('termsOverlay'),50)">شروط الاستخدام</button>
+      <button class="sidebar-policy-link" onclick="event.stopPropagation(); toggleSidebar(); setTimeout(()=>openPolicyPage('termsOverlay'),50)">شروط الاستخدام</button>
     </div>
     &#169; جميع الحقوق محفوظة لدى<br>
     <strong style="color:rgba(255,215,0,0.75)">RAYteam</strong>
