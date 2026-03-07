@@ -1566,9 +1566,9 @@ body.on-setup .hamburger-btn { display: none !important; }
 
   <div class="sidebar-footer">
     <div style="display:flex;gap:12px;justify-content:center;margin-bottom:8px">
-      <button class="sidebar-policy-link" onclick="event.stopPropagation(); toggleSidebar(); setTimeout(()=>openPolicyPage('privacyOverlay'),50)">سياسة الخصوصية</button>
+      <button class="sidebar-policy-link" onclick="toggleSidebar(); setTimeout(()=>openPolicyPage('privacyOverlay'),50)">سياسة الخصوصية</button>
       <span style="color:rgba(255,255,255,0.2)">|</span>
-      <button class="sidebar-policy-link" onclick="event.stopPropagation(); toggleSidebar(); setTimeout(()=>openPolicyPage('termsOverlay'),50)">شروط الاستخدام</button>
+      <button class="sidebar-policy-link" onclick="toggleSidebar(); setTimeout(()=>openPolicyPage('termsOverlay'),50)">شروط الاستخدام</button>
     </div>
     &#169; جميع الحقوق محفوظة لدى<br>
     <strong style="color:rgba(255,215,0,0.75)">RAYteam</strong>
@@ -3081,15 +3081,15 @@ async function startHostListener(sessionId) {
   // نحفظ UID صاحب الجلسة — تستخدمه Firebase Rules للتحقق
   const currentUid = auth.currentUser ? auth.currentUser.uid : null;
   await db.collection(HOST_COLL).doc(sessionId).set({
-    active:    true,
-    hostUid:   currentUid,          // ← للتحقق في Rules
-    scores:    { orange: 0, green: 0 },
-    teamNames: teamNames,
-    grid:      [],
-    question:  null,
+    active:      true,
+    scores:      { orange: 0, green: 0 },
+    teamNames:   teamNames,
+    gridLetters: currentGridLetters.length === 25 ? currentGridLetters : [],
+    grid:        [],
+    question:    null,
     revealAnswer: false,
     claimWinner:  null,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    createdAt:   firebase.firestore.FieldValue.serverTimestamp()
   });
 
   // ─── استماع للتغييرات من الهوست ──────────────────────
@@ -3886,7 +3886,7 @@ function hostContinueRound2() {
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="mailto:RAYteam2026@outlook.com" style="color:#ffd700;text-decoration:none;">RAYteam2026@outlook.com</a></span></p>
+      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection#fcaebda588999d91cecccecabc93898890939397d29f9391" style="color:#ffd700;text-decoration:none;"><span class="__cf_email__" data-cfemail="f9abb8a08d9c9894cbc9cbcfb9968c8d95969692d79a9694">[email&#160;protected]</span></a></span></p>
     </div>
 
     <div class="policy-section">
