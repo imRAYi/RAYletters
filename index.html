@@ -2522,6 +2522,12 @@ function _launchGame() {
   document.getElementById('greenScore').textContent  = '0';
   usedQuestions = {};
   buildGrid();
+  // تأكد من رفع gridLetters بعد buildGrid مباشرة
+  if (hostSessionId && currentGridLetters.length === 25) {
+    db.collection(HOST_COLL).doc(hostSessionId)
+      .update({ gridLetters: currentGridLetters })
+      .catch(() => {});
+  }
 }
 
 async function onCellClick(cell) {
@@ -3078,8 +3084,6 @@ const HOST_COLL = 'hostSessions';
 async function startHostListener(sessionId) {
   if (hostListener) hostListener();
   // كتابة بيانات الجلسة الأولية
-  // نحفظ UID صاحب الجلسة — تستخدمه Firebase Rules للتحقق
-  const currentUid = auth.currentUser ? auth.currentUser.uid : null;
   await db.collection(HOST_COLL).doc(sessionId).set({
     active:      true,
     scores:      { orange: 0, green: 0 },
