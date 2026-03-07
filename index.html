@@ -68,8 +68,6 @@
 
 <link rel="icon" type="image/png" href="favicon.png">
 
-<!-- Content Security Policy -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net https://www.googletagmanager.com https://pagead2.googlesyndication.com https://apis.google.com https://partner.googleadservices.com https://tpc.googlesyndication.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https: ; connect-src 'self' https://*.googleapis.com wss://*.firebaseio.com https://www.google-analytics.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; object-src 'none'; base-uri 'self';">
 
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2576310128869225"
@@ -2522,6 +2520,12 @@ function _launchGame() {
   document.getElementById('greenScore').textContent  = '0';
   usedQuestions = {};
   buildGrid();
+  // ارفع gridLetters فور بناء الشبكة — الهوست يحتاجها
+  if (hostSessionId && currentGridLetters.length === 25) {
+    db.collection(HOST_COLL).doc(hostSessionId)
+      .update({ gridLetters: currentGridLetters, grid: {} })
+      .catch(() => {});
+  }
 }
 
 async function onCellClick(cell) {
@@ -2783,6 +2787,11 @@ function startNextRound() {
   currentTurn = 'orange';
   cells = []; usedQuestions = {};
   buildGrid();
+  if (hostSessionId && currentGridLetters.length === 25) {
+    db.collection(HOST_COLL).doc(hostSessionId)
+      .update({ gridLetters: currentGridLetters, grid: {}, question: null, revealAnswer: false })
+      .catch(() => {});
+  }
 }
 
 // ── LIGHTBOX ─────────────────────────────────────────────────
@@ -3078,18 +3087,16 @@ const HOST_COLL = 'hostSessions';
 async function startHostListener(sessionId) {
   if (hostListener) hostListener();
   // كتابة بيانات الجلسة الأولية
-  // نحفظ UID صاحب الجلسة — تستخدمه Firebase Rules للتحقق
-  const currentUid = auth.currentUser ? auth.currentUser.uid : null;
   await db.collection(HOST_COLL).doc(sessionId).set({
-    active:    true,
-    hostUid:   currentUid,          // ← للتحقق في Rules
-    scores:    { orange: 0, green: 0 },
-    teamNames: teamNames,
-    grid:      [],
-    question:  null,
+    active:      true,
+    scores:      { orange: 0, green: 0 },
+    teamNames:   teamNames,
+    gridLetters: currentGridLetters.length === 25 ? currentGridLetters : [],
+    grid:        [],
+    question:    null,
     revealAnswer: false,
     claimWinner:  null,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    createdAt:   firebase.firestore.FieldValue.serverTimestamp()
   });
 
   // ─── استماع للتغييرات من الهوست ──────────────────────
@@ -3304,11 +3311,22 @@ async function initHostMobile(sessionId) {
       document.getElementById('hostQuestionView').classList.remove('active');
     }
 
-    // بناء وتحديث الشبكة
+    // ─── بناء الشبكة ─────────────────────────────────────
     if (data.gridLetters && data.gridLetters.length === 25) {
       buildHostMiniGrid(data.gridLetters);
-    }
-    if (data.grid && data.grid.length > 0) {
+      // بعد البناء مباشرة طبّق حالة الخلايا المطالب بها
+      if (data.grid && Object.keys(data.grid).length > 0) {
+        updateHostMiniGrid(data.grid);
+      }
+    } else if (!_hostBuiltLetters) {
+      // لو gridLetters مش موجود بعد، اطلبه مرة واحدة
+      db.collection(HOST_COLL).doc(sessionId).get().then(s => {
+        if (s.exists && s.data().gridLetters && s.data().gridLetters.length === 25) {
+          buildHostMiniGrid(s.data().gridLetters);
+          if (s.data().grid) updateHostMiniGrid(s.data().grid);
+        }
+      });
+    } else if (data.grid) {
       updateHostMiniGrid(data.grid);
     }
 
@@ -3337,35 +3355,38 @@ async function initHostMobile(sessionId) {
 let hostLastWinState  = null;
 let hostLastDoNextTs  = 0;
 
+// ─── آخر gridLetters بُني بها الهوست ─────────────────────
+let _hostBuiltLetters = null;
+
 function buildHostMiniGrid(letters) {
-  // نستخدم نفس ترتيب الشاشة الرئيسية تماماً
   if (!letters || letters.length < 25) return;
-  // نفس ترتيب الصفوف مع buildGrid الرئيسي: 5,5,5,5,5 والصفوف الفردية offset
-  const ROWS    = [5, 5, 5, 5, 5];
-  const grid    = document.getElementById('hostMiniGrid');
-  grid.innerHTML = '';
+  // لا تعد البناء لو نفس الحروف بالضبط
+  if (_hostBuiltLetters && JSON.stringify(_hostBuiltLetters) === JSON.stringify(letters)) return;
+  _hostBuiltLetters = letters.slice();
+
+  const ROWS = [5, 5, 5, 5, 5];
+  const wrap = document.getElementById('hostMiniGrid');
+  wrap.innerHTML = '';
   let idx = 0;
   ROWS.forEach((count, rowIdx) => {
     const row = document.createElement('div');
-    // نفس منطق offset مع buildGrid: rowIdx % 2 !== 0
     row.className = 'host-mini-row' + (rowIdx % 2 !== 0 ? ' offset' : '');
     for (let i = 0; i < count; i++) {
       if (idx >= letters.length) break;
-      const letter = letters[idx];
-      const outer  = document.createElement('div');
-      outer.className = 'host-hex-outer';
-      outer.dataset.idx    = idx;
-      outer.dataset.letter = letter;
+      const outer = document.createElement('div');
+      outer.className      = 'host-hex-outer';
+      outer.dataset.idx    = String(idx);
+      outer.dataset.letter = letters[idx];
       if (idx === 12) outer.classList.add('h-gold');
       const cell = document.createElement('div');
-      cell.className  = 'host-hex-cell';
-      cell.textContent = letter;
-      outer.onclick = () => hostSelectCell(outer);
+      cell.className   = 'host-hex-cell';
+      cell.textContent = letters[idx];
       outer.appendChild(cell);
+      outer.addEventListener('click', () => hostSelectCell(outer));
       row.appendChild(outer);
       idx++;
     }
-    grid.appendChild(row);
+    wrap.appendChild(row);
   });
 }
 
@@ -3425,12 +3446,18 @@ async function hostSelectCell(outer) {
 }
 
 function updateHostMiniGrid(gridData) {
-  const outers = document.querySelectorAll('.host-hex-outer');
+  if (!gridData) return;
+  const outers = document.querySelectorAll('#hostMiniGrid .host-hex-outer');
   outers.forEach(outer => {
     const i = parseInt(outer.dataset.idx);
-    if (gridData[i]) {
+    const owner = gridData[i];
+    // إزالة الحالات القديمة
+    outer.classList.remove('h-claimed-orange', 'h-claimed-green');
+    if (owner === 'orange' || owner === 'green') {
       outer.classList.remove('h-gold');
-      outer.classList.add('h-claimed-' + gridData[i]);
+      outer.classList.add('h-claimed-' + owner);
+    } else if (i === 12 && !outer.classList.contains('h-claimed-orange') && !outer.classList.contains('h-claimed-green')) {
+      outer.classList.add('h-gold');
     }
   });
 }
@@ -3886,7 +3913,7 @@ function hostContinueRound2() {
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="mailto:RAYteam2026@outlook.com" style="color:#ffd700;text-decoration:none;">RAYteam2026@outlook.com</a></span></p>
+      <p>إذا كان لديكم أي استفسار بشأن سياسة الخصوصية، يمكنكم التواصل معنا عبر البريد الإلكتروني: <span style="color:#ffd700"><a href="/cdn-cgi/l/email-protection#fcaebda588999d91cecccecabc93898890939397d29f9391" style="color:#ffd700;text-decoration:none;"><span class="__cf_email__" data-cfemail="f9abb8a08d9c9894cbc9cbcfb9968c8d95969692d79a9694">[email&#160;protected]</span></a></span></p>
     </div>
 
     <div class="policy-section">
