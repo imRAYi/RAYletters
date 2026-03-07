@@ -2522,10 +2522,10 @@ function _launchGame() {
   document.getElementById('greenScore').textContent  = '0';
   usedQuestions = {};
   buildGrid();
-  // تأكد من رفع gridLetters بعد buildGrid مباشرة
+  // ارفع gridLetters فور بناء الشبكة — الهوست يحتاجها
   if (hostSessionId && currentGridLetters.length === 25) {
     db.collection(HOST_COLL).doc(hostSessionId)
-      .update({ gridLetters: currentGridLetters })
+      .update({ gridLetters: currentGridLetters, grid: {} })
       .catch(() => {});
   }
 }
@@ -2789,6 +2789,11 @@ function startNextRound() {
   currentTurn = 'orange';
   cells = []; usedQuestions = {};
   buildGrid();
+  if (hostSessionId && currentGridLetters.length === 25) {
+    db.collection(HOST_COLL).doc(hostSessionId)
+      .update({ gridLetters: currentGridLetters, grid: {}, question: null, revealAnswer: false })
+      .catch(() => {});
+  }
 }
 
 // ── LIGHTBOX ─────────────────────────────────────────────────
@@ -3308,11 +3313,22 @@ async function initHostMobile(sessionId) {
       document.getElementById('hostQuestionView').classList.remove('active');
     }
 
-    // بناء وتحديث الشبكة
+    // ─── بناء الشبكة ─────────────────────────────────────
     if (data.gridLetters && data.gridLetters.length === 25) {
       buildHostMiniGrid(data.gridLetters);
-    }
-    if (data.grid && data.grid.length > 0) {
+      // بعد البناء مباشرة طبّق حالة الخلايا المطالب بها
+      if (data.grid && Object.keys(data.grid).length > 0) {
+        updateHostMiniGrid(data.grid);
+      }
+    } else if (!_hostBuiltLetters) {
+      // لو gridLetters مش موجود بعد، اطلبه مرة واحدة
+      db.collection(HOST_COLL).doc(sessionId).get().then(s => {
+        if (s.exists && s.data().gridLetters && s.data().gridLetters.length === 25) {
+          buildHostMiniGrid(s.data().gridLetters);
+          if (s.data().grid) updateHostMiniGrid(s.data().grid);
+        }
+      });
+    } else if (data.grid) {
       updateHostMiniGrid(data.grid);
     }
 
@@ -3341,35 +3357,38 @@ async function initHostMobile(sessionId) {
 let hostLastWinState  = null;
 let hostLastDoNextTs  = 0;
 
+// ─── آخر gridLetters بُني بها الهوست ─────────────────────
+let _hostBuiltLetters = null;
+
 function buildHostMiniGrid(letters) {
-  // نستخدم نفس ترتيب الشاشة الرئيسية تماماً
   if (!letters || letters.length < 25) return;
-  // نفس ترتيب الصفوف مع buildGrid الرئيسي: 5,5,5,5,5 والصفوف الفردية offset
-  const ROWS    = [5, 5, 5, 5, 5];
-  const grid    = document.getElementById('hostMiniGrid');
-  grid.innerHTML = '';
+  // لا تعد البناء لو نفس الحروف بالضبط
+  if (_hostBuiltLetters && JSON.stringify(_hostBuiltLetters) === JSON.stringify(letters)) return;
+  _hostBuiltLetters = letters.slice();
+
+  const ROWS = [5, 5, 5, 5, 5];
+  const wrap = document.getElementById('hostMiniGrid');
+  wrap.innerHTML = '';
   let idx = 0;
   ROWS.forEach((count, rowIdx) => {
     const row = document.createElement('div');
-    // نفس منطق offset مع buildGrid: rowIdx % 2 !== 0
     row.className = 'host-mini-row' + (rowIdx % 2 !== 0 ? ' offset' : '');
     for (let i = 0; i < count; i++) {
       if (idx >= letters.length) break;
-      const letter = letters[idx];
-      const outer  = document.createElement('div');
-      outer.className = 'host-hex-outer';
-      outer.dataset.idx    = idx;
-      outer.dataset.letter = letter;
+      const outer = document.createElement('div');
+      outer.className      = 'host-hex-outer';
+      outer.dataset.idx    = String(idx);
+      outer.dataset.letter = letters[idx];
       if (idx === 12) outer.classList.add('h-gold');
       const cell = document.createElement('div');
-      cell.className  = 'host-hex-cell';
-      cell.textContent = letter;
-      outer.onclick = () => hostSelectCell(outer);
+      cell.className   = 'host-hex-cell';
+      cell.textContent = letters[idx];
       outer.appendChild(cell);
+      outer.addEventListener('click', () => hostSelectCell(outer));
       row.appendChild(outer);
       idx++;
     }
-    grid.appendChild(row);
+    wrap.appendChild(row);
   });
 }
 
@@ -3429,12 +3448,18 @@ async function hostSelectCell(outer) {
 }
 
 function updateHostMiniGrid(gridData) {
-  const outers = document.querySelectorAll('.host-hex-outer');
+  if (!gridData) return;
+  const outers = document.querySelectorAll('#hostMiniGrid .host-hex-outer');
   outers.forEach(outer => {
     const i = parseInt(outer.dataset.idx);
-    if (gridData[i]) {
+    const owner = gridData[i];
+    // إزالة الحالات القديمة
+    outer.classList.remove('h-claimed-orange', 'h-claimed-green');
+    if (owner === 'orange' || owner === 'green') {
       outer.classList.remove('h-gold');
-      outer.classList.add('h-claimed-' + gridData[i]);
+      outer.classList.add('h-claimed-' + owner);
+    } else if (i === 12 && !outer.classList.contains('h-claimed-orange') && !outer.classList.contains('h-claimed-green')) {
+      outer.classList.add('h-gold');
     }
   });
 }
