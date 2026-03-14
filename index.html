@@ -2244,7 +2244,7 @@ async function loadUpdates() {
   listEl.innerHTML = '';
 
   try {
-    const snap = await db.collection('updates').orderBy('createdAt','desc').get();
+    const snap = await db.collection('updates').get();
     if (snap.empty) {
       emptyEl.style.display = 'block';
       listEl.appendChild(emptyEl);
@@ -2255,7 +2255,16 @@ async function loadUpdates() {
     window._updatesCache = {};
     snap.forEach(doc => { window._updatesCache[doc.id] = doc.data(); });
 
-    snap.forEach(doc => {
+    // افرز من الأحدث للأقدم في JS بدل Firestore (يتجنب مشكلة الـ index)
+    const docs = [];
+    snap.forEach(doc => docs.push(doc));
+    docs.sort((a, b) => {
+      const aT = a.data().createdAt ? a.data().createdAt.seconds : 0;
+      const bT = b.data().createdAt ? b.data().createdAt.seconds : 0;
+      return bT - aT;
+    });
+
+    docs.forEach(doc => {
       const d       = doc.data();
       const isAdmin = currentUser && currentUser.uid === ADMIN_UID;
       const docId   = doc.id;
@@ -3951,4 +3960,10 @@ function hostContinueRound2() {
 
     <div class="policy-section">
       <h3>التواصل معنا</h3>
-      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700"><a href="/cdn-cgi/l/emai
+      <p>لأي استفسار أو ملاحظة بشأن شروط الاستخدام، يمكنكم التواصل معنا عبر: <span style="color:#ffd700"><a href="mailto:RAYteam2026@outlook.com" style="color:#ffd700;text-decoration:none;">RAYteam2026@outlook.com</a></span></p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
